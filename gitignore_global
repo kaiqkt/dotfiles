@@ -1,0 +1,10 @@
+tags
+.DS_Store
+*/**/.DS_Store
+.idea/
+*.iml
+*.class
+build/
+out/
+
+**/.claude/settings.local.json

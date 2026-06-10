@@ -1,0 +1,37 @@
+#!/bin/sh
+
+source "$CONFIG_DIR/colors.sh"
+
+PERCENTAGE="$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)"
+CHARGING="$(pmset -g batt | grep 'AC Power')"
+
+if [ "$PERCENTAGE" = "" ]; then
+  exit 0
+fi
+
+case "${PERCENTAGE}" in
+  9[0-9]|100) ICON=$(printf '') ;;
+  [6-8][0-9])  ICON=$(printf '') ;;
+  [3-5][0-9])  ICON=$(printf '') ;;
+  [1-2][0-9])  ICON=$(printf '') ;;
+  *)           ICON=$(printf '') ;;
+esac
+
+if [[ "$CHARGING" != "" ]]; then
+  ICON=$(printf '')
+fi
+
+if [ "$PERCENTAGE" -le 10 ]; then
+  COLOR="$RED"
+elif [ "$PERCENTAGE" -le 20 ]; then
+  COLOR="$ORANGE"
+else
+  COLOR="$WHITE"
+fi
+
+sketchybar --set "$NAME" \
+  icon="$ICON" \
+  label="${PERCENTAGE}%" \
+  icon.color="$COLOR" \
+  label.color="$COLOR" \
+  padding_right=0

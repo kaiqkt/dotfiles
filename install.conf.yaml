@@ -1,0 +1,25 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ["~"]
+
+- create:
+    - ~/.local/bin
+
+- link:
+    ~/.zshenv: zshenv
+    ~/.config/zsh: zsh
+    ~/.Brewfile: homebrew/Brewfile
+    ~/.config/kitty: kitty
+    ~/.fzfrc: fzfrc
+    ~/.config/tmux: tmux
+    ~/.gitconfig: gitconfig
+    ~/.gitignore_global: gitignore_global
+    ~/.claude/settings.json: claude/settings.json
+    ~/.config/sketchybar: sketchybar
+
+- shell:
+    - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
+    - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
+    - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]

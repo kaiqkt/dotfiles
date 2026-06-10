@@ -1,0 +1,45 @@
+# Core
+brew "git"
+brew "zsh"
+brew "dotbot"
+
+# Shell utilities
+brew "eza"
+brew "fzf"
+brew "fd"
+brew "bat"
+brew "ripgrep"
+brew "jq"
+brew "wget"
+brew "htop"
+brew "fastfetch"
+brew "rtk"
+
+# Git
+brew "lazygit"
+brew "diff-so-fancy", args: ["HEAD"]
+
+# Java / Kotlin
+brew "openjdk"
+brew "gradle"
+
+# Go
+brew "go"
+
+# Containers
+brew "docker-compose"
+
+# Terminal & multiplexer
+brew "tmux"
+cask "kitty"
+cask "font-hack-nerd-font"
+
+# Sketchybar
+tap "felixkratz/formulae"
+brew "felixkratz/formulae/sketchybar"
+
+# Apps
+cask "claude"
+cask "spotify"
+cask "bitwarden"
+cask "bruno"

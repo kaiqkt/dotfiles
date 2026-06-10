@@ -1,0 +1,11 @@
+tags
+tmux/plugins/
+zsh/secrets.sh
+zsh/.zsh_history
+zsh/.zsh_sessions
+zsh/.zcompdump
+zsh/plugins
+zsh/.zcompcache
+/.claude/settings.local.json
+settings.local.json
+.DS_Store

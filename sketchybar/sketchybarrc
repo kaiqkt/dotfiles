@@ -159,16 +159,6 @@ sketchybar \
       padding_right=4 \
       --subscribe battery system_woke power_source_change \
   \
-  --add item disk right \
-    --set disk \
-    script="$PLUGIN_DIR/disk.sh" \
-    icon= \
-     update_freq=3 \
-     label.padding_left=0 \
-     icon.padding_right=8 \
-    label.color=0xfff2cdcd \
-    icon.color=0xfff2cdcd \
-  \
   --add graph cpu_usage right 50 \
      --set cpu_usage script="$PLUGIN_DIR/cpu_usage.sh" \
       update_freq=5 \

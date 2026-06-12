@@ -25,5 +25,6 @@ dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 echo ""
 echo "Starting services..."
 brew services start sketchybar
-brew autoupdate start --upgrade --cleanup 2>/dev/null || true
+brew autoupdate delete 2>/dev/null || true
+brew autoupdate start --upgrade --cleanup
 echo "Done."

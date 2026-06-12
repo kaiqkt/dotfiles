@@ -1,11 +1,13 @@
 - defaults:
     link:
       relink: true
+      force: true
 
 - clean: ["~"]
 
 - create:
     - ~/.local/bin
+    - ~/.config/opencode
 
 - link:
     ~/.zshenv: zshenv

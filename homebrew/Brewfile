@@ -2,7 +2,6 @@
 brew "git"
 brew "zsh"
 brew "dotbot"
-brew "brew-autoupdate"
 
 # Shell utilities
 brew "eza"

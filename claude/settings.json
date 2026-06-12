@@ -94,5 +94,9 @@
     "defaultMode": "plan"
   },
   "effortLevel": "medium",
-  "preferredNotifChannel": "kitty"
+  "preferredNotifChannel": "kitty",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }

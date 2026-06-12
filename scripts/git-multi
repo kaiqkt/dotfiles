@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+
+# Multi Git Push
+# Configures automatic push to GitHub + Codeberg
+#
+# Usage:
+#   git-multi -u kaiqkt
+#   git-multi -u kaiqkt -r repo
+#
+# After setup:
+#   git push
+#
+# Pushes automatically to both remotes.
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") -u <username> [-r <repo>]
+
+Options:
+  -u, --user   GitHub + Codeberg username
+  -r, --repo   Repository name (inferred from git if omitted)
+  -h, --help   Show help
+EOF
+  exit 0
+}
+
+USER=""
+REPO=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -u|--user)
+      USER="$2"
+      shift 2
+      ;;
+    -r|--repo)
+      REPO="$2"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      echo "Unknown option: $1"
+      usage
+      ;;
+  esac
+done
+
+if [[ -z "$USER" ]]; then
+  echo "Error: -u <username> required."
+  usage
+fi
+
+# Must be inside git repo
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "Error: not inside a git repository."
+  exit 1
+fi
+
+# Infer repo name
+if [[ -z "$REPO" ]]; then
+  inferred=$(git remote get-url origin 2>/dev/null | sed 's/.*[:/]\([^/]*\)\.git$/\1/' || true)
+
+  if [[ -n "$inferred" ]]; then
+    REPO="$inferred"
+    echo "Repository inferred from origin: $REPO"
+  else
+    inferred=$(basename "$(git rev-parse --show-toplevel)")
+    read -rp "Repository name [${inferred}]: " REPO
+    REPO="${REPO:-$inferred}"
+  fi
+fi
+
+if [[ -z "$REPO" ]]; then
+  echo "Error: repository name required."
+  exit 1
+fi
+
+# URLs
+GITHUB_URL="git@github.com:${USER}/${REPO}.git"
+CODEBERG_URL="git@codeberg.org:${USER}/${REPO}.git"
+
+echo ""
+echo "Configuring multi-push origin (fetch: Codeberg, push: both):"
+echo "  Codeberg: $CODEBERG_URL"
+echo "  GitHub:   $GITHUB_URL"
+echo ""
+
+# Create or update origin — fetch from Codeberg (primary)
+if ! git remote get-url origin &>/dev/null; then
+  echo "No origin found — creating origin."
+  git remote add origin "$CODEBERG_URL"
+else
+  echo "Updating fetch URL to Codeberg."
+  git remote set-url origin "$CODEBERG_URL"
+fi
+
+# Configure push URLs — Codeberg first, then GitHub
+git config --unset-all remote.origin.pushurl 2>/dev/null || true
+
+git config --add remote.origin.pushurl "$CODEBERG_URL"
+git config --add remote.origin.pushurl "$GITHUB_URL"
+
+echo ""
+echo "Push URLs configured:"
+git --no-pager config --get-all remote.origin.pushurl
+
+echo ""
+echo "Remote status:"
+git remote -v
+
+echo ""
+
+CURRENT_BRANCH=$(git branch --show-current || true)
+
+if [[ -n "$CURRENT_BRANCH" ]]; then
+  echo "Current branch: $CURRENT_BRANCH"
+  echo ""
+  echo "First push:"
+  echo "  git push -u origin $CURRENT_BRANCH"
+else
+  echo "No branch detected."
+fi
+
+echo ""
+echo "After first push you can simply use:"
+echo "  git push"

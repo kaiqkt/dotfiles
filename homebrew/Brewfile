@@ -19,6 +19,9 @@ brew "rtk"
 brew "lazygit"
 brew "diff-so-fancy", args: ["HEAD"]
 
+# Version manager
+brew "asdf"
+
 # Java / Kotlin
 brew "openjdk"
 brew "gradle"
@@ -38,8 +41,13 @@ cask "font-hack-nerd-font"
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
 
+# Window manager
+tap "nikitabobko/tap"
+cask "nikitabobko/tap/aerospace"
+
 # Apps
 cask "claude"
 cask "spotify"
 cask "bitwarden"
+cask "brave-browser"
 cask "bruno"

@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+set -e
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+info() { echo -e "${GREEN}[INFO]${NC} $1"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+
+echo ""
+echo "Dotfiles Uninstaller"
+echo "===================="
+echo ""
+echo "This will undo changes made by the install script."
+echo "Your dotfiles repo will NOT be deleted — only the symlinks and system changes."
+echo ""
+
+# ─── Step 1: Remove symlinks ─────────────────────────────────────────────────
+
+echo "Step 1: Remove symlinks"
+echo "-----------------------"
+
+SYMLINKS=(
+  ~/.zshenv
+  ~/.config/zsh
+  ~/.Brewfile
+  ~/.config/kitty
+  ~/.fzfrc
+  ~/.config/tmux
+  ~/.gitconfig
+  ~/.gitignore_global
+  ~/.claude/settings.json
+  ~/.claude/CLAUDE.md
+  ~/.claude/RTK.md
+  ~/.config/opencode/opencode.json
+  ~/.local/bin/git-multi
+  ~/.config/sketchybar
+  ~/.config/aerospace
+  ~/.config/lazygit
+  ~/.config/htop
+  ~/.config/bat
+  ~/.editorconfig
+  ~/.asdfrc
+)
+
+for link in "${SYMLINKS[@]}"; do
+  expanded="${link/#\~/$HOME}"
+  if [ -L "$expanded" ]; then
+    rm "$expanded"
+    info "Removed symlink: $link"
+  elif [ -e "$expanded" ]; then
+    warn "Skipped $link — exists but is not a symlink"
+  fi
+done
+
+echo ""
+
+# ─── Step 2: Uninstall Homebrew packages (optional) ──────────────────────────
+
+echo "Step 2: Uninstall Homebrew packages"
+echo "------------------------------------"
+read -rp "Uninstall Homebrew packages from Brewfile? (y/N) " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  if command -v brew &>/dev/null; then
+    brew bundle cleanup --file="${BASEDIR}/homebrew/Brewfile" --force
+    info "Homebrew packages uninstalled"
+  else
+    warn "Homebrew not found, skipping"
+  fi
+else
+  info "Skipped Homebrew package removal"
+fi
+
+echo ""
+
+# ─── Step 3: Remove tmux plugins (optional) ──────────────────────────────────
+
+echo "Step 3: Remove tmux plugins"
+echo "----------------------------"
+read -rp "Remove TPM and tmux plugins? (y/N) " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  if [ -d ~/.config/tmux/plugins ]; then
+    rm -rf ~/.config/tmux/plugins
+    info "Removed tmux plugins"
+  else
+    warn "No tmux plugins directory found"
+  fi
+else
+  info "Skipped tmux plugin removal"
+fi
+
+echo ""
+
+# ─── Step 4: Reset macOS defaults (optional) ─────────────────────────────────
+
+echo "Step 4: Reset macOS defaults"
+echo "-----------------------------"
+echo "The install script changed these macOS settings:"
+echo "  - Dock auto-hide with no delay"
+echo "  - Disable space rearranging"
+echo "  - Finder: show hidden files, path bar, status bar, all extensions"
+echo "  - Disable auto-correct and window animations"
+echo ""
+read -rp "Reset these to macOS defaults? (y/N) " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  defaults write com.apple.dock autohide -bool false
+  defaults delete com.apple.dock autohide-delay 2>/dev/null || true
+  defaults delete com.apple.dock autohide-time-modifier 2>/dev/null || true
+  defaults write com.apple.dock mru-spaces -bool true
+  killall Dock &>/dev/null || true
+
+  defaults write com.apple.finder AppleShowAllFiles -bool false
+  defaults write com.apple.finder ShowPathbar -bool false
+  defaults write com.apple.finder ShowStatusBar -bool false
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool false
+  killall Finder &>/dev/null || true
+
+  defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool true
+  defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool true
+  info "macOS defaults reset"
+else
+  info "Skipped macOS defaults reset"
+fi
+
+echo ""
+info "Uninstall complete. Your dotfiles repo is still at: ${BASEDIR}"
+info "To fully remove, run: rm -rf ${BASEDIR}"

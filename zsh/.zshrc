@@ -32,7 +32,11 @@ autoload -Uz colors && colors
 
 autoload -Uz compinit
 
-fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+if [ -d "/opt/homebrew/share/zsh/site-functions" ]; then
+  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+else
+  fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+fi
 
 zstyle ':completion:*' completer _complete
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'

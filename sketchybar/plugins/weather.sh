@@ -2,7 +2,7 @@
 
 LAT="39.7392"
 LON="-104.9903"
-URL="https://api.open-meteo.com/v1/forecast?latitude=$LAT&longitude=$LON&current=temperature_2m,weather_code,precipitation&timezone=auto&temperature_unit=fahrenheit"
+URL="https://api.open-meteo.com/v1/forecast?latitude=$LAT&longitude=$LON&current=temperature_2m,weather_code,precipitation&timezone=auto&temperature_unit=celsius"
 
 DATA=$(curl -s "$URL")
 
@@ -35,7 +35,7 @@ case $CODE in
 esac
 
 # Format temp: round to nearest integer, add degree symbol
-TEMP_LABEL="$(printf "%.0f°F" "$TEMP")"
+TEMP_LABEL="$(printf "%.0f°C" "$TEMP")"
 
 # Only show rain label/color if rain is expected soon
 if [ "$(echo "$RAIN_NEXT_2HRS > 0" | bc -l)" -eq 1 ]; then

@@ -17,7 +17,17 @@
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.claude/settings.json: claude/settings.json
+    ~/.claude/CLAUDE.md: claude/CLAUDE.md
+    ~/.claude/RTK.md: claude/RTK.md
+    ~/.config/opencode/opencode.json: opencode/opencode.json
     ~/.config/sketchybar: sketchybar
+    ~/.config/aerospace: aerospace
+    ~/.config/lazygit: lazygit
+    ~/.config/htop: htop
+    ~/.config/bat: bat
+    ~/.editorconfig: editorconfig
+    ~/.asdfrc: asdfrc
+    ~/.local/bin/git-multi: scripts/git-multi
 
 - shell:
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]

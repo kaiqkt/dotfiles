@@ -45,6 +45,11 @@ function dc-dev() {
   docker-attach app
 }
 
+# Sketchybar
+alias sketchy:start="brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && killall SystemUIServer"
+alias sketchy:stop="brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && killall SystemUIServer"
+alias sketchy:restart="brew services restart sketchybar"
+
 # Utilities
 function list_colors() {
   for i in {0..255}; do

@@ -1,0 +1,25 @@
+{
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "enabled": true
+    },
+    "fetch": {
+      "type": "local",
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "enabled": true
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "enabled": true
+    }
+  },
+  "instructions": [
+    "~/.claude/RTK.md"
+  ]
+}

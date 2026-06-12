@@ -40,6 +40,7 @@ cask "font-hack-nerd-font"
 # Sketchybar
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
+cask "font-sketchybar-app-font"
 
 # Window manager
 tap "nikitabobko/tap"

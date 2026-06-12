@@ -10,7 +10,6 @@ sketchybar --bar position=top height=40 \
           border_color=$BAR_BORDER_COLOR \
           border_width=2 \
           shadow=on \
-          notch_width=0 \
           color=$BAR_COLOR
 
 ##### Changing Defaults #####

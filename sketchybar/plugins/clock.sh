@@ -9,4 +9,4 @@ sketchybar --set "$NAME" \
   icon="$DATE" \
   icon.color=$WHITE \
   label="$TIME" \
-  label.color=$ACCENT_COLOR
+  label.color=$WHITE

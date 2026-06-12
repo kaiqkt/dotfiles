@@ -3,7 +3,6 @@ brew "git"
 brew "zsh"
 brew "dotbot"
 tap "domt4/autoupdate"
-brew "domt4/autoupdate/brew-autoupdate"
 
 # Shell utilities
 brew "eza"

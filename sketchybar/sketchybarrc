@@ -83,29 +83,24 @@ for sid in 1 2 3 4 5 6 7 8 9; do
   fi
 done
 
-sketchybar --add item music left \
-           --set music \
-             script="$PLUGIN_DIR/music.sh" \
-             icon= \
-             label.padding_left=0 \
-             icon.padding_right=8 \
-             label.color=0xffa6e3a1 \
-             icon.color=0xffa6e3a1 \
-             click_script="open -a Spotify" \
-             update_freq=2 \
-             drawing=off \    # start hidden
-           --subscribe music media_change
 
-
-##### Right Items #####
+##### Center Items #####
 
 sketchybar \
-  --add item clock right \
-    --set clock \
-      update_freq=10 \
-      script="$PLUGIN_DIR/clock.sh" \
+  --add item music center \
+    --set music \
+      script="$PLUGIN_DIR/music.sh" \
+      icon= \
+      label.padding_left=0 \
+      icon.padding_right=8 \
+      label.color=0xffa6e3a1 \
+      icon.color=0xffa6e3a1 \
+      click_script="open -a Spotify" \
+      update_freq=2 \
+      drawing=off \
+    --subscribe music media_change \
   \
-  --add item weather right \
+  --add item weather center \
     --set weather \
       script="$PLUGIN_DIR/weather.sh" \
       icon= \
@@ -115,8 +110,21 @@ sketchybar \
       label.color=$WHITE \
       icon.color=$WHITE \
       click_script="open -a Weather" \
-      drawing=on \
   \
+  --add item clock center \
+    --set clock \
+      update_freq=30 \
+      icon.font="SF Pro:Bold:14.0" \
+      icon.padding_left=10 \
+      icon.padding_right=4 \
+      label.font="SF Pro:Semibold:12.0" \
+      label.padding_left=0 \
+      label.padding_right=10 \
+      script="$PLUGIN_DIR/clock.sh"
+
+##### Right Items #####
+
+sketchybar \
   --add item volume right \
     --set volume \
       script="$PLUGIN_DIR/volume.sh" \

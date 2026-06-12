@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# The $NAME variable is passed from sketchybar and holds the name of
-# the item invoking this script:
+source "$CONFIG_DIR/colors.sh"
 
-sketchybar --set "$NAME" icon="󰸘" label="$(date '+%A, %d %B  %H:%M')"
-
+sketchybar --set "$NAME" \
+  icon="$(date '+%H:%M')" \
+  icon.color=$ACCENT_COLOR \
+  label="$(date '+%d %b %a')" \
+  label.color=$WHITE

@@ -23,21 +23,7 @@ echo "Running monitoring software detection..."
 dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
-echo "Applying macOS defaults..."
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.3
-defaults write com.apple.dock mru-spaces -bool false
-killall Dock 2>/dev/null || true
-
-# Finder
-defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-killall Finder 2>/dev/null || true
-
-# Misc
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+echo "Starting services..."
+brew services start sketchybar
+brew autoupdate start --upgrade --cleanup 2>/dev/null || true
 echo "Done."

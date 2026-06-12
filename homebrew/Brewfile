@@ -2,6 +2,7 @@
 brew "git"
 brew "zsh"
 brew "dotbot"
+brew "brew-autoupdate"
 
 # Shell utilities
 brew "eza"
@@ -36,6 +37,9 @@ brew "docker-compose"
 brew "tmux"
 cask "kitty"
 cask "font-hack-nerd-font"
+
+# Music
+brew "mpc"
 
 # Sketchybar
 tap "felixkratz/formulae"

@@ -33,3 +33,33 @@
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
     - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
+    - description: Applying macOS defaults
+      command: |
+        # Keyboard
+        defaults write NSGlobalDomain KeyRepeat -int 2
+        defaults write NSGlobalDomain InitialKeyRepeat -int 15
+        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+        # Dock
+        defaults write com.apple.dock autohide -bool true
+        defaults write com.apple.dock autohide-delay -float 0
+        defaults write com.apple.dock autohide-time-modifier -float 0.3
+        defaults write com.apple.dock mru-spaces -bool false
+        # Finder
+        defaults write com.apple.finder AppleShowAllFiles -bool true
+        defaults write com.apple.finder ShowPathbar -bool true
+        defaults write com.apple.finder ShowStatusBar -bool true
+        defaults write com.apple.finder CreateDesktop -bool false
+        defaults write com.apple.finder NewWindowTarget -string "PfHm"
+        defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"
+        defaults write com.apple.finder FinderSpawnTab -bool true
+        defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+        defaults write com.apple.finder FXEnableRemoveFromICloudDriveWarning -bool false
+        defaults write com.apple.finder WarnOnEmptyTrash -bool true
+        defaults write com.apple.finder FXRemoveOldTrashItems -bool true
+        defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+        # Misc
+        defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+        defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+        defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+        defaults write NSGlobalDomain _HIHideMenuBar -bool true
+        killall Dock Finder SystemUIServer &>/dev/null || true

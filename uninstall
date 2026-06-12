@@ -101,13 +101,21 @@ echo ""
 echo "Step 4: Reset macOS defaults"
 echo "-----------------------------"
 echo "The install script changed these macOS settings:"
+echo "  - Fast key repeat (KeyRepeat=2, InitialKeyRepeat=15)"
+echo "  - Disable press-and-hold for keys"
 echo "  - Dock auto-hide with no delay"
 echo "  - Disable space rearranging"
 echo "  - Finder: show hidden files, path bar, status bar, all extensions"
 echo "  - Disable auto-correct and window animations"
+echo "  - Hide menu bar"
 echo ""
 read -rp "Reset these to macOS defaults? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
+  # Keyboard
+  defaults delete NSGlobalDomain KeyRepeat 2>/dev/null || true
+  defaults delete NSGlobalDomain InitialKeyRepeat 2>/dev/null || true
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool true
+
   defaults write com.apple.dock autohide -bool false
   defaults delete com.apple.dock autohide-delay 2>/dev/null || true
   defaults delete com.apple.dock autohide-time-modifier 2>/dev/null || true
@@ -117,14 +125,39 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
   defaults write com.apple.finder AppleShowAllFiles -bool false
   defaults write com.apple.finder ShowPathbar -bool false
   defaults write com.apple.finder ShowStatusBar -bool false
+  defaults write com.apple.finder CreateDesktop -bool true
+  defaults delete com.apple.finder NewWindowTarget 2>/dev/null || true
+  defaults delete com.apple.finder NewWindowTargetPath 2>/dev/null || true
+  defaults write com.apple.finder FinderSpawnTab -bool false
+  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true
+  defaults write com.apple.finder FXEnableRemoveFromICloudDriveWarning -bool true
+  defaults write com.apple.finder FXRemoveOldTrashItems -bool false
+  defaults delete com.apple.finder FXDefaultSearchScope 2>/dev/null || true
   defaults write NSGlobalDomain AppleShowAllExtensions -bool false
   killall Finder &>/dev/null || true
 
   defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool true
   defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool true
+  defaults write NSGlobalDomain _HIHideMenuBar -bool false
+  killall SystemUIServer &>/dev/null || true
   info "macOS defaults reset"
 else
   info "Skipped macOS defaults reset"
+fi
+
+echo ""
+
+# ─── Step 5: Stop services ───────────────────────────────────────────────────
+
+echo "Step 5: Stop services"
+echo "----------------------"
+read -rp "Stop and disable sketchybar and brew autoupdate? (y/N) " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  brew services stop sketchybar 2>/dev/null || true
+  brew autoupdate delete 2>/dev/null || true
+  info "Services stopped"
+else
+  info "Skipped service removal"
 fi
 
 echo ""

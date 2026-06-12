@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
-export PATH="/Users/ericmckevitt/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 NAME="music"
+MAX_CHARS=30
+
+truncate() {
+  local s="$1"
+  if [ "${#s}" -gt "$MAX_CHARS" ]; then
+    echo "${s:0:$MAX_CHARS}…"
+  else
+    echo "$s"
+  fi
+}
 
 # Check Spotify.app first
 if osascript -e 'application "Spotify" is running' &>/dev/null; then
@@ -10,7 +20,7 @@ if osascript -e 'application "Spotify" is running' &>/dev/null; then
     TRACK=$(osascript -e 'tell application "Spotify" to name of current track' 2>/dev/null)
     ARTIST=$(osascript -e 'tell application "Spotify" to artist of current track' 2>/dev/null)
     if [ -n "$TRACK" ] && [ -n "$ARTIST" ]; then
-      NEW_LABEL="$TRACK — $ARTIST"
+      NEW_LABEL="$(truncate "$TRACK — $ARTIST")"
       sketchybar --set "$NAME" drawing=on label="$NEW_LABEL"
       exit 0
     fi
@@ -25,7 +35,7 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
     TITLE=$(rmpc song | jq -r '.metadata.title' 2>/dev/null)
     ARTIST=$(rmpc song | jq -r '.metadata.artist' 2>/dev/null)
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
-      NEW_LABEL="$TITLE — $ARTIST"
+      NEW_LABEL="$(truncate "$TITLE — $ARTIST")"
       sketchybar --set "$NAME" drawing=on label="$NEW_LABEL"
       exit 0
     fi

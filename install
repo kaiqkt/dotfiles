@@ -28,9 +28,7 @@ osascript <<EOF || true
 tell application "System Events"
   tell every desktop
     set picture to "${BASEDIR}/wallpaper/wallpaper.jpg"
-    set picture scaling to fill screen
-    set picture rotation to 0
-    set random order to false
+    set picture scaling to 4
   end tell
 end tell
 EOF

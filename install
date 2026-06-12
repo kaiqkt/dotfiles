@@ -24,7 +24,16 @@ dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
 echo "Setting wallpaper..."
-osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"${BASEDIR}/wallpaper/wallpaper.jpg\"" || true
+osascript <<EOF || true
+tell application "System Events"
+  tell every desktop
+    set picture to "${BASEDIR}/wallpaper/wallpaper.jpg"
+    set picture scaling to fill screen
+    set picture rotation to 0
+    set random order to false
+  end tell
+end tell
+EOF
 
 echo ""
 echo "Starting services..."

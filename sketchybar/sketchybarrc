@@ -126,10 +126,9 @@ sketchybar \
   --add item clock center \
     --set clock \
       update_freq=30 \
-      icon.font="SF Pro:Semibold:12.0" \
       icon.padding_left=10 \
-      icon.padding_right=6 \
-      label.font="SF Pro:Bold:14.0" \
+      icon.padding_right=4 \
+      label.font="SF Pro:Semibold:13.0" \
       label.padding_left=0 \
       label.padding_right=10 \
       background.drawing=off \

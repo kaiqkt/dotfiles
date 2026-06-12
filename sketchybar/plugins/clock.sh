@@ -2,8 +2,11 @@
 
 source "$CONFIG_DIR/colors.sh"
 
+DATE="$(date '+%d %b %a')"
+TIME="$(date '+%H:%M')"
+
 sketchybar --set "$NAME" \
-  icon="$(date '+%H:%M')" \
-  icon.color=$ACCENT_COLOR \
-  label="$(date '+%d %b %a')" \
-  label.color=$WHITE
+  icon="$DATE" \
+  icon.color=$WHITE \
+  label="$TIME" \
+  label.color=$ACCENT_COLOR

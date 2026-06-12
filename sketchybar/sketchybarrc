@@ -103,7 +103,7 @@ sketchybar --add item music center \
 # Invisible spacer — creates notch gap on all displays (adjust width: 200-220 for 14" MBP, 220-250 for 16")
 sketchybar --add item center.notch center \
            --set center.notch \
-             width=200 \
+             width=180 \
              icon.drawing=off \
              label.drawing=off \
              background.drawing=off

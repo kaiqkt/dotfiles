@@ -23,17 +23,6 @@ echo "Running monitoring software detection..."
 dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
-echo "Setting wallpaper..."
-osascript <<EOF || true
-tell application "System Events"
-  tell every desktop
-    set picture to "${BASEDIR}/wallpaper/wallpaper.jpg"
-    set picture scaling to 4
-  end tell
-end tell
-EOF
-
-echo ""
 echo "Starting services..."
 brew services start sketchybar
 brew autoupdate start --upgrade --cleanup 2>/dev/null || true

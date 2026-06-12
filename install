@@ -23,6 +23,10 @@ echo "Running monitoring software detection..."
 dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
+echo "Setting wallpaper..."
+osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"${BASEDIR}/wallpaper/wallpaper.jpg\"" || true
+
+echo ""
 echo "Starting services..."
 brew services start sketchybar
 brew autoupdate start --upgrade --cleanup 2>/dev/null || true

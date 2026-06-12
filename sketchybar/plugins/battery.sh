@@ -10,15 +10,15 @@ if [ "$PERCENTAGE" = "" ]; then
 fi
 
 case "${PERCENTAGE}" in
-  9[0-9]|100) ICON=$(printf '') ;;
-  [6-8][0-9])  ICON=$(printf '') ;;
-  [3-5][0-9])  ICON=$(printf '') ;;
-  [1-2][0-9])  ICON=$(printf '') ;;
-  *)           ICON=$(printf '') ;;
+  9[0-9]|100) ICON="" ;;
+  [6-8][0-9]) ICON="" ;;
+  [3-5][0-9]) ICON="" ;;
+  [1-2][0-9]) ICON="" ;;
+  *)          ICON="" ;;
 esac
 
 if [[ "$CHARGING" != "" ]]; then
-  ICON=$(printf '')
+  ICON=""
 fi
 
 if [ "$PERCENTAGE" -le 10 ]; then

@@ -150,13 +150,22 @@ sketchybar --add bracket center.bracket \
 ##### Right Items #####
 
 sketchybar \
+  --add item volume right \
+    --set volume \
+      script="$PLUGIN_DIR/volume.sh" \
+      padding_left=4 \
+      padding_right=0 \
+      label.drawing=off \
+      --subscribe volume volume_change mouse.clicked mouse.scrolled \
+  \
   --add slider volume_slider right 80 \
     --set volume_slider \
       updates=on \
       label.drawing=off \
       icon.drawing=off \
       padding_left=0 \
-      padding_right=0 \
+      padding_right=4 \
+      slider.width=0 \
       slider.highlight_color=$ACCENT_COLOR \
       slider.background.height=4 \
       slider.background.corner_radius=2 \
@@ -166,14 +175,6 @@ sketchybar \
       slider.knob.color=$WHITE \
       script="$PLUGIN_DIR/volume.sh" \
       --subscribe volume_slider mouse.clicked mouse.scrolled \
-  \
-  --add item volume right \
-    --set volume \
-      script="$PLUGIN_DIR/volume.sh" \
-      padding_left=4 \
-      padding_right=4 \
-      label.drawing=off \
-      --subscribe volume volume_change mouse.scrolled \
   \
   --add item battery right \
     --set battery \

@@ -178,6 +178,8 @@ sketchybar \
       slider.background.height=6 \
       slider.background.corner_radius=3 \
       slider.background.color=0x44ffffff \
+      slider.background.padding_left=8 \
+      slider.background.padding_right=8 \
       slider.knob="⬤" \
       slider.knob.font="Hack Nerd Font:Regular:10.0" \
       slider.knob.y_offset=0 \

@@ -36,7 +36,6 @@ brew "docker-compose"
 # Terminal & multiplexer
 brew "tmux"
 cask "kitty"
-cask "font-hack-nerd-font"
 
 # Music
 brew "mpc"
@@ -45,6 +44,7 @@ brew "mpc"
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
 cask "font-sketchybar-app-font"
+cask "sf-symbols"
 
 # Window manager
 tap "nikitabobko/tap"

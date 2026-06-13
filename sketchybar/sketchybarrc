@@ -95,7 +95,7 @@ done
 sketchybar --add item music center \
            --set music \
              script="$PLUGIN_DIR/music.sh" \
-             icon= \
+             icon=♪ \
              label.padding_left=0 \
              icon.padding_right=8 \
              label.color=$GREEN \
@@ -158,7 +158,7 @@ sketchybar \
   --add graph cpu_usage right 42 \
      --set cpu_usage script="$PLUGIN_DIR/cpu_usage.sh" \
       update_freq=5 \
-      icon="󰍛" \
+      icon="􀫥" \
       icon.drawing=on \
       icon.padding_left=0 \
       icon.padding_right=4 \

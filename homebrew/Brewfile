@@ -36,6 +36,7 @@ brew "docker-compose"
 # Terminal & multiplexer
 brew "tmux"
 cask "kitty"
+cask "font-hack-nerd-font"
 
 # Music
 brew "mpc"

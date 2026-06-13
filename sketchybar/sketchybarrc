@@ -157,12 +157,13 @@ sketchybar \
   --add graph cpu_usage right 50 \
      --set cpu_usage script="$PLUGIN_DIR/cpu_usage.sh" \
       update_freq=5 \
-      icon="" \
+      icon="󰻠" \
+      icon.padding_left=8 \
       icon.padding_right=4 \
       label.font="SF Pro:Semibold:10.0" \
-      label.align="right" \
-      label.padding_right=0 \
-      label.y_offset=4 \
+      label.align=right \
+      label.padding_right=8 \
+      label.y_offset=6 \
       graph.color=$BLUE \
       graph.fill_color=0x55${BLUE:4} \
       graph.line_width=2 \

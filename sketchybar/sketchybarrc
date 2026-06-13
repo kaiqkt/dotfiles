@@ -160,12 +160,12 @@ sketchybar \
       icon="󰍛" \
       icon.drawing=on \
       icon.padding_left=8 \
-      icon.padding_right=4 \
-      label.font="SF Pro:Semibold:10.0" \
+      icon.padding_right=8 \
+      label.font="$SMALL_FONT" \
       label.align=right \
       label.padding_right=8 \
       label.width=0 \
-      label.y_offset=4 \
+      label.y_offset=6 \
       background.height=22 \
       background.color=$ITEM_BG_COLOR \
       background.border_color=0x00000000 \

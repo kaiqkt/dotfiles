@@ -17,7 +17,7 @@ sketchybar --bar position=top height=40 \
 default=(
   padding_left=5
   padding_right=5
-  icon.font="Hack Nerd Font:Regular:15.0"
+  icon.font="Hack Nerd Font:Regular:16.0"
   label.font="SF Pro:Semibold:15.0"
   icon.color=$WHITE
   label.color=$WHITE
@@ -54,7 +54,7 @@ for sid in 1 2 3 4 5 6 7 8 9; do
                icon.padding_right=0 \
                icon.shadow.distance=4 \
                icon.shadow.color=0xA0000000 \
-               label.font="sketchybar-app-font:Regular:15.0" \
+               label.font="sketchybar-app-font:Regular:16.0" \
                label.padding_left=0 \
                label.padding_right=20 \
                label.y_offset=-1 \

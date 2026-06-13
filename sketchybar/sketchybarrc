@@ -37,9 +37,13 @@ sketchybar --add event aerospace_workspace_change
 
 ##### Workspaces #####
 
+TOTAL_SPACES=9
+MONITOR_COUNT=$(aerospace list-monitors 2>/dev/null | wc -l | tr -d ' ')
+[ "$MONITOR_COUNT" -lt 1 ] && MONITOR_COUNT=1
+SPACES_PER_MONITOR=$(( (TOTAL_SPACES + MONITOR_COUNT - 1) / MONITOR_COUNT ))
+
 for sid in 1 2 3 4 5 6 7 8 9; do
-  display_id="1"
-  if [ "$sid" -ge 6 ]; then display_id="2"; fi
+  display_id=$(( (sid - 1) / SPACES_PER_MONITOR + 1 ))
 
   sketchybar --add item space.$sid left \
              --set space.$sid \

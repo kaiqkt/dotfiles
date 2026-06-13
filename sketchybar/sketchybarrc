@@ -152,7 +152,6 @@ sketchybar \
     --set battery \
       update_freq=120 \
       script="$PLUGIN_DIR/battery.sh" \
-      padding_right=4 \
       --subscribe battery system_woke power_source_change \
   \
   --add graph cpu_usage right 50 \
@@ -169,8 +168,6 @@ sketchybar \
       updates=on \
       label.drawing=off \
       icon.drawing=off \
-      padding_left=0 \
-      padding_right=4 \
       slider.width=0 \
       background.color=$BAR_COLOR \
       slider.highlight_color=$BLUE \

@@ -18,13 +18,13 @@ toggle_slider() {
   CURRENT_WIDTH=$(sketchybar --query volume_slider | python3 -c \
     "import sys,json; print(json.load(sys.stdin)['slider']['width'])" 2>/dev/null)
   if [ "${CURRENT_WIDTH:-0}" -gt 0 ]; then
-    sketchybar --animate tanh 20 --set volume_slider slider.width=0
+    sketchybar --animate tanh 20 --set volume_slider slider.width=0 padding_right=0
   else
-    sketchybar --animate tanh 20 --set volume_slider slider.width=80
+    sketchybar --animate tanh 20 --set volume_slider slider.width=80 padding_right=5
   fi
 }
 
-if [ "$SENDER" = "volume_change" ]; then
+if [ "$SENDER" = "volume_change" ] || [ "$SENDER" = "forced_update" ]; then
   VOLUME=$(osascript -e 'output volume of (get volume settings)')
   set_icons "$VOLUME"
 

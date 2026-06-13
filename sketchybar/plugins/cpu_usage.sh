@@ -11,12 +11,12 @@ if [ "$load" -ge 80 ]; then
 elif [ "$load" -ge 60 ]; then
   COLOR=$ORANGE
 elif [ "$load" -ge 30 ]; then
-  COLOR=0xfff9e2af
+  COLOR=$YELLOW
 else
   COLOR=$BLUE
 fi
 
-sketchybar --set cpu_usage \
+sketchybar --set "$NAME" \
   label="${load}%" \
   label.color=$WHITE \
   graph.color=$COLOR \

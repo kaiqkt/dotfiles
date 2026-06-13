@@ -54,18 +54,18 @@ for sid in 1 2 3 4 5 6 7 8 9; do
                icon.padding_left=8 \
                icon.padding_right=0 \
                icon.shadow.distance=4 \
-               icon.shadow.color=0xA0000000 \
+               icon.shadow.color=$SHADOW_COLOR \
                label.font="$APP_ICON_FONT" \
                label.padding_left=0 \
                label.padding_right=20 \
                label.y_offset=-1 \
                label.shadow.drawing=off \
-               label.shadow.color=0xA0000000 \
+               label.shadow.color=$SHADOW_COLOR \
                label.shadow.distance=4 \
                background.color=$ITEM_BG_COLOR \
                background.corner_radius=5 \
                background.drawing=on \
-               background.border_color=0xAAFFFFFF \
+               background.border_color=$WORKSPACE_BORDER_COLOR \
                background.border_width=0 \
                background.height=25 \
                click_script="aerospace workspace $sid" \
@@ -98,8 +98,8 @@ sketchybar --add item music center \
              icon= \
              label.padding_left=0 \
              icon.padding_right=8 \
-             label.color=0xffa6e3a1 \
-             icon.color=0xffa6e3a1 \
+             label.color=$GREEN \
+             icon.color=$GREEN \
              click_script="open -a Spotify" \
              update_freq=2 \
              width=220 \
@@ -151,6 +151,7 @@ sketchybar \
   --add item battery right \
     --set battery \
       update_freq=120 \
+      padding_right=0 \
       script="$PLUGIN_DIR/battery.sh" \
       --subscribe battery system_woke power_source_change \
   \
@@ -159,15 +160,15 @@ sketchybar \
       update_freq=5 \
       icon="󰍛" \
       icon.drawing=on \
-      icon.padding_left=10 \
-      icon.padding_right=6 \
+      icon.padding_left=0 \
+      icon.padding_right=4 \
       label.font="$SMALL_FONT" \
       label.align=right \
-      label.padding_right=10 \
+      label.padding_right=0 \
       label.width=0 \
-      label.y_offset=6 \
-      background.color=0x00000000 \
-      background.border_color=0x00000000 \
+      label.y_offset=4 \
+      background.color=$TRANSPARENT \
+      background.border_color=$TRANSPARENT \
       background.drawing=on \
       graph.color=$BLUE \
       graph.fill_color=0x55${BLUE:4} \
@@ -185,11 +186,13 @@ sketchybar \
       label.drawing=off \
       icon.drawing=off \
       slider.width=0 \
+      padding_left=0 \
+      padding_right=0 \
       background.color=$BAR_COLOR \
       slider.highlight_color=$BLUE \
       slider.background.height=6 \
       slider.background.corner_radius=3 \
-      slider.background.color=0x44ffffff \
+      slider.background.color=$SLIDER_BG_COLOR \
       slider.knob="⬤" \
       slider.knob.font="$KNOB_FONT" \
       slider.knob.y_offset=0 \
@@ -200,7 +203,7 @@ sketchybar \
   --add item volume right \
     --set volume \
       script="$PLUGIN_DIR/volume.sh" \
-      icon.padding_left=4 \
+      icon.padding_left=10 \
       icon.padding_right=4 \
       label.drawing=off \
       background.color=$BAR_COLOR \

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 source "$CONFIG_DIR/colors.sh"
 
@@ -33,5 +33,4 @@ sketchybar --set "$NAME" \
   icon="$ICON" \
   label="${PERCENTAGE}%" \
   icon.color="$COLOR" \
-  label.color="$COLOR" \
-  padding_right=0
+  label.color="$COLOR"

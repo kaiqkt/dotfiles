@@ -157,7 +157,8 @@ sketchybar \
   --add graph cpu_usage right 42 \
      --set cpu_usage script="$PLUGIN_DIR/cpu_usage.sh" \
       update_freq=5 \
-      icon="" \
+      icon="󰍛" \
+      icon.drawing=on \
       icon.padding_left=8 \
       icon.padding_right=4 \
       label.font="SF Pro:Semibold:10.0" \
@@ -166,7 +167,7 @@ sketchybar \
       label.width=0 \
       label.y_offset=4 \
       background.height=22 \
-      background.color=0x00000000 \
+      background.color=$ITEM_BG_COLOR \
       background.border_color=0x00000000 \
       background.drawing=on \
       graph.color=$BLUE \

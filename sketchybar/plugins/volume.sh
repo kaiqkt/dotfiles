@@ -1,7 +1,10 @@
 #!/bin/bash
 
+source "$CONFIG_DIR/colors.sh"
+
 set_volume() {
   local VOLUME="$1"
+
   case "$VOLUME" in
     [6-9][0-9]|100) ICON="󰕾" ;;
     [3-5][0-9])     ICON="󰖀" ;;
@@ -9,15 +12,16 @@ set_volume() {
     *)              ICON="󰖁" ;;
   esac
 
-  if [ "$VOLUME" -ne 0 ]; then
-    sketchybar --set "$NAME" icon="$ICON" label="$VOLUME%" drawing=on
-  else
-    sketchybar --set "$NAME" drawing=off
-  fi
+  sketchybar --set volume icon="$ICON" \
+             --set volume_slider slider.percentage="$VOLUME"
 }
 
 if [ "$SENDER" = "volume_change" ]; then
   set_volume "$INFO"
+
+elif [ "$SENDER" = "mouse.clicked" ]; then
+  osascript -e "set volume output volume $PERCENTAGE"
+  set_volume "$PERCENTAGE"
 
 elif [ "$SENDER" = "mouse.scrolled" ]; then
   CURRENT=$(osascript -e 'output volume of (get volume settings)')

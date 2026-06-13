@@ -154,7 +154,7 @@ sketchybar \
     --set volume \
       script="$PLUGIN_DIR/volume.sh" \
       padding_right=4 \
-      --subscribe volume volume_change \
+      --subscribe volume volume_change mouse.scrolled \
   \
   --add item battery right \
     --set battery \

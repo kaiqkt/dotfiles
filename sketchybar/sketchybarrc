@@ -11,7 +11,7 @@ sketchybar --bar position=top height=40 \
           border_color=$BAR_BORDER_COLOR \
           border_width=2 \
           shadow=on \
-          color=0xffffffff
+          color=$BAR_COLOR
 
 ##### Changing Defaults #####
 

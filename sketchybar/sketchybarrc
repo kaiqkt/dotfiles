@@ -175,11 +175,12 @@ sketchybar \
       padding_right=4 \
       slider.width=0 \
       slider.highlight_color=$BLUE \
-      slider.background.height=4 \
-      slider.background.corner_radius=2 \
+      slider.background.height=6 \
+      slider.background.corner_radius=3 \
       slider.background.color=0x44ffffff \
-      slider.knob="●" \
-      slider.knob.font="SF Pro:Bold:8.0" \
+      slider.knob="⬤" \
+      slider.knob.font="Hack Nerd Font:Regular:10.0" \
+      slider.knob.y_offset=0 \
       slider.knob.color=$WHITE \
       script="$PLUGIN_DIR/volume.sh" \
       --subscribe volume_slider mouse.clicked mouse.scrolled \

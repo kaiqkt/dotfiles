@@ -62,8 +62,9 @@ for sid in 1 2 3 4 5 6 7 8 9; do
                label.shadow.drawing=off \
                label.shadow.color=0xA0000000 \
                label.shadow.distance=4 \
+               background.color=$ITEM_BG_COLOR \
                background.corner_radius=5 \
-               background.drawing=off \
+               background.drawing=on \
                background.border_color=0xAAFFFFFF \
                background.border_width=0 \
                background.height=25 \
@@ -142,10 +143,7 @@ sketchybar \
 sketchybar --add bracket center.bracket \
              music center.notch weather clock \
            --set center.bracket \
-             background.color=$ITEM_BG_COLOR \
-             background.corner_radius=8 \
-             background.height=26 \
-             background.drawing=on
+             background.drawing=off
 
 ##### Right Items #####
 

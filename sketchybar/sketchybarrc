@@ -175,6 +175,7 @@ sketchybar \
       padding_left=0 \
       padding_right=4 \
       slider.width=0 \
+      background.color=$BAR_COLOR \
       slider.highlight_color=$BLUE \
       slider.background.height=6 \
       slider.background.corner_radius=3 \

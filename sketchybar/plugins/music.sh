@@ -21,7 +21,7 @@ if osascript -e 'application "Spotify" is running' &>/dev/null; then
     ARTIST=$(osascript -e 'tell application "Spotify" to artist of current track' 2>/dev/null)
     if [ -n "$TRACK" ] && [ -n "$ARTIST" ]; then
       NEW_LABEL="$(truncate "$TRACK — $ARTIST")"
-      sketchybar --set "$NAME" drawing=on label="$NEW_LABEL"
+      sketchybar --set "$NAME" icon.drawing=on label="$NEW_LABEL"
       exit 0
     fi
   fi
@@ -36,13 +36,13 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
     ARTIST=$(rmpc song | jq -r '.metadata.artist' 2>/dev/null)
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
       NEW_LABEL="$(truncate "$TITLE — $ARTIST")"
-      sketchybar --set "$NAME" drawing=on label="$NEW_LABEL"
+      sketchybar --set "$NAME" icon.drawing=on label="$NEW_LABEL"
       exit 0
     fi
   fi
 fi
 
-# Nothing is playing
-sketchybar --set "$NAME" drawing=off label=""
+# Nothing is playing — keep item but hide content
+sketchybar --set "$NAME" icon.drawing=off label=""
 
 exit 0

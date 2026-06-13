@@ -97,7 +97,7 @@ sketchybar --add item music center \
              icon.color=0xffa6e3a1 \
              click_script="open -a Spotify" \
              update_freq=2 \
-             drawing=off \
+             width=220 \
              background.drawing=off \
            --subscribe music media_change
 
@@ -116,7 +116,6 @@ sketchybar \
       script="$PLUGIN_DIR/weather.sh" \
       icon= \
       update_freq=300 \
-      padding_left=10 \
       label.padding_left=0 \
       icon.padding_right=8 \
       label.color=$WHITE \

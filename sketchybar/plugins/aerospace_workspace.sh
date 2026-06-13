@@ -6,13 +6,14 @@ WS_ID="$1"
 
 if [ "$WS_ID" = "$FOCUSED_WORKSPACE" ]; then
   sketchybar --set "$NAME" \
-    background.color=0x33b4befe \
+    background.drawing=on \
+    background.color=$ITEM_BG_COLOR \
     background.border_width=2 \
     label.shadow.drawing=on \
     icon.shadow.drawing=on
 else
   sketchybar --set "$NAME" \
-    background.color=$ITEM_BG_COLOR \
+    background.drawing=off \
     background.border_width=0 \
     label.shadow.drawing=off \
     icon.shadow.drawing=off

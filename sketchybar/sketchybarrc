@@ -163,7 +163,7 @@ sketchybar \
       icon.padding_right=4 \
       label.font="SF Pro:Semibold:10.0" \
       label.align=right \
-      label.padding_right=0 \
+      label.padding_right=8 \
       label.width=0 \
       label.y_offset=4 \
       background.height=22 \

@@ -18,7 +18,7 @@ fi
 
 sketchybar --set cpu_usage \
   label="${load}%" \
-  label.color=$COLOR \
+  label.color=$WHITE \
   graph.color=$COLOR \
   graph.fill_color="0x55${COLOR:4}"
 

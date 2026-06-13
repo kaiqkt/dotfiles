@@ -150,14 +150,6 @@ sketchybar --add bracket center.bracket \
 ##### Right Items #####
 
 sketchybar \
-  --add item volume right \
-    --set volume \
-      script="$PLUGIN_DIR/volume.sh" \
-      padding_left=4 \
-      padding_right=0 \
-      label.drawing=off \
-      --subscribe volume volume_change mouse.clicked mouse.scrolled \
-  \
   --add slider volume_slider right 80 \
     --set volume_slider \
       updates=on \
@@ -175,6 +167,14 @@ sketchybar \
       slider.knob.color=$WHITE \
       script="$PLUGIN_DIR/volume.sh" \
       --subscribe volume_slider mouse.clicked mouse.scrolled \
+  \
+  --add item volume right \
+    --set volume \
+      script="$PLUGIN_DIR/volume.sh" \
+      padding_left=4 \
+      padding_right=0 \
+      label.drawing=off \
+      --subscribe volume volume_change mouse.clicked mouse.scrolled \
   \
   --add item battery right \
     --set battery \

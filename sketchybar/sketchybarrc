@@ -159,22 +159,25 @@ sketchybar \
       update_freq=5 \
       icon="󰍛" \
       icon.drawing=on \
-      icon.padding_left=8 \
-      icon.padding_right=8 \
-      label.font="$LABEL_FONT" \
+      icon.padding_left=10 \
+      icon.padding_right=6 \
+      label.font="$SMALL_FONT" \
       label.align=right \
-      label.padding_right=8 \
+      label.padding_right=10 \
       label.width=0 \
       label.y_offset=6 \
-      background.height=22 \
-      background.color=$ITEM_BG_COLOR \
+      background.color=0x00000000 \
       background.border_color=0x00000000 \
-      background.padding_left=8 \
-      background.padding_right=8 \
       background.drawing=on \
       graph.color=$BLUE \
       graph.fill_color=0x55${BLUE:4} \
       graph.line_width=2 \
+  \
+  --add bracket cpu.bracket cpu_usage \
+     --set cpu.bracket \
+      background.color=$ITEM_BG_COLOR \
+      background.corner_radius=5 \
+      background.height=24 \
   \
   --add slider volume_slider right 80 \
     --set volume_slider \

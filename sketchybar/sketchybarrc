@@ -188,7 +188,7 @@ sketchybar \
     --set volume \
       script="$PLUGIN_DIR/volume.sh" \
       padding_left=4 \
-      padding_right=0 \
+      padding_right=4 \
       label.drawing=off \
       --subscribe volume volume_change mouse.clicked mouse.scrolled
 

@@ -9,6 +9,7 @@ Font: `Hack Nerd Font Mono 12pt` | Right `Option` key acts as `Alt`
 | `Cmd+T`        | New tab              |
 | `Cmd+W`        | Close tab            |
 | `Cmd+1-9`      | Switch to tab by num |
+| `Ctrl+Shift+1-9` | Switch to tab by num (default) |
 | `Ctrl+Shift+.` | Move tab right       |
 | `Ctrl+Shift+,` | Move tab left        |
 | `Ctrl+Shift+Q` | Close tab            |

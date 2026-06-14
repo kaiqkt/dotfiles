@@ -157,9 +157,9 @@ sketchybar \
       icon.padding_right=4 \
       label.font="$SMALL_FONT" \
       label.align=right \
-      label.padding_left=4 \
-      label.padding_right=6 \
-      label.drawing=on \
+      label.padding_right=0 \
+      label.width=0 \
+      label.y_offset=4 \
       background.color=$TRANSPARENT \
       background.border_color=$TRANSPARENT \
       background.drawing=on \

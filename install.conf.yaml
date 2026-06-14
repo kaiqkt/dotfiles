@@ -41,6 +41,16 @@
     - [asdf install, Installing tool versions]
     - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
+    - description: Setting up flavours (Base16 theme manager)
+      command: |
+        mkdir -p "$HOME/Library/Preferences/flavours"
+        cp "$(pwd)/flavours/config.toml" "$HOME/Library/Preferences/flavours/config.toml"
+        mkdir -p "$HOME/Library/Application Support/flavours/base16/templates"
+        for app in kitty sketchybar tmux borders fzf; do
+          ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
+        done
+        flavours update all || true
+        flavours apply nord || true
     - description: Applying macOS defaults
       command: |
         # Keyboard

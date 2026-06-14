@@ -1,0 +1,25 @@
+[[items]]
+  template = "kitty"
+  file = "~/.config/kitty/colors.conf"
+  rewrite = true
+
+[[items]]
+  template = "sketchybar"
+  file = "~/.config/sketchybar/colors.sh"
+  rewrite = true
+  hook = "sketchybar --reload"
+
+[[items]]
+  template = "tmux"
+  file = "~/.config/tmux/config/theme.conf"
+  rewrite = true
+
+[[items]]
+  template = "borders"
+  file = "~/.config/borders/bordersrc"
+  rewrite = true
+
+[[items]]
+  template = "fzf"
+  file = "~/.fzfrc"
+  rewrite = true

@@ -18,6 +18,7 @@ brew "duf"
 brew "dust"
 brew "shellcheck"
 brew "fastfetch"
+brew "flavours"
 brew "rtk"
 
 # Git

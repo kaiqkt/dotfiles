@@ -39,6 +39,7 @@ cask "kitty"
 
 # Music
 brew "mpc"
+brew "nowplaying-cli"
 
 # Sketchybar
 tap "felixkratz/formulae"

@@ -87,19 +87,39 @@ done
 ##### Center Items #####
 
 # Left of notch
+# Artwork thumbnail (separate item so background.image works correctly)
+sketchybar --add item music_art center \
+           --set music_art \
+             drawing=off \
+             icon.drawing=off \
+             label.drawing=off \
+             padding_left=8 \
+             padding_right=4 \
+             background.color=$TRANSPARENT \
+             background.border_width=0 \
+             background.height=22 \
+             background.corner_radius=4 \
+             background.drawing=on \
+             click_script="open -a Spotify"
+
 sketchybar --add item music center \
            --set music \
              script="$PLUGIN_DIR/music.sh" \
-             icon.font="$NF_FONT" \
+             padding_left=0 \
+             padding_right=8 \
+             icon.drawing=off \
+             icon.padding_left=0 \
              label.padding_left=0 \
-             icon.padding_right=8 \
+             label.padding_right=0 \
              label.color=$GREEN \
-             icon.color=$GREEN \
              click_script="open -a Spotify" \
              update_freq=2 \
-             width=220 \
              background.drawing=off \
            --subscribe music media_change
+
+sketchybar --add bracket music.group music_art music \
+           --set music.group \
+             background.drawing=off
 
 # Invisible spacer — creates notch gap on all displays (adjust width: 200-220 for 14" MBP, 220-250 for 16")
 sketchybar --add item center.notch center \
@@ -140,6 +160,7 @@ sketchybar \
     --set battery \
       update_freq=120 \
       padding_right=0 \
+      background.drawing=off \
       script="$PLUGIN_DIR/battery.sh" \
       --subscribe battery system_woke power_source_change \
   \
@@ -164,9 +185,7 @@ sketchybar \
   \
   --add bracket cpu.bracket cpu_usage \
      --set cpu.bracket \
-      background.color=$ITEM_BG_COLOR \
-      background.corner_radius=5 \
-      background.height=24 \
+      background.drawing=off \
   \
   --add slider volume_slider right 80 \
     --set volume_slider \

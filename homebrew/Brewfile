@@ -52,6 +52,9 @@ cask "sf-symbols"
 tap "nikitabobko/tap"
 cask "nikitabobko/tap/aerospace"
 
+# Security
+cask "lulu"
+
 # Apps
 cask "claude"
 cask "spotify"

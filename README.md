@@ -62,11 +62,11 @@ aerospace reload-config
 - **asdf** — version manager (Java, Kotlin, Go)
 - **Homebrew** — package manager
 
-## Docs
+## Shortcuts
 
 | Topic | File |
 | ----- | ---- |
-| Tmux keybinds & popups | [docs/tmux.md](docs/tmux.md) |
-| AeroSpace keybinds & workspaces | [docs/aerospace.md](docs/aerospace.md) |
-| ZSH aliases & functions | [docs/zsh.md](docs/zsh.md) |
-| Tools reference | [docs/tools.md](docs/tools.md) |
+| Tmux keybinds & popups | [shortcuts/tmux.md](shortcuts/tmux.md) |
+| AeroSpace keybinds & workspaces | [shortcuts/aerospace.md](shortcuts/aerospace.md) |
+| ZSH aliases & functions | [shortcuts/zsh.md](shortcuts/zsh.md) |
+| Tools reference | [shortcuts/tools.md](shortcuts/tools.md) |

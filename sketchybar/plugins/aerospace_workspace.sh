@@ -30,10 +30,5 @@ if [ -n "$apps" ]; then
   done <<< "$apps"
   sketchybar --set "$NAME" label="$icon_strip" drawing=on
 else
-  # Always show focused workspace even if empty
-  if [ "$WS_ID" = "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --set "$NAME" label="" drawing=on
-  else
-    sketchybar --set "$NAME" drawing=off
-  fi
+  sketchybar --set "$NAME" label="" drawing=on
 fi

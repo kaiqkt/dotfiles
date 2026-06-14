@@ -14,6 +14,10 @@ path=(
 )
 
 export EDITOR=vim
+
+# asdf java home
+[ -f "${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/java/set-java-home.zsh" ] && \
+  . "${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/java/set-java-home.zsh"
 export LANG=en_US.UTF-8
 export HOMEBREW_NO_ENV_HINTS=1
 export TERMINAL=kitty

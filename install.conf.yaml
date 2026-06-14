@@ -29,10 +29,15 @@
     ~/.config/bat: bat
     ~/.editorconfig: editorconfig
     ~/.asdfrc: asdfrc
+    ~/.tool-versions: tool-versions
     ~/.local/bin/git-multi: scripts/git-multi
 
 - shell:
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
+    - [asdf plugin add java || true, Adding asdf java plugin]
+    - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
+    - [asdf plugin add golang || true, Adding asdf golang plugin]
+    - [asdf install, Installing tool versions]
     - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
     - description: Applying macOS defaults

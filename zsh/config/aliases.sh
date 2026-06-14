@@ -50,6 +50,11 @@ alias sketchy:start="brew services start sketchybar && defaults write NSGlobalDo
 alias sketchy:stop="brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && killall SystemUIServer"
 alias sketchy:restart="brew services restart sketchybar"
 
+# Borders
+alias borders:start="brew services start felixkratz/formulae/borders"
+alias borders:stop="brew services stop felixkratz/formulae/borders"
+alias borders:restart="brew services restart felixkratz/formulae/borders"
+
 # Utilities
 function list_colors() {
   for i in {0..255}; do

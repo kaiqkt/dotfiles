@@ -22,6 +22,7 @@
     ~/.claude/CLAUDE.md: claude/CLAUDE.md
     ~/.claude/RTK.md: claude/RTK.md
     ~/.config/opencode/opencode.json: opencode/opencode.json
+    ~/.config/borders: borders
     ~/.config/sketchybar: sketchybar
     ~/.config/aerospace: aerospace
     ~/.config/lazygit: lazygit

@@ -13,12 +13,17 @@ brew "ripgrep"
 brew "jq"
 brew "wget"
 brew "htop"
+brew "btop"
+brew "duf"
+brew "dust"
+brew "shellcheck"
 brew "fastfetch"
 brew "rtk"
 
 # Git
 brew "lazygit"
 brew "diff-so-fancy", args: ["HEAD"]
+brew "gnupg"
 
 # Version manager
 brew "asdf"
@@ -35,9 +40,10 @@ cask "kitty"
 # Music
 brew "nowplaying-cli"
 
-# Sketchybar
+# Sketchybar + borders
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
+brew "felixkratz/formulae/borders"
 cask "font-sketchybar-app-font"
 cask "font-hack-nerd-font"
 cask "sf-symbols"

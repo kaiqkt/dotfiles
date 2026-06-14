@@ -1,5 +1,22 @@
 # Tools
 
+## Borders
+
+Window border highlight via [JankyBorders](https://github.com/FelixKratz/JankyBorders). Active window gets blue (Catppuccin) border; inactive windows get subtle dark border.
+
+Config: `~/.config/borders/bordersrc`
+
+| Alias             | Description          |
+| ----------------- | -------------------- |
+| `borders:start`   | Start borders service |
+| `borders:stop`    | Stop borders service  |
+| `borders:restart` | Restart borders service |
+
+To tweak colors at runtime (no restart needed):
+```bash
+borders active_color=0xffcba6f7  # change active to mauve
+```
+
 ## Sketchybar
 
 Custom status bar integrated with AeroSpace. Manage with:

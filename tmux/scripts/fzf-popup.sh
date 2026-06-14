@@ -16,14 +16,25 @@ fi
 # Export the active pane in the original window so scripts can send commands to it
 export CALLER_PANE=$(tmux list-panes -t "$WINDOW_ID" -F '#{pane_id} #{pane_active}' | awk '$2 == 1 {print $1}')
 
+# Capture current styles before dimming so restore always matches the active theme
+ORIG_STYLE=$(tmux show -t "$WINDOW_ID" -wv window-style 2>/dev/null || true)
+ORIG_ACTIVE_STYLE=$(tmux show -t "$WINDOW_ID" -wv window-active-style 2>/dev/null || true)
+
 # Dim the original window's panes
 tmux set -t "$WINDOW_ID" -w window-style "fg=#464f62,bg=#1c1f26"
 tmux set -t "$WINDOW_ID" -w window-active-style "fg=#464f62,bg=#1c1f26"
 
-# Restore original styles on exit (matches theme.conf values)
 restore() {
-  tmux set -t "$WINDOW_ID" -w window-style "fg=#74819a,bg=#282e38" 2>/dev/null
-  tmux set -t "$WINDOW_ID" -w window-active-style "fg=#ECEFF4,bg=#2e3440" 2>/dev/null
+  if [[ -n "$ORIG_STYLE" ]]; then
+    tmux set -t "$WINDOW_ID" -w window-style "$ORIG_STYLE" 2>/dev/null
+  else
+    tmux set -t "$WINDOW_ID" -wu window-style 2>/dev/null
+  fi
+  if [[ -n "$ORIG_ACTIVE_STYLE" ]]; then
+    tmux set -t "$WINDOW_ID" -w window-active-style "$ORIG_ACTIVE_STYLE" 2>/dev/null
+  else
+    tmux set -t "$WINDOW_ID" -wu window-active-style 2>/dev/null
+  fi
 }
 trap restore EXIT
 

@@ -482,7 +482,7 @@ function wt:rename() {
   mv "$old" "$new" || return 1
 
   # Update .bare/worktrees/<id>/gitdir to point to new location
-  echo "$root/$new" > "$wt_git_dir/gitdir"
+  echo "$root/$new/.git" > "$wt_git_dir/gitdir"
 
   # Update the .git link inside the worktree (path may have changed relative to .bare)
   echo "gitdir: $wt_git_dir" > "$new/.git"

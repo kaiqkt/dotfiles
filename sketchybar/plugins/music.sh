@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 MAX_CHARS=30
@@ -81,7 +81,7 @@ if [ -n "$SPOTIFY_INFO" ]; then
     LABEL="$(truncate_str "$TRACK — $ARTIST")"
     ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL")
     set_artwork "$ART_FILE"
-    sketchybar --set "$NAME" label="$LABEL" label.drawing=on
+    sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on
     exit 0
   fi
 fi
@@ -96,14 +96,14 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
       LABEL="$(truncate_str "$TITLE — $ARTIST")"
       sketchybar --set "$ART_ITEM" drawing=off
-      sketchybar --set "$NAME" label="$LABEL" label.drawing=on
+      sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on
       exit 0
     fi
   fi
 fi
 
-# Nothing playing
+# Nothing playing — collapse entire section so label.width doesn't reserve space
 sketchybar --set "$ART_ITEM" drawing=off
-sketchybar --set "$NAME" label="" label.drawing=off
+sketchybar --set "$NAME" drawing=off label="" label.drawing=off
 
 exit 0

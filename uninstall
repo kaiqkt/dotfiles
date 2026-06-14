@@ -43,9 +43,12 @@ SYMLINKS=(
   ~/.config/aerospace
   ~/.config/lazygit
   ~/.config/htop
+  ~/.config/fastfetch
+  ~/.config/borders
   ~/.config/bat
   ~/.editorconfig
   ~/.asdfrc
+  ~/.tool-versions
 )
 
 for link in "${SYMLINKS[@]}"; do

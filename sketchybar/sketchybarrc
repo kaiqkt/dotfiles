@@ -111,6 +111,7 @@ sketchybar --add item music center \
              icon.padding_left=0 \
              label.padding_left=0 \
              label.padding_right=0 \
+             label.width=200 \
              label.color=$GREEN \
              click_script="open -a Spotify" \
              update_freq=2 \
@@ -134,11 +135,10 @@ sketchybar \
   --add item weather center \
     --set weather \
       script="$PLUGIN_DIR/weather.sh" \
-      icon= \
-      update_freq=300 \
-      icon.font="SF Pro Display:Regular:14.0" \
+      icon="􀆭" \
+      update_freq=1800 \
       label.padding_left=0 \
-      icon.padding_right=8 \
+      icon.padding_right=4 \
       label.color=$WHITE \
       icon.color=$WHITE \
       background.drawing=off \
@@ -179,8 +179,8 @@ sketchybar \
       background.color=$TRANSPARENT \
       background.border_color=$TRANSPARENT \
       background.drawing=on \
-      graph.color=$BLUE \
-      graph.fill_color=0x55${BLUE:4} \
+      graph.color=$BAR_BORDER_COLOR \
+      graph.fill_color=0x44${BAR_BORDER_COLOR:4} \
       graph.line_width=2 \
   \
   --add bracket cpu.bracket cpu_usage \
@@ -196,7 +196,7 @@ sketchybar \
       padding_left=0 \
       padding_right=0 \
       background.color=$BAR_COLOR \
-      slider.highlight_color=$BLUE \
+      slider.highlight_color=$BAR_BORDER_COLOR \
       slider.background.height=6 \
       slider.background.corner_radius=3 \
       slider.background.color=$SLIDER_BG_COLOR \

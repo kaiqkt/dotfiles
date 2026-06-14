@@ -4,7 +4,7 @@ export WHITE=0xffffffff
 export TRANSPARENT=0x00000000
 
 export BAR_COLOR=0x00000000
-export BAR_BORDER_COLOR=0x2a4e1623
+export BAR_BORDER_COLOR=0xCC961920
 export ITEM_BG_COLOR=0x4a25141b
 export RED=0xfff49b2d
 export ORANGE=0xfff7c65d

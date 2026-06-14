@@ -13,6 +13,7 @@
   template = "tmux"
   file = "~/.config/tmux/config/theme.conf"
   rewrite = true
+  hook = "tmux source-file ~/.config/tmux/config/theme.conf"
 
 [[items]]
   template = "borders"

@@ -3,6 +3,7 @@
 source "$CONFIG_DIR/colors.sh"
 
 raw=$(top -l 1 | awk '/CPU usage/ {print $3}' | sed 's/%//')
+[ -z "$raw" ] && exit 0
 load=$(printf "%.0f" "$raw")
 normalized=$(echo "$raw / 100" | bc -l)
 
@@ -13,7 +14,7 @@ elif [ "$load" -ge 60 ]; then
 elif [ "$load" -ge 30 ]; then
   COLOR=$YELLOW
 else
-  COLOR=$BLUE
+  COLOR=$BAR_BORDER_COLOR
 fi
 
 sketchybar --set "$NAME" \

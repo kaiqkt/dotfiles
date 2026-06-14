@@ -27,6 +27,7 @@
     ~/.config/aerospace: aerospace
     ~/.config/lazygit: lazygit
     ~/.config/htop: htop
+    ~/.config/fastfetch: fastfetch
     ~/.config/bat: bat
     ~/.editorconfig: editorconfig
     ~/.asdfrc: asdfrc

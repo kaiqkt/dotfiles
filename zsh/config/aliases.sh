@@ -34,7 +34,7 @@ alias dce="docker compose exec"
 alias dcw="docker compose watch"
 
 function docker-attach() {
-  docker attach $(docker-compose ps -q $1)
+  docker attach $(docker compose ps -q $1)
 }
 
 function dc-dev() {

@@ -33,18 +33,20 @@ brew "go"
 # Containers
 brew "docker-compose"
 
+brew "cloudflare-speed-cli"
+
 # Terminal & multiplexer
 brew "tmux"
 cask "kitty"
 
 # Music
-brew "mpc"
 brew "nowplaying-cli"
 
 # Sketchybar
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
 cask "font-sketchybar-app-font"
+cask "font-hack-nerd-font"
 cask "sf-symbols"
 
 # Window manager

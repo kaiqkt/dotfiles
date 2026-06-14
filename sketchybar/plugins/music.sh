@@ -4,6 +4,7 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 MAX_CHARS=30
 ART_COUNTER_FILE="/tmp/sketchybar_art_counter"
 ART_LAST_TITLE_FILE="/tmp/sketchybar_art_last_title"
+ART_ITEM="${NAME}_art"
 
 truncate_str() {
   local s="$1"
@@ -17,7 +18,7 @@ truncate_str() {
 fetch_artwork() {
   local title="$1"
   local art_url="$2"
-  local last_title counter art_file
+  local last_title counter art_file tmp_file
   last_title=$(cat "$ART_LAST_TITLE_FILE" 2>/dev/null)
 
   if [ "$title" = "$last_title" ]; then
@@ -31,46 +32,57 @@ fetch_artwork() {
   echo "$title" > "$ART_LAST_TITLE_FILE"
 
   art_file="/tmp/sketchybar_art_${counter}.jpg"
-  rm -f /tmp/sketchybar_art_*.jpg 2>/dev/null
+  tmp_file="${art_file}.tmp"
 
-  curl -sL "$art_url" -o "$art_file" 2>/dev/null
-  if [ -s "$art_file" ]; then
-    sips -Z 96 "$art_file" >/dev/null 2>&1
+  curl -sL "$art_url" -o "$tmp_file" 2>/dev/null
+  if [ -s "$tmp_file" ]; then
+    sips -Z 96 "$tmp_file" >/dev/null 2>&1
+    find /tmp -maxdepth 1 -name "sketchybar_art_*.jpg" -delete 2>/dev/null
+    mv "$tmp_file" "$art_file"
     echo "$art_file"
   else
-    rm -f "$art_file"
+    rm -f "$tmp_file"
   fi
 }
 
 set_artwork() {
   local art_file="$1"
-  if [ -n "$art_file" ]; then
-    sketchybar --set music_art \
+  if [ -n "$art_file" ] && [ -f "$art_file" ]; then
+    sketchybar --set "$ART_ITEM" \
       drawing=on \
       background.image="$art_file" \
       background.image.drawing=on \
       background.image.scale=0.23 \
       background.image.corner_radius=4
   else
-    sketchybar --set music_art drawing=off
+    sketchybar --set "$ART_ITEM" drawing=off
   fi
 }
 
-# Spotify (explicit check — avoids picking up browser/YouTube)
-if osascript -e 'application "Spotify" is running' &>/dev/null; then
-  STATE=$(osascript -e 'tell application "Spotify" to player state' 2>/dev/null)
-  if [ "$STATE" = "playing" ]; then
-    TRACK=$(osascript -e 'tell application "Spotify" to name of current track' 2>/dev/null)
-    ARTIST=$(osascript -e 'tell application "Spotify" to artist of current track' 2>/dev/null)
-    ART_URL=$(osascript -e 'tell application "Spotify" to artwork url of current track' 2>/dev/null)
+# Single osascript call — avoids 5x AppleScript VM forks per update cycle
+SPOTIFY_INFO=$(osascript 2>/dev/null <<'EOF'
+if application "Spotify" is running then
+  tell application "Spotify"
+    if player state is playing then
+      return (player state as string) & "|" & (name of current track) & "|" & (artist of current track) & "|" & (artwork url of current track)
+    end if
+  end tell
+end if
+return ""
+EOF
+)
 
-    if [ -n "$TRACK" ] && [ -n "$ARTIST" ]; then
-      LABEL="$(truncate_str "$TRACK — $ARTIST")"
-      ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL")
-      set_artwork "$ART_FILE"
-      sketchybar --set "$NAME" label="$LABEL" label.drawing=on
-      exit 0
-    fi
+if [ -n "$SPOTIFY_INFO" ]; then
+  TRACK=$(echo "$SPOTIFY_INFO" | cut -d'|' -f2)
+  ARTIST=$(echo "$SPOTIFY_INFO" | cut -d'|' -f3)
+  ART_URL=$(echo "$SPOTIFY_INFO" | cut -d'|' -f4)
+
+  if [ -n "$TRACK" ] && [ -n "$ARTIST" ]; then
+    LABEL="$(truncate_str "$TRACK — $ARTIST")"
+    ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL")
+    set_artwork "$ART_FILE"
+    sketchybar --set "$NAME" label="$LABEL" label.drawing=on
+    exit 0
   fi
 fi
 
@@ -83,7 +95,7 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
     ARTIST=$(rmpc song | jq -r '.metadata.artist' 2>/dev/null)
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
       LABEL="$(truncate_str "$TITLE — $ARTIST")"
-      sketchybar --set music_art drawing=off
+      sketchybar --set "$ART_ITEM" drawing=off
       sketchybar --set "$NAME" label="$LABEL" label.drawing=on
       exit 0
     fi
@@ -91,7 +103,7 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
 fi
 
 # Nothing playing
-sketchybar --set music_art drawing=off
+sketchybar --set "$ART_ITEM" drawing=off
 sketchybar --set "$NAME" label="" label.drawing=off
 
 exit 0

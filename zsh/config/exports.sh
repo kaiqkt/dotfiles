@@ -13,6 +13,7 @@ path=(
   $path
 )
 
+export EDITOR=vim
 export LANG=en_US.UTF-8
 export HOMEBREW_NO_ENV_HINTS=1
 export TERMINAL=kitty

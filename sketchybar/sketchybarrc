@@ -136,7 +136,7 @@ sketchybar \
       script="$PLUGIN_DIR/weather.sh" \
       icon= \
       update_freq=300 \
-      icon.font="$NF_FONT" \
+      icon.font="SF Pro Display:Regular:14.0" \
       label.padding_left=0 \
       icon.padding_right=8 \
       label.color=$WHITE \

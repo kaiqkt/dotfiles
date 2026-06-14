@@ -74,7 +74,7 @@ Targets configured in `flavours/config.toml`:
 - `~/.config/kitty/colors.conf`
 - `~/.config/sketchybar/colors.sh` → hook: `sketchybar --reload`
 - `~/.config/tmux/config/theme.conf` → hook: `tmux source-file ~/.config/tmux/config/theme.conf`
-- `~/.config/borders/bordersrc`
+- `~/.config/borders/bordersrc` → hook: `~/.config/borders/bordersrc` (borders reloads on re-invocation)
 - `~/.fzfrc`
 
 Generate palette from wallpaper:

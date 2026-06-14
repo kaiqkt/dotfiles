@@ -59,6 +59,13 @@ set_artwork() {
   fi
 }
 
+MONITOR_COUNT=$(aerospace list-monitors 2>/dev/null | wc -l | tr -d ' ')
+if [ "$MONITOR_COUNT" -lt 2 ]; then
+  sketchybar --set "$ART_ITEM" drawing=off
+  sketchybar --set "$NAME" drawing=off label="" label.drawing=off
+  exit 0
+fi
+
 # Single osascript call — avoids 5x AppleScript VM forks per update cycle
 SPOTIFY_INFO=$(osascript 2>/dev/null <<'EOF'
 if application "Spotify" is running then

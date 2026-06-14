@@ -19,6 +19,7 @@
   template = "borders"
   file = "~/.config/borders/bordersrc"
   rewrite = true
+  hook = "~/.config/borders/bordersrc"
 
 [[items]]
   template = "fzf"

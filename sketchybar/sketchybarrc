@@ -95,7 +95,7 @@ done
 sketchybar --add item music center \
            --set music \
              script="$PLUGIN_DIR/music.sh" \
-             icon=♪ \
+             icon.font="$NF_FONT" \
              label.padding_left=0 \
              icon.padding_right=8 \
              label.color=$GREEN \
@@ -121,6 +121,7 @@ sketchybar \
       script="$PLUGIN_DIR/weather.sh" \
       icon= \
       update_freq=300 \
+      icon.font="$NF_FONT" \
       label.padding_left=0 \
       icon.padding_right=8 \
       label.color=$WHITE \
@@ -128,22 +129,14 @@ sketchybar \
       background.drawing=off \
       click_script="open -a Weather" \
   \
-  --add item clock center \
-    --set clock \
+  --add item datetime center \
+    --set datetime \
       update_freq=30 \
-      icon.padding_left=10 \
-      icon.padding_right=4 \
       label.font="$LABEL_FONT" \
-      label.padding_left=0 \
+      label.padding_left=10 \
       label.padding_right=10 \
       background.drawing=off \
       script="$PLUGIN_DIR/clock.sh"
-
-# Center bracket — visual island spanning both sides of notch
-sketchybar --add bracket center.bracket \
-             music center.notch weather clock \
-           --set center.bracket \
-             background.drawing=off
 
 ##### Right Items #####
 
@@ -164,9 +157,9 @@ sketchybar \
       icon.padding_right=4 \
       label.font="$SMALL_FONT" \
       label.align=right \
-      label.padding_right=0 \
-      label.width=0 \
-      label.y_offset=4 \
+      label.padding_left=4 \
+      label.padding_right=6 \
+      label.drawing=on \
       background.color=$TRANSPARENT \
       background.border_color=$TRANSPARENT \
       background.drawing=on \

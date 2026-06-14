@@ -51,7 +51,8 @@
           ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
         done
         flavours update all || true
-        flavours apply nord || true
+        python3 "$(pwd)/scripts/generate-wallpaper-theme" "$(pwd)/wallpaper/wallpaper.jpg"
+        flavours apply wallpaper || flavours apply nord || true
     - description: Applying macOS defaults
       command: |
         # Keyboard

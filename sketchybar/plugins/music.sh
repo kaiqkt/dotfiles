@@ -88,7 +88,8 @@ if [ -n "$SPOTIFY_INFO" ]; then
     LABEL="$(truncate_str "$TRACK — $ARTIST")"
     ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL")
     set_artwork "$ART_FILE"
-    sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on
+    # width=208: label.width(200) + padding_right(8). art item adds ~34px → total 242px fixed.
+    sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on width=208
     exit 0
   fi
 fi
@@ -103,14 +104,15 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
       LABEL="$(truncate_str "$TITLE — $ARTIST")"
       sketchybar --set "$ART_ITEM" drawing=off
-      sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on
+      sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on width=242
       exit 0
     fi
   fi
 fi
 
-# Nothing playing — collapse entire section so label.width doesn't reserve space
+# Nothing playing — keep fixed-width invisible placeholder so center items don't drift.
+# Total width 242 = art(34) + music(208) when playing; spacer absorbs that gap when stopped.
 sketchybar --set "$ART_ITEM" drawing=off
-sketchybar --set "$NAME" drawing=off label="" label.drawing=off
+sketchybar --set "$NAME" drawing=on label="" label.drawing=off width=242
 
 exit 0

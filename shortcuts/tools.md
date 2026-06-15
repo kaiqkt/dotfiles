@@ -43,9 +43,9 @@ Also available as tmux popup: `prefix + v`
 
 Git TUI with custom config at `~/.config/lazygit/`.
 
-```bash
-lazygit        # via alias (sets config dir)
-```
+| Alias     | Description                           |
+| --------- | ------------------------------------- |
+| `lazygit` | Run lazygit with custom config dir    |
 
 Also available as tmux popup: `prefix + g g`
 
@@ -74,6 +74,29 @@ asdf set java temurin-17.0.13+11.0.LTS
 ```
 
 JAVA_HOME is set automatically via the asdf-java plugin hook sourced in `exports.sh`.
+
+## Brew
+
+| Alias          | Description                          |
+| -------------- | ------------------------------------ |
+| `brew:upgrade` | `brew upgrade`                       |
+| `brew:bundle`  | `brew bundle --file ~/.Brewfile`     |
+
+## Docker Compose
+
+| Alias | Command                      |
+| ----- | ---------------------------- |
+| `dc`  | `docker compose`             |
+| `dcr` | `docker compose run --rm`    |
+| `dce` | `docker compose exec`        |
+| `dcw` | `docker compose watch`       |
+
+### Functions
+
+| Function        | Description                                             |
+| --------------- | ------------------------------------------------------- |
+| `docker-attach` | Attach to running compose container by service name     |
+| `dc-dev`        | Start `app` service, watch for changes, attach to shell |
 
 ## Claude Code
 

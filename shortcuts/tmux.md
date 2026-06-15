@@ -78,3 +78,12 @@ Prefix: `Ctrl+A`
 | Binding      | Description        |
 | ------------ | ------------------ |
 | `prefix + r` | Reload tmux config |
+
+## Aliases
+
+| Alias | Command          |
+| ----- | ---------------- |
+| `t`   | `tmux`           |
+| `ta`  | `tmux attach -t` |
+| `tls` | `tmux ls`        |
+| `tn`  | `tmux new -t`    |

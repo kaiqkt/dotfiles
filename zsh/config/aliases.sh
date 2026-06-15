@@ -22,6 +22,8 @@ alias t="tmux"
 alias ta="t a -t"
 alias tls="t ls"
 alias tn="t new -t"
+alias tk="t kill-session -t"
+alias tka="t kill-server"
 
 # Brew
 alias brew:upgrade="brew upgrade"

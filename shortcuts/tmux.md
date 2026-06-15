@@ -83,7 +83,9 @@ Prefix: `Ctrl+A`
 
 | Alias | Command          |
 | ----- | ---------------- |
-| `t`   | `tmux`           |
-| `ta`  | `tmux attach -t` |
-| `tls` | `tmux ls`        |
-| `tn`  | `tmux new -t`    |
+| `t`   | `tmux`                 |
+| `ta`  | `tmux attach -t`       |
+| `tls` | `tmux ls`              |
+| `tn`  | `tmux new -t`          |
+| `tk`  | `tmux kill-session -t` |
+| `tka` | `tmux kill-server`     |

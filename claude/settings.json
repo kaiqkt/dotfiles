@@ -1,4 +1,46 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(find *)",
+      "Bash(ls*)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(mkdir *)",
+      "Bash(touch *)",
+      "Bash(chmod *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(open *)",
+      "Bash(kill *)",
+      "Bash(killall *)",
+      "Bash(brew install*)",
+      "Bash(brew update*)",
+      "Bash(brew bundle*)",
+      "Bash(tmux *)",
+      "Bash(docker *)",
+      "Bash(docker compose *)",
+      "Bash(gradle *)",
+      "Bash(go *)",
+      "Bash(mvn *)",
+      "Bash(java *)",
+      "Bash(kotlinc *)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(sudo *)"
+    ],
+    "defaultMode": "plan"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -55,48 +97,7 @@
       }
     }
   },
-  "permissions": {
-    "allow": [
-      "Bash(git *)",
-      "Bash(find *)",
-      "Bash(ls*)",
-      "Bash(cat *)",
-      "Bash(grep *)",
-      "Bash(rm *)",
-      "Bash(mv *)",
-      "Bash(cp *)",
-      "Bash(mkdir *)",
-      "Bash(touch *)",
-      "Bash(chmod *)",
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(open *)",
-      "Bash(kill *)",
-      "Bash(killall *)",
-      "Bash(brew install*)",
-      "Bash(brew update*)",
-      "Bash(brew bundle*)",
-      "Bash(tmux *)",
-      "Bash(docker *)",
-      "Bash(docker compose *)",
-      "Bash(gradle *)",
-      "Bash(go *)",
-      "Bash(mvn *)",
-      "Bash(java *)",
-      "Bash(kotlinc *)"
-    ],
-    "deny": [
-      "Bash(rm -rf*)",
-      "Bash(git push --force*)",
-      "Bash(git reset --hard*)",
-      "Bash(sudo *)"
-    ],
-    "defaultMode": "plan"
-  },
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "preferredNotifChannel": "kitty",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "model": "opus"
 }

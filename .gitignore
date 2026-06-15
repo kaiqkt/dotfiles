@@ -9,3 +9,9 @@ zsh/.zcompcache
 /.claude/settings.local.json
 settings.local.json
 .DS_Store
+lazygit/state.yml
+flavours/templates/borders/borders
+flavours/templates/fzf/fzf
+flavours/templates/kitty/kitty
+flavours/templates/sketchybar/sketchybar
+flavours/templates/tmux/tmux

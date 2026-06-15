@@ -5,21 +5,32 @@ Extract dominant colors from wallpaper and generate a Base16 flavours scheme.
 Usage: generate-wallpaper-theme [image_path]
 """
 
+import math
 import subprocess
 import re
 import sys
 from pathlib import Path
 
 
+HUE_DIVERSITY_THRESHOLD = 60
+
+
 def get_dominant_colors(image_path, n=32):
-    result = subprocess.run(
-        [
-            "magick", str(image_path),
-            "+dither", "-colors", str(n),
-            "-unique-colors", "txt:-",
-        ],
-        capture_output=True, text=True, check=True,
-    )
+    try:
+        result = subprocess.run(
+            [
+                "magick", str(image_path),
+                "+dither", "-colors", str(n),
+                "-unique-colors", "txt:-",
+            ],
+            capture_output=True, text=True, check=True,
+        )
+    except FileNotFoundError:
+        print("Error: 'magick' not found. Install ImageMagick: brew install imagemagick", file=sys.stderr)
+        sys.exit(1)
+    except subprocess.CalledProcessError as e:
+        print(f"Error: magick failed: {e.stderr.strip() or e}", file=sys.stderr)
+        sys.exit(1)
     return list(dict.fromkeys(re.findall(r"#([0-9A-Fa-f]{6})", result.stdout)))
 
 
@@ -53,8 +64,67 @@ def hue(h):
 
 
 def vibrance(h):
-    """Combined score: saturation * sqrt(luminance). Prefers vivid, visible colors."""
-    return saturation(h) * (luminance(h) ** 0.5)
+    """Combined score: saturation * sqrt(luminance/255). Prefers vivid, visible colors."""
+    return saturation(h) * ((luminance(h) / 255) ** 0.5)
+
+
+def hue_diversity(colors):
+    """Return circular std-dev of hues (0-180). Low = monochromatic palette."""
+    hues = [hue(c) for c in colors if saturation(c) > 0.1]
+    if not hues:
+        return 0
+    angles = [math.radians(h) for h in hues]
+    sin_avg = sum(math.sin(a) for a in angles) / len(angles)
+    cos_avg = sum(math.cos(a) for a in angles) / len(angles)
+    R = math.sqrt(sin_avg ** 2 + cos_avg ** 2)
+    if R <= 0:
+        return 180  # perfectly distributed — max diversity
+    if R >= 1:
+        return 0    # all same hue — no diversity
+    return math.degrees(math.sqrt(-2 * math.log(R)))
+
+
+def hsv_to_hex(h, s, v):
+    """Convert HSV (h:0-360, s:0-1, v:0-1) to hex string."""
+    h = h % 360
+    c = v * s
+    x = c * (1 - abs((h / 60) % 2 - 1))
+    m = v - c
+    if h < 60:    r, g, b = c, x, 0
+    elif h < 120: r, g, b = x, c, 0
+    elif h < 180: r, g, b = 0, c, x
+    elif h < 240: r, g, b = 0, x, c
+    elif h < 300: r, g, b = x, 0, c
+    else:         r, g, b = c, 0, x
+    return "{:02X}{:02X}{:02X}".format(round((r+m)*255), round((g+m)*255), round((b+m)*255))
+
+
+def rgb_to_hsv(h):
+    r, g, b = [x / 255.0 for x in hex_to_rgb(h)]
+    cmax = max(r, g, b)
+    cmin = min(r, g, b)
+    delta = cmax - cmin
+    s = delta / cmax if cmax > 0 else 0
+    return hue(h), s, cmax
+
+
+def synthetic_accents(base_color, target_hues):
+    """Generate vivid accents by rotating the standard hue wheel to the wallpaper's dominant hue.
+
+    All slots rotate uniformly so the spread stays even. Exception: slots 5 (base0D)
+    and 6 (base0E) are pinned to source_hue so wallpaper-anchored UI accents
+    (borders active color, tmux active tab, pane/popup borders, message style)
+    always match the wallpaper. Both pinned to same hue — on monochromatic
+    wallpapers only one accent hue is meaningful anyway.
+    """
+    source_hue, s, v = rgb_to_hsv(base_color)
+    s = max(s, 0.65)
+    v = max(v, 0.75)
+    pinned = {5, 6}
+    return [
+        hsv_to_hex(source_hue if i in pinned else (th + source_hue) % 360, s, v)
+        for i, th in enumerate(target_hues)
+    ]
 
 
 def pick_accent(candidates, target_hue, used, hue_weight=1.0):
@@ -66,7 +136,7 @@ def pick_accent(candidates, target_hue, used, hue_weight=1.0):
             continue
         h = hue(c)
         diff = min(abs(h - target_hue), 360 - abs(h - target_hue))
-        hue_score = 1.0 - (diff / 180.0)  # 1.0 = exact match, 0.0 = opposite
+        hue_score = 1.0 - (diff / 180.0)
         score = hue_score * hue_weight + vibrance(c) * 2.0
         if score > best_score:
             best_score = score
@@ -81,28 +151,32 @@ def build_scheme(colors):
     by_sat = sorted(colors, key=saturation, reverse=True)
 
     # base00-07: backgrounds to foregrounds (darkest → lightest)
-    # Pick 8 evenly spread by luminance
     n = len(by_lum)
     indices = [int(round(i * (n - 1) / 7)) for i in range(8)]
     backgrounds = [by_lum[i] for i in indices]
 
-    # base08-0F: accent colors — target hues red/orange/yellow/green/cyan/blue/purple/brown
-    target_hues = [0, 30, 60, 120, 180, 240, 270, 30]  # last is brownish orange
-    used = set(backgrounds)
-    saturated = [c for c in by_sat if saturation(c) > 0.15] or by_sat
+    # base08-0F: accent hues — red/orange/yellow/green/cyan/blue/purple/pink
+    target_hues = [0, 30, 60, 120, 180, 240, 270, 330]
 
-    # When image lacks certain hues, allow reuse by searching all colors (not just saturated)
-    all_by_vibrance = sorted(colors, key=vibrance, reverse=True)
+    diversity = hue_diversity(colors)
+    print(f"Hue diversity: {diversity:.1f}° (threshold: 60°)")
 
-    accents = []
-    for th in target_hues:
-        picked = pick_accent(saturated, th, used)
-        if picked is None:
-            # fallback: most vibrant unused color from full palette
-            picked = pick_accent(all_by_vibrance, th, used, hue_weight=0.2)
-        if picked is None:
-            picked = all_by_vibrance[0] if all_by_vibrance else "000000"
-        accents.append(picked)
+    if diversity < HUE_DIVERSITY_THRESHOLD:
+        print("Low hue diversity — generating synthetic accents")
+        most_vibrant = max(by_sat, key=vibrance)
+        accents = synthetic_accents(most_vibrant, target_hues)
+    else:
+        used = set(backgrounds)
+        saturated = [c for c in by_sat if saturation(c) > 0.15] or by_sat
+        all_by_vibrance = sorted(colors, key=vibrance, reverse=True)
+        accents = []
+        for th in target_hues:
+            picked = pick_accent(saturated, th, used)
+            if picked is None:
+                picked = pick_accent(all_by_vibrance, th, used, hue_weight=0.2)
+            if picked is None:
+                picked = all_by_vibrance[0] if all_by_vibrance else "000000"
+            accents.append(picked)
 
     return backgrounds + accents
 
@@ -125,7 +199,6 @@ def main():
 
     bases = build_scheme(colors)
 
-    # Pad to 16 if somehow short
     while len(bases) < 16:
         bases.append("000000")
 

@@ -81,8 +81,8 @@ Prefix: `Ctrl+A`
 
 ## Aliases
 
-| Alias | Command          |
-| ----- | ---------------- |
+| Alias | Command                |
+| ----- | ---------------------- |
 | `t`   | `tmux`                 |
 | `ta`  | `tmux attach -t`       |
 | `tls` | `tmux ls`              |

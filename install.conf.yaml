@@ -2,12 +2,17 @@
     link:
       relink: true
       force: true
+      create: true
+    shell:
+      stdout: true
+      stderr: true
 
 - clean: ["~"]
 
 - create:
     - ~/.local/bin
     - ~/.config/opencode
+    - ~/.claude
 
 - link:
     ~/.zshenv: zshenv
@@ -50,8 +55,8 @@
         for app in kitty sketchybar tmux borders fzf; do
           ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
         done
-        flavours update all || true
-        python3 "$(pwd)/scripts/generate-wallpaper-theme" "$(pwd)/wallpaper/wallpaper.jpg"
+        gtimeout 60 flavours update all || true
+        gtimeout 120 python3 "$(pwd)/scripts/generate-wallpaper-theme" "$(pwd)/wallpaper/wallpaper.jpg" || true
         flavours apply wallpaper || flavours apply nord || true
     - description: Applying macOS defaults
       command: |

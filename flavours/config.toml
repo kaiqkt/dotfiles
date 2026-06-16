@@ -7,19 +7,19 @@
   template = "sketchybar"
   file = "~/.config/sketchybar/colors.sh"
   rewrite = true
-  hook = "sketchybar --reload"
+  hook = "pgrep -x sketchybar > /dev/null && sketchybar --reload || true"
 
 [[items]]
   template = "tmux"
   file = "~/.config/tmux/config/theme.conf"
   rewrite = true
-  hook = "tmux source-file ~/.config/tmux/config/theme.conf"
+  hook = "pgrep -x tmux > /dev/null && tmux source-file ~/.config/tmux/config/theme.conf || true"
 
 [[items]]
   template = "borders"
   file = "~/.config/borders/bordersrc"
   rewrite = true
-  hook = "~/.config/borders/bordersrc"
+  hook = "pgrep -x borders > /dev/null && ~/.config/borders/bordersrc || true"
 
 [[items]]
   template = "fzf"

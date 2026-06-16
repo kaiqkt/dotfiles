@@ -20,11 +20,19 @@ echo ""
 echo "Running monitoring software detection..."
 "${BASEDIR}/scripts/detect-monitoring" || true
 
+echo ""
+echo "Trusting third-party Homebrew taps..."
+for tap in felixkratz/formulae nikitabobko/tap domt4/autoupdate; do
+  brew tap "$tap" 2>/dev/null || true
+  brew trust "$tap" 2>/dev/null || true
+done
+
 dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
 echo "Starting services..."
-brew services start sketchybar
-brew services start felixkratz/formulae/borders
-brew autoupdate start --upgrade --cleanup 2>/dev/null || true
+brew services start sketchybar || echo "[WARN] sketchybar service failed to start"
+brew services start felixkratz/formulae/borders || echo "[WARN] borders service failed to start"
+brew autoupdate start --upgrade --cleanup 2>/dev/null || echo "[WARN] brew autoupdate not available (domt4/autoupdate tap missing?)"
+open -a AeroSpace 2>/dev/null || echo "[WARN] AeroSpace not installed — login item not registered"
 echo "Done."

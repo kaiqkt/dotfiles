@@ -98,6 +98,6 @@
     }
   },
   "effortLevel": "high",
-  "preferredNotifChannel": "kitty",
-  "model": "opus"
+  "theme": "auto",
+  "preferredNotifChannel": "kitty"
 }

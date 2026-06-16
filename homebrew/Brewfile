@@ -20,6 +20,8 @@ brew "shellcheck"
 brew "fastfetch"
 brew "flavours"
 brew "rtk"
+brew "coreutils"
+brew "imagemagick"
 
 # Git
 brew "lazygit"
@@ -57,7 +59,7 @@ cask "nikitabobko/tap/aerospace"
 cask "lulu"
 
 # Apps
-cask "claude"
+cask "claude-code"
 cask "spotify"
 cask "bitwarden"
 cask "brave-browser"

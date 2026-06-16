@@ -1,5 +1,6 @@
 tags
 tmux/plugins/
+tmux/resurrect/
 zsh/secrets.sh
 zsh/.zsh_history
 zsh/.zsh_sessions

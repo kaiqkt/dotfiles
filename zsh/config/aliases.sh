@@ -57,6 +57,9 @@ alias borders:start="brew services start felixkratz/formulae/borders"
 alias borders:stop="brew services stop felixkratz/formulae/borders"
 alias borders:restart="brew services restart felixkratz/formulae/borders"
 
+# IntelliJ
+alias idea='open -na "IntelliJ IDEA CE" --args'
+
 # Utilities
 function list_colors() {
   for i in {0..255}; do

@@ -23,7 +23,7 @@ macOS development environment dotfiles for a Kotlin/Java/Go developer. Uses dotb
 ## Install / Uninstall
 
 ```bash
-./install    # Homebrew + dotbot symlinks + asdf + flavours + macOS defaults + services
+./install    # Homebrew + dotbot symlinks + asdf + flavours + macOS defaults + services + IntelliJ vmoptions
 ./uninstall  # Remove symlinks, optionally remove packages/plugins/defaults
 ```
 
@@ -56,6 +56,8 @@ macOS development environment dotfiles for a Kotlin/Java/Go developer. Uses dotb
 | `tmux/tmux.conf` | Tmux entrypoint |
 | `tmux/config/` | Split configs: options, keybindings, theme |
 | `tmux/scripts/` | FZF popup scripts (git, sessions, files, rg, ports) |
+| `intellij/idea.vmoptions` | JVM performance flags (heap, GC) for IntelliJ CE |
+| `intellij/apply.sh` | Copies vmoptions to the versioned IntelliJ config dir |
 
 ## AeroSpace Workspace Layout
 

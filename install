@@ -30,6 +30,10 @@ done
 dotbot -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 echo ""
+echo "Applying IntelliJ settings..."
+"${BASEDIR}/intellij/apply.sh" || echo "[WARN] IntelliJ not installed — skipping"
+
+echo ""
 echo "Starting services..."
 brew services start sketchybar || echo "[WARN] sketchybar service failed to start"
 brew services start felixkratz/formulae/borders || echo "[WARN] borders service failed to start"

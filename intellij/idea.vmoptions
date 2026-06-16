@@ -1,0 +1,7 @@
+-Xmx4g
+-Xms512m
+-XX:ReservedCodeCacheSize=512m
+-XX:+UseG1GC
+-XX:SoftRefLRUPolicyMSPerMB=50
+-XX:CICompilerCount=2
+-Dide.max.intellisense.filesize=10000

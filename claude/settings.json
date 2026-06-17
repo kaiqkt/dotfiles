@@ -97,7 +97,7 @@
       }
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "theme": "auto",
   "preferredNotifChannel": "kitty"
 }

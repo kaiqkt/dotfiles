@@ -56,10 +56,10 @@ fi
 
 source "$ZDOTDIR/user/packages.sh"
 
-zsh_add_plugin "zsh-users/zsh-autosuggestions"
-zsh_add_plugin "zsh-users/zsh-history-substring-search"
-zsh_add_plugin "hlissner/zsh-autopair"
-zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
+zsh_add_plugin "zsh-users/zsh-autosuggestions" "v0.7.1"
+zsh_add_plugin "zsh-users/zsh-history-substring-search" "v1.1.0"
+zsh_add_plugin "hlissner/zsh-autopair" "v1.0"
+zsh_add_plugin "zsh-users/zsh-syntax-highlighting" "0.8.0"
 
 zsh_add_config "config/vim-mode.sh"
 zsh_add_config "config/exports.sh"

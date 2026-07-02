@@ -10,9 +10,12 @@
 - clean: ["~"]
 
 - create:
-    - ~/.local/bin
-    - ~/.config/opencode
-    - ~/.claude
+    ~/.local/bin:
+      mode: 0755
+    ~/.config/opencode:
+      mode: 0755
+    ~/.claude:
+      mode: 0755
 
 - link:
     ~/.zshenv: zshenv
@@ -45,7 +48,7 @@
     - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
     - [asdf plugin add golang || true, Adding asdf golang plugin]
     - [asdf install, Installing tool versions]
-    - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
+    - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone --depth 1 --branch v3.1.0 https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
     - description: Setting up flavours (Base16 theme manager)
       command: |

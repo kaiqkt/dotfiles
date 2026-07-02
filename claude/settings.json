@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/hooks/caveman-activate.js\"",
+            "command": "PATH=\"/opt/homebrew/bin:$PATH\" node \"$HOME/.claude/hooks/caveman-activate.js\"",
             "timeout": 5,
             "statusMessage": "Loading caveman mode..."
           }
@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/hooks/caveman-mode-tracker.js\"",
+            "command": "PATH=\"/opt/homebrew/bin:$PATH\" node \"$HOME/.claude/hooks/caveman-mode-tracker.js\"",
             "timeout": 5,
             "statusMessage": "Tracking caveman mode..."
           }
@@ -63,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "rtk hook claude"
+            "command": "PATH=\"/opt/homebrew/bin:$PATH\" rtk hook claude"
           }
         ]
       }

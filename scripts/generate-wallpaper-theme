@@ -5,14 +5,19 @@ Extract dominant colors from wallpaper and generate a Base16 flavours scheme.
 Usage: generate-wallpaper-theme [image_path]
 """
 
-import math
 import subprocess
 import re
 import sys
 from pathlib import Path
 
 
-HUE_DIVERSITY_THRESHOLD = 60
+# Canonical hues for base08-base0E: red, orange, yellow, green, cyan, blue, magenta.
+# Accents stay semantic (red is red) and only borrow saturation/brightness — plus a
+# small hue bias — from the wallpaper. base0F is the wallpaper-anchored UI accent.
+ACCENT_HUES = [0, 30, 55, 120, 185, 220, 285]
+MAX_HUE_BIAS = 10       # max degrees an accent may drift toward the wallpaper hue
+REAL_COLOR_TOLERANCE = 15  # use an extracted color's hue when this close to canonical
+MIN_HUE_SEPARATION = 15    # real hues must be this far from already-picked accents
 
 
 def get_dominant_colors(image_path, n=32):
@@ -71,20 +76,10 @@ def vibrance(h):
     return saturation(h) * ((luminance(h) / 255) ** 0.5)
 
 
-def hue_diversity(colors):
-    """Return circular std-dev of hues (0-180). Low = monochromatic palette."""
-    hues = [hue(c) for c in colors if saturation(c) > 0.1]
-    if not hues:
-        return 0
-    angles = [math.radians(h) for h in hues]
-    sin_avg = sum(math.sin(a) for a in angles) / len(angles)
-    cos_avg = sum(math.cos(a) for a in angles) / len(angles)
-    R = math.sqrt(sin_avg ** 2 + cos_avg ** 2)
-    if R <= 0:
-        return 180  # perfectly distributed — max diversity
-    if R >= 1:
-        return 0    # all same hue — no diversity
-    return math.degrees(math.sqrt(-2 * math.log(R)))
+def signed_hue_diff(a, b):
+    """Shortest signed angular distance from b to a, in (-180, 180]."""
+    d = (a - b) % 360
+    return d - 360 if d > 180 else d
 
 
 def hsv_to_hex(h, s, v):
@@ -111,77 +106,72 @@ def rgb_to_hsv(h):
     return hue(h), s, cmax
 
 
-def synthetic_accents(base_color, target_hues):
-    """Generate vivid accents by rotating the standard hue wheel to the wallpaper's dominant hue.
+def clamp(x, lo, hi):
+    return max(lo, min(hi, x))
 
-    All slots rotate uniformly so the spread stays even. Exception: slots 5 (base0D)
-    and 6 (base0E) are pinned to source_hue so wallpaper-anchored UI accents
-    (borders active color, tmux active tab, pane/popup borders, message style)
-    always match the wallpaper. Both pinned to same hue — on monochromatic
-    wallpapers only one accent hue is meaningful anyway.
+
+def build_accents(colors):
+    """base08-0E: canonical semantic hues, harmonized with the wallpaper.
+
+    Every accent is synthesized at a uniform saturation/brightness band taken
+    from the wallpaper's most vibrant color, so no single slot dominates and
+    dull slots don't disappear. The hue is canonical (red stays red) with at
+    most MAX_HUE_BIAS degrees of drift toward the wallpaper hue — unless the
+    wallpaper actually contains a color near the canonical hue, in which case
+    that real hue is used. base0F is the pure wallpaper accent for UI chrome
+    (window borders, tmux active tab / pane borders, kitty active tab).
     """
-    source_hue, s, v = rgb_to_hsv(base_color)
-    s = max(s, 0.65)
-    v = max(v, 0.75)
-    pinned = {5, 6}
-    return [
-        hsv_to_hex(source_hue if i in pinned else (th + source_hue) % 360, s, v)
-        for i, th in enumerate(target_hues)
-    ]
+    ref = max(colors, key=vibrance)
+    h_ref, s_ref, v_ref = rgb_to_hsv(ref)
+    s = clamp(s_ref, 0.45, 0.72)
+    v = clamp(v_ref, 0.72, 0.92)
+    # Greyscale wallpapers have no meaningful hue to bias toward
+    bias_strength = min(1.0, s_ref / 0.3)
+
+    vivid = [c for c in colors if saturation(c) > 0.25 and luminance(c) > 60]
+
+    accents = []
+    picked_hues = []
+    for target in ACCENT_HUES:
+        near = [
+            c for c in vivid
+            if abs(signed_hue_diff(hue(c), target)) <= REAL_COLOR_TOLERANCE
+            and all(abs(signed_hue_diff(hue(c), p)) >= MIN_HUE_SEPARATION for p in picked_hues)
+        ]
+        if near:
+            h = hue(max(near, key=vibrance))
+        else:
+            drift = clamp(signed_hue_diff(h_ref, target), -MAX_HUE_BIAS, MAX_HUE_BIAS)
+            h = target + drift * bias_strength
+        picked_hues.append(h)
+        accents.append(hsv_to_hex(h, s, v))
+
+    if s_ref < 0.15:
+        wallpaper_accent = hsv_to_hex(220, 0.5, 0.85)  # greyscale fallback: blue
+    else:
+        wallpaper_accent = hsv_to_hex(h_ref, clamp(s_ref, 0.60, 0.85), clamp(v_ref, 0.80, 0.95))
+    accents.append(wallpaper_accent)
+    return accents
 
 
-def pick_accent(candidates, target_hue, used, hue_weight=1.0):
-    """Pick best accent: balance hue proximity vs color vividness."""
-    best = None
-    best_score = float("-inf")
-    for c in candidates:
-        if c in used:
-            continue
-        h = hue(c)
-        diff = min(abs(h - target_hue), 360 - abs(h - target_hue))
-        hue_score = 1.0 - (diff / 180.0)
-        score = hue_score * hue_weight + vibrance(c) * 2.0
-        if score > best_score:
-            best_score = score
-            best = c
-    if best:
-        used.add(best)
-    return best
+# base04-07 are text/foreground colors: keep the wallpaper's warmth but cap
+# saturation progressively so body text reads as tinted grey, not a solid color.
+FG_SATURATION_CAPS = {4: 0.35, 5: 0.28, 6: 0.22, 7: 0.16}
 
 
 def build_scheme(colors):
     by_lum = sorted(colors, key=luminance)
-    by_sat = sorted(colors, key=saturation, reverse=True)
 
     # base00-07: backgrounds to foregrounds (darkest → lightest)
     n = len(by_lum)
     indices = [int(round(i * (n - 1) / 7)) for i in range(8)]
     backgrounds = [by_lum[i] for i in indices]
 
-    # base08-0F: accent hues — red/orange/yellow/green/cyan/blue/purple/pink
-    target_hues = [0, 30, 60, 120, 180, 240, 270, 330]
+    for i, cap in FG_SATURATION_CAPS.items():
+        h, s, v = rgb_to_hsv(backgrounds[i])
+        backgrounds[i] = hsv_to_hex(h, min(s, cap), max(v, 0.70 + 0.05 * (i - 4)))
 
-    diversity = hue_diversity(colors)
-    print(f"Hue diversity: {diversity:.1f}° (threshold: 60°)")
-
-    if diversity < HUE_DIVERSITY_THRESHOLD:
-        print("Low hue diversity — generating synthetic accents")
-        most_vibrant = max(by_sat, key=vibrance)
-        accents = synthetic_accents(most_vibrant, target_hues)
-    else:
-        used = set(backgrounds)
-        saturated = [c for c in by_sat if saturation(c) > 0.15] or by_sat
-        all_by_vibrance = sorted(colors, key=vibrance, reverse=True)
-        accents = []
-        for th in target_hues:
-            picked = pick_accent(saturated, th, used)
-            if picked is None:
-                picked = pick_accent(all_by_vibrance, th, used, hue_weight=0.2)
-            if picked is None:
-                picked = all_by_vibrance[0] if all_by_vibrance else "000000"
-            accents.append(picked)
-
-    return backgrounds + accents
+    return backgrounds + build_accents(colors)
 
 
 def main():

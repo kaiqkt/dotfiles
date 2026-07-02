@@ -13,6 +13,7 @@ green="#{{base0B-hex}}"
 cyan="#{{base0C-hex}}"
 magenta="#{{base0E-hex}}"
 pink="#{{base0E-hex}}"
+accent="#{{base0F-hex}}"
 grey1="#{{base07-hex}}"
 grey2="#{{base07-hex}}"
 grey3="#{{base07-hex}}"
@@ -56,12 +57,12 @@ set -g status-style "bg=$bg"
 set -g window-style "fg=$grey10,bg=$bg"
 set -g window-active-style "fg=$fg,bg=$bg"
 
-set -g message-style bg=$magenta,fg=$bg
+set -g message-style bg=$accent,fg=$bg
 set -g pane-border-style fg=$grey11
-set -g pane-active-border-style fg=$magenta
+set -g pane-active-border-style fg=$accent
 
 set -g popup-style "bg=$bg,fg=$fg"
-set -g popup-border-style "fg=$magenta"
+set -g popup-border-style "fg=$accent"
 set -g popup-border-lines rounded
 setw -g window-status-separator ""
 
@@ -70,4 +71,4 @@ set -g status-left "#{tmux_mode_indicator} "
 set -g status-right "#[fg=$grey11]#{online_status}   #[fg=$grey11]%R"
 
 setw -g window-status-format "#[fg=$grey11,nobold,nounderscore,noitalics] #[fg=$grey11] #I #W #[fg=$grey11,nobold,nounderscore,noitalics]"
-setw -g window-status-current-format "#[fg=$grey11,nobold,nounderscore,noitalics] #[fg=$magenta] #I #W #[fg=$grey11,nobold,nounderscore,noitalics]"
+setw -g window-status-current-format "#[fg=$grey11,nobold,nounderscore,noitalics] #[fg=$accent] #I #W #[fg=$grey11,nobold,nounderscore,noitalics]"

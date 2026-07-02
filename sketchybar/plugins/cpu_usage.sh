@@ -1,9 +1,10 @@
 #!/bin/bash
+set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
 raw=$(top -l 1 | awk '/CPU usage/ {print $3}' | sed 's/%//')
-[ -z "$raw" ] && exit 0
+if [ -z "$raw" ]; then exit 0; fi
 load=$(printf "%.0f" "$raw")
 normalized=$(echo "$raw / 100" | bc -l)
 
@@ -19,8 +20,8 @@ fi
 
 sketchybar --set "$NAME" \
   label="${load}%" \
-  label.color=$WHITE \
-  graph.color=$COLOR \
+  label.color="$WHITE" \
+  graph.color="$COLOR" \
   graph.fill_color="0x55${COLOR:4}"
 
 sketchybar --push cpu_usage "$normalized"

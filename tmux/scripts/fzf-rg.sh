@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Live interactive ripgrep with file preview
 # Type to search, Enter to edit in popup, Ctrl-S to edit in caller pane
@@ -14,7 +15,7 @@ result=$(fzf --no-tmux --ansi --disabled \
     --preview 'bat --color=always --highlight-line {2} {1} 2>/dev/null' \
     --preview-window '+{2}/2' \
     --bind "ctrl-s:become(echo '+{2}' '{1}' > $RESULT_FILE)" \
-    --exit-0)
+    --exit-0) || exit 0
 
 if [[ -n "$result" ]]; then
   file=$(echo "$result" | awk -F: '{print $1}')

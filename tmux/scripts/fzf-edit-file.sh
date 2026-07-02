@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Find and edit a file in the current pane's directory using fzf.
 # Respects .gitignore (fd default). Hidden files are off by default —
@@ -14,7 +15,7 @@ file=$($FD_BASE | \
     --header 'Enter: edit here · Ctrl-S: edit in pane · Ctrl-H: toggle hidden' \
     --bind "ctrl-s:become(echo '{}' > $RESULT_FILE)" \
     --bind "ctrl-h:transform:[[ \$FZF_PROMPT == '> ' ]] && echo 'change-prompt(hidden> )+reload($FD_BASE --hidden)' || echo 'change-prompt(> )+reload($FD_BASE)'" \
-    --exit-0)
+    --exit-0) || exit 0
 
 if [[ -n "$file" ]]; then
   ${EDITOR:-nvim} "$file"

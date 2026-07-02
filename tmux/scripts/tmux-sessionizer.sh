@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Usage:
 #   tmux-sessionizer.sh [directory]
@@ -7,7 +8,7 @@ if [[ $# -eq 1 ]]; then
 else
   # if no directory is passed in, use fzf to select one
   # NOTE: change the directories to search in the find command as you wish
-  selected=$(find ~/Dev ~ ~/Personal/repos/dotfiles -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf --no-tmux)
+  selected=$(find ~/Dev ~ ~/Personal/repos/dotfiles -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf --no-tmux) || true
 fi
 
 # exit if no directory is selected from fzf
@@ -16,7 +17,7 @@ if [[ -z $selected ]]; then
 fi
 
 selected_name=$(basename "$selected" | tr . _)
-tmux_running=$(pgrep tmux)
+tmux_running=$(pgrep tmux || true)
 
 # create new session if not in tmux
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then

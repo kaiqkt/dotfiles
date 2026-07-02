@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Fuzzy find and kill a process
-pid=$(ps -f -u "$UID" | sed 1d | fzf --no-tmux --no-preview -m --header 'Select process(es) to kill' | awk '{print $2}')
+pid=$(ps -f -u "$UID" | sed 1d | fzf --no-tmux --no-preview -m --header 'Select process(es) to kill' | awk '{print $2}') || exit 0
 
 if [[ -n "$pid" ]]; then
   echo "$pid" | xargs kill -9

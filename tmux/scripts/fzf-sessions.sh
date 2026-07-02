@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Fuzzy find tmux sessions - Enter to switch, Ctrl-X to kill
 
@@ -23,4 +24,4 @@ eval "$reload_cmd" \
     --bind "enter:become(
       session=\$(echo {} | awk '{print \$1}');
       tmux switch-client -t \"\$session\"
-    )"
+    )" || exit 0

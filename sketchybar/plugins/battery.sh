@@ -1,10 +1,11 @@
 #!/bin/bash
+set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
 BATT="$(pmset -g batt)"
-PERCENTAGE="$(echo "$BATT" | grep -Eo "\d+%" | cut -d% -f1)"
-CHARGING="$(echo "$BATT" | grep 'AC Power')"
+PERCENTAGE="$(echo "$BATT" | grep -Eo "\d+%" | cut -d% -f1)" || true
+CHARGING="$(echo "$BATT" | grep 'AC Power')" || true
 
 if [ "$PERCENTAGE" = "" ]; then
   exit 0

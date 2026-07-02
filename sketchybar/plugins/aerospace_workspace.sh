@@ -1,13 +1,14 @@
 #!/bin/bash
+set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
-WS_ID="$1"
+WS_ID="${1:-}"
 
-if [ "$WS_ID" = "$FOCUSED_WORKSPACE" ]; then
+if [ "$WS_ID" = "${FOCUSED_WORKSPACE:-}" ]; then
   sketchybar --set "$NAME" \
     background.drawing=on \
-    background.color=$ITEM_BG_COLOR \
+    background.color="$ITEM_BG_COLOR" \
     background.border_width=2 \
     label.shadow.drawing=on \
     icon.shadow.drawing=on
@@ -21,7 +22,7 @@ fi
 
 # Refresh app icons, show/hide based on occupancy
 apps=$(aerospace list-windows --workspace "$WS_ID" 2>/dev/null \
-       | awk -F'|' '{gsub(/^ *| *$/, "", $2); print $2}')
+       | awk -F'|' '{gsub(/^ *| *$/, "", $2); print $2}') || true
 
 if [ -n "$apps" ]; then
   icon_strip=" "

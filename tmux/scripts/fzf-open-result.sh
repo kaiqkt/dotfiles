@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Opens the file saved in /tmp/tmux-fzf-result in the active tmux pane
 RESULT_FILE=/tmp/tmux-fzf-result

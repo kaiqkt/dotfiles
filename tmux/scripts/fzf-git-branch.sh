@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Fuzzy find and checkout a git branch
 # Shows local and remote branches with last commit info
@@ -7,7 +8,7 @@ branch=$(git branch -a --sort=-committerdate \
   fzf --no-tmux --header 'Switch branch' \
       --preview 'git log --oneline --graph --color=always {1} -- | head -20' \
       --exit-0 | \
-  awk '{print $1}')
+  awk '{print $1}') || exit 0
 
 if [[ -n "$branch" ]]; then
   # Strip origin/ prefix for remote branches

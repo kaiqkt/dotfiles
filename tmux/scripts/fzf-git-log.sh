@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Browse git log with fzf and preview diffs
 git log --oneline --color=always --decorate | \
@@ -7,4 +8,4 @@ git log --oneline --color=always --decorate | \
       --preview 'git show --color=always --stat --patch {1}' \
       --preview-window=right,60% \
       --bind 'enter:execute(git show --color=always {1} | less -R)' \
-      --bind 'ctrl-o:become(git checkout {1})'
+      --bind 'ctrl-o:become(git checkout {1})' || exit 0

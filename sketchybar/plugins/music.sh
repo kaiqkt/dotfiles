@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 MAX_CHARS=30
@@ -19,12 +20,12 @@ fetch_artwork() {
   local title="$1"
   local art_url="$2"
   local last_title counter art_file tmp_file
-  last_title=$(cat "$ART_LAST_TITLE_FILE" 2>/dev/null)
+  last_title=$(cat "$ART_LAST_TITLE_FILE" 2>/dev/null) || true
 
   if [ "$title" = "$last_title" ]; then
     counter=$(cat "$ART_COUNTER_FILE" 2>/dev/null || echo 1)
     art_file="/tmp/sketchybar_art_${counter}.jpg"
-    [ -f "$art_file" ] && echo "$art_file" && return
+    if [ -f "$art_file" ]; then echo "$art_file"; return; fi
   fi
 
   counter=$(( $(cat "$ART_COUNTER_FILE" 2>/dev/null || echo 0) + 1 ))
@@ -34,10 +35,10 @@ fetch_artwork() {
   art_file="/tmp/sketchybar_art_${counter}.jpg"
   tmp_file="${art_file}.tmp"
 
-  curl -sL "$art_url" -o "$tmp_file" 2>/dev/null
+  curl -sL "$art_url" -o "$tmp_file" 2>/dev/null || true
   if [ -s "$tmp_file" ]; then
-    sips -Z 96 "$tmp_file" >/dev/null 2>&1
-    find /tmp -maxdepth 1 -name "sketchybar_art_*.jpg" -delete 2>/dev/null
+    sips -Z 96 "$tmp_file" >/dev/null 2>&1 || true
+    find /tmp -maxdepth 1 -name "sketchybar_art_*.jpg" -delete 2>/dev/null || true
     mv "$tmp_file" "$art_file"
     echo "$art_file"
   else
@@ -47,7 +48,7 @@ fetch_artwork() {
 
 set_artwork() {
   local art_file="$1"
-  if [ -n "$art_file" ] && [ -f "$art_file" ]; then
+  if [ -n "${art_file:-}" ] && [ -f "$art_file" ]; then
     sketchybar --set "$ART_ITEM" \
       drawing=on \
       background.image="$art_file" \
@@ -59,8 +60,8 @@ set_artwork() {
   fi
 }
 
-MONITOR_COUNT=$(aerospace list-monitors 2>/dev/null | wc -l | tr -d ' ')
-if [ "$MONITOR_COUNT" -lt 2 ]; then
+MONITOR_COUNT=$(aerospace list-monitors 2>/dev/null | wc -l | tr -d ' ') || true
+if [ "${MONITOR_COUNT:-0}" -lt 2 ]; then
   sketchybar --set "$ART_ITEM" drawing=off
   sketchybar --set "$NAME" drawing=off label="" label.drawing=off
   exit 0
@@ -77,7 +78,7 @@ if application "Spotify" is running then
 end if
 return ""
 EOF
-)
+) || true
 
 if [ -n "$SPOTIFY_INFO" ]; then
   TRACK=$(echo "$SPOTIFY_INFO" | cut -d'|' -f2)
@@ -86,7 +87,7 @@ if [ -n "$SPOTIFY_INFO" ]; then
 
   if [ -n "$TRACK" ] && [ -n "$ARTIST" ]; then
     LABEL="$(truncate_str "$TRACK — $ARTIST")"
-    ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL")
+    ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL") || true
     set_artwork "$ART_FILE"
     # width=208: label.width(200) + padding_right(8). art item adds ~34px → total 242px fixed.
     sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on width=208
@@ -96,11 +97,11 @@ fi
 
 # Fallback: rmpc + jq (local MPD)
 if command -v rmpc >/dev/null && command -v jq >/dev/null; then
-  RAW_STATE=$(rmpc status | jq -r '.state' 2>/dev/null)
+  RAW_STATE=$(rmpc status | jq -r '.state' 2>/dev/null) || true
   STATE="$(echo "$RAW_STATE" | tr '[:upper:]' '[:lower:]')"
   if [ "$STATE" = "play" ]; then
-    TITLE=$(rmpc song | jq -r '.metadata.title' 2>/dev/null)
-    ARTIST=$(rmpc song | jq -r '.metadata.artist' 2>/dev/null)
+    TITLE=$(rmpc song | jq -r '.metadata.title' 2>/dev/null) || true
+    ARTIST=$(rmpc song | jq -r '.metadata.artist' 2>/dev/null) || true
     if [ -n "$TITLE" ] && [ -n "$ARTIST" ]; then
       LABEL="$(truncate_str "$TITLE — $ARTIST")"
       sketchybar --set "$ART_ITEM" drawing=off

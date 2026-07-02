@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
@@ -16,7 +17,7 @@ set_icons() {
 
 toggle_slider() {
   CURRENT_WIDTH=$(sketchybar --query volume_slider | python3 -c \
-    "import sys,json; print(json.load(sys.stdin)['slider']['width'])" 2>/dev/null)
+    "import sys,json; print(json.load(sys.stdin)['slider']['width'])" 2>/dev/null) || true
   if [ "${CURRENT_WIDTH:-0}" -gt 0 ]; then
     sketchybar --animate tanh 20 --set volume_slider slider.width=0 padding_right=0
   else
@@ -24,23 +25,23 @@ toggle_slider() {
   fi
 }
 
-if [ "$SENDER" = "volume_change" ] || [ "$SENDER" = "forced_update" ]; then
+if [ "${SENDER:-}" = "volume_change" ] || [ "${SENDER:-}" = "forced_update" ]; then
   VOLUME=$(osascript -e 'output volume of (get volume settings)')
   set_icons "$VOLUME"
 
-elif [ "$SENDER" = "mouse.clicked" ] && [ "$NAME" = "volume" ]; then
+elif [ "${SENDER:-}" = "mouse.clicked" ] && [ "$NAME" = "volume" ]; then
   toggle_slider
 
-elif [ "$SENDER" = "mouse.clicked" ] && [ "$NAME" = "volume_slider" ]; then
+elif [ "${SENDER:-}" = "mouse.clicked" ] && [ "$NAME" = "volume_slider" ]; then
   osascript -e "set volume output volume $PERCENTAGE"
   set_icons "$PERCENTAGE"
 
-elif [ "$SENDER" = "mouse.scrolled" ]; then
+elif [ "${SENDER:-}" = "mouse.scrolled" ]; then
   CURRENT=$(osascript -e 'output volume of (get volume settings)')
   DELTA=$([ "$SCROLL_DELTA" -gt 0 ] && echo 5 || echo -5)
   NEW=$(( CURRENT + DELTA ))
-  [ "$NEW" -gt 100 ] && NEW=100
-  [ "$NEW" -lt 0 ]   && NEW=0
+  if [ "$NEW" -gt 100 ]; then NEW=100; fi
+  if [ "$NEW" -lt 0 ]; then NEW=0; fi
   osascript -e "set volume output volume $NEW"
   set_icons "$NEW"
 fi

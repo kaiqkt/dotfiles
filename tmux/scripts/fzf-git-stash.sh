@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Browse git stashes with diff preview
 # Enter to apply, Ctrl-D to drop
@@ -8,4 +9,4 @@ git stash list | \
       --preview-window=right,60% \
       --bind 'ctrl-d:become(git stash drop $(echo {} | cut -d: -f1))' \
       --exit-0 | \
-  cut -d: -f1 | xargs -r git stash apply
+  cut -d: -f1 | xargs -r git stash apply || exit 0

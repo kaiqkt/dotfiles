@@ -5,39 +5,30 @@
   },
   "permissions": {
     "allow": [
-      "Bash(git *)",
-      "Bash(find *)",
-      "Bash(ls*)",
-      "Bash(cat *)",
-      "Bash(grep *)",
-      "Bash(rm *)",
-      "Bash(mv *)",
-      "Bash(cp *)",
-      "Bash(mkdir *)",
-      "Bash(touch *)",
-      "Bash(chmod *)",
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(open *)",
-      "Bash(kill *)",
-      "Bash(killall *)",
-      "Bash(brew install*)",
-      "Bash(brew update*)",
-      "Bash(brew bundle*)",
-      "Bash(tmux *)",
-      "Bash(docker *)",
-      "Bash(docker compose *)",
-      "Bash(gradle *)",
-      "Bash(go *)",
-      "Bash(mvn *)",
-      "Bash(java *)",
-      "Bash(kotlinc *)"
+      "Bash(git:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(brew install:*)",
+      "Bash(brew update:*)",
+      "Bash(brew bundle:*)",
+      "Bash(tmux:*)",
+      "Bash(docker:*)",
+      "Bash(docker compose:*)",
+      "Bash(gradle:*)",
+      "Bash(go:*)",
+      "Bash(mvn:*)",
+      "Bash(java:*)",
+      "Bash(kotlinc:*)"
     ],
     "deny": [
-      "Bash(rm -rf*)",
-      "Bash(git push --force*)",
-      "Bash(git reset --hard*)",
-      "Bash(sudo *)"
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(sudo:*)"
     ],
     "defaultMode": "plan"
   },
@@ -98,6 +89,8 @@
     }
   },
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "theme": "auto",
-  "preferredNotifChannel": "kitty"
+  "preferredNotifChannel": "kitty",
+  "model": "claude-fable-5[1m]"
 }

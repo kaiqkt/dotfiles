@@ -47,5 +47,10 @@ Menuselect (tab-completion menu) keys are vim-friendly:
 | ------------------- | --------------------- |
 | `Ctrl+h` / `Ctrl+l` | Previous / next char  |
 | `Ctrl+k` / `Ctrl+j` | Up / down line        |
-| `Ctrl+Shift+Tab`    | Up (alternate)        |
-| `Ctrl+?` (Backspace) | Backward delete char  |
+| `Shift+Tab`         | Up (alternate)        |
+| `Backspace`         | Backward delete char  |
+
+> **Note:** `Ctrl+h/j/k/l` only work outside tmux — tmux's global vim-aware
+> pane navigation (`bind -n C-h/j/k/l`) intercepts them, and its `is_vim`
+> check matches vim/fzf only, not the zsh completion menu. Inside tmux use
+> arrows, `Tab` and `Shift+Tab`.

@@ -9,7 +9,6 @@ Font: `Hack Nerd Font Mono 12pt` | Right `Option` key acts as `Alt`
 | `Cmd+T`        | New tab              |
 | `Cmd+W`        | Close tab            |
 | `Cmd+1-9`      | Switch to tab by num |
-| `Ctrl+Shift+1-9` | Switch to tab by num (default) |
 | `Ctrl+Shift+.` | Move tab right       |
 | `Ctrl+Shift+,` | Move tab left        |
 | `Ctrl+Shift+Q` | Close tab            |
@@ -35,7 +34,7 @@ Font: `Hack Nerd Font Mono 12pt` | Right `Option` key acts as `Alt`
 | `Ctrl+Shift+Page_Down` | Scroll page down       |
 | `Ctrl+Shift+Home`    | Scroll to top            |
 | `Ctrl+Shift+End`     | Scroll to bottom         |
-| `Ctrl+Shift+H`       | Browse scrollback in vim |
+| `Ctrl+Shift+H`       | Browse scrollback in pager (`less`) |
 
 ## Font size
 
@@ -52,7 +51,7 @@ Font: `Hack Nerd Font Mono 12pt` | Right `Option` key acts as `Alt`
 | `Ctrl+Click`         | Open link under cursor    |
 | `Ctrl+Shift+C`       | Copy to clipboard         |
 | `Ctrl+Shift+V`       | Paste from clipboard      |
-| `Ctrl+Shift+S`       | Take screenshot of window |
+| `Ctrl+Shift+S`       | Paste from primary selection |
 | `Ctrl+Shift+F2`      | Edit kitty.conf           |
 | `Ctrl+Shift+F5`      | Reload config             |
 | `Ctrl+Shift+Escape`  | Open kitty shell          |

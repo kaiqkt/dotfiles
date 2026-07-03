@@ -9,6 +9,7 @@ Prefix: `Ctrl+A`
 | `prefix + \`  | Split vertical             |
 | `prefix + -`  | Split horizontal           |
 | `C-h/j/k/l`   | Navigate panes (vim-aware) |
+| `C-\`         | Toggle last pane (vim-aware) |
 | `M-[` / `M-]` | Swap pane down/up          |
 | `prefix + z`  | Zoom pane                  |
 | `prefix + x`  | Close pane                 |
@@ -40,6 +41,7 @@ Prefix: `Ctrl+A`
 | `V`           | Select line                |
 | `y` / `Enter` | Copy to clipboard (pbcopy) |
 | `prefix + P`  | Paste buffer               |
+| `C-h/j/k/l`   | Navigate panes             |
 | `q`           | Exit copy mode             |
 
 ## Popups
@@ -75,9 +77,12 @@ Prefix: `Ctrl+A`
 
 ## Misc
 
-| Binding      | Description        |
-| ------------ | ------------------ |
-| `prefix + r` | Reload tmux config |
+| Binding        | Description                        |
+| -------------- | ---------------------------------- |
+| `prefix + r`   | Reload tmux config                 |
+| `prefix + C-l` | Clear screen (C-l alone navigates) |
+| `prefix + S`   | Save session (tmux-resurrect)      |
+| `prefix + R`   | Restore session (tmux-resurrect)   |
 
 ## Aliases
 

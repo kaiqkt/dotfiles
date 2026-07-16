@@ -33,6 +33,7 @@ brew "gnupg"
 brew "asdf"
 
 # Containers
+brew "docker"
 brew "colima"
 brew "docker-compose"
 

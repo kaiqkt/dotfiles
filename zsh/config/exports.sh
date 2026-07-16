@@ -23,3 +23,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 export TERMINAL=kitty
 export FUNCNEST=100
 export COLORTERM=truecolor
+
+# testcontainers + colima: ryuk monta o socket do daemon; o path do host
+# (~/.colima/...) não existe dentro da VM, então aponta pro socket interno
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock

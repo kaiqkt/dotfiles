@@ -33,6 +33,7 @@ brew "gnupg"
 brew "asdf"
 
 # Containers
+brew "colima"
 brew "docker-compose"
 
 brew "cloudflare-speed-cli"

@@ -32,6 +32,7 @@
     ],
     "defaultMode": "plan"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -88,9 +89,9 @@
       }
     }
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
+  "advisorModel": "opus",
   "tui": "fullscreen",
   "theme": "auto",
-  "preferredNotifChannel": "kitty",
-  "model": "claude-fable-5[1m]"
+  "preferredNotifChannel": "kitty"
 }

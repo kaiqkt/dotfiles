@@ -7,6 +7,7 @@ alias ls="eza -s type"
 alias la="ls -la"
 alias grep="grep --color=auto"
 alias git_unlock="rm -f .git/index.lock"
+alias v="nvim"
 
 # Lazygit
 alias lazygit="lazygit -ucd ~/.config/lazygit/"

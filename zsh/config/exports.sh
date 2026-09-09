@@ -13,7 +13,8 @@ path=(
   $path
 )
 
-export EDITOR=vim
+export EDITOR=nvim
+export VISUAL=nvim
 
 # asdf java home
 [ -f "${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/java/set-java-home.zsh" ] && \

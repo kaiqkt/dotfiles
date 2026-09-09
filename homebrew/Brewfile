@@ -41,6 +41,7 @@ brew "cloudflare-speed-cli"
 
 # Terminal & multiplexer
 brew "tmux"
+brew "neovim"
 cask "kitty"
 
 # Music

@@ -1,0 +1,27 @@
+local fallback = {
+  base00 = "#110e13",
+  base01 = "#25141b",
+  base02 = "#4e1623",
+  base03 = "#961920",
+  base04 = "#d08887",
+  base05 = "#e0a6a1",
+  base06 = "#f7ddc1",
+  base07 = "#f3e2cc",
+  base08 = "#eb6042",
+  base09 = "#eb9f42",
+  base0A = "#ebc042",
+  base0B = "#5eeb42",
+  base0C = "#42ebdd",
+  base0D = "#425eeb",
+  base0E = "#dd42eb",
+  base0F = "#f29a2d",
+}
+
+local M = {}
+
+function M.setup()
+  local ok, colors = pcall(require, "config.generated_theme")
+  require("base16-colorscheme").setup(ok and colors or fallback)
+end
+
+return M

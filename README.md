@@ -20,6 +20,10 @@ cd ~/Projects/dotfiles
 # 4. Open a new terminal to load ZSH configuration
 ```
 
+The first `nvim` launch bootstraps LazyVim and installs the configured plugins,
+language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
+that first launch to verify the installation.
+
 ### Post-Install
 
 ```bash
@@ -57,6 +61,7 @@ aerospace reload-config
 - **Kitty** — terminal (Nord theme)
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
+- **Neovim** — LazyVim with Go, Java, Kotlin, LSP, formatting, search, and Git integration
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
 - **asdf** — version manager (Java, Kotlin, Go)
@@ -69,4 +74,5 @@ aerospace reload-config
 | Tmux keybinds & popups | [shortcuts/tmux.md](shortcuts/tmux.md) |
 | AeroSpace keybinds & workspaces | [shortcuts/aerospace.md](shortcuts/aerospace.md) |
 | ZSH aliases & functions | [shortcuts/zsh.md](shortcuts/zsh.md) |
+| Neovim keybindings | [shortcuts/nvim.md](shortcuts/nvim.md) |
 | Tools reference | [shortcuts/tools.md](shortcuts/tools.md) |

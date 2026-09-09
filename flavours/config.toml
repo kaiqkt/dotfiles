@@ -4,6 +4,11 @@
   rewrite = true
 
 [[items]]
+  template = "neovim"
+  file = "~/.config/nvim/lua/config/generated_theme.lua"
+  rewrite = true
+
+[[items]]
   template = "sketchybar"
   file = "~/.config/sketchybar/colors.sh"
   rewrite = true

@@ -22,6 +22,7 @@
     ~/.config/zsh: zsh
     ~/.Brewfile: homebrew/Brewfile
     ~/.config/kitty: kitty
+    ~/.config/nvim: nvim
     ~/.fzfrc: fzfrc
     ~/.config/tmux: tmux
     ~/.gitconfig: gitconfig
@@ -55,7 +56,7 @@
         mkdir -p "$HOME/Library/Preferences/flavours"
         cp "$(pwd)/flavours/config.toml" "$HOME/Library/Preferences/flavours/config.toml"
         mkdir -p "$HOME/Library/Application Support/flavours/base16/templates"
-        for app in kitty sketchybar tmux borders fzf; do
+        for app in kitty sketchybar tmux borders fzf neovim; do
           ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
         done
         gtimeout 60 flavours update all 2>/dev/null || true

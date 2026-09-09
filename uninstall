@@ -30,6 +30,7 @@ SYMLINKS=(
   ~/.config/zsh
   ~/.Brewfile
   ~/.config/kitty
+  ~/.config/nvim
   ~/.fzfrc
   ~/.config/tmux
   ~/.gitconfig
@@ -205,7 +206,7 @@ read -rp "Remove flavours config and Base16 template symlinks? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   rm -f "$HOME/Library/Preferences/flavours/config.toml"
   rmdir "$HOME/Library/Preferences/flavours" 2>/dev/null || true
-  for app in kitty sketchybar tmux borders fzf; do
+  for app in kitty sketchybar tmux borders fzf neovim; do
     rm -f "$HOME/Library/Application Support/flavours/base16/templates/$app"
   done
   rm -rf "$HOME/Library/Application Support/flavours/base16/schemes/wallpaper" 2>/dev/null || true

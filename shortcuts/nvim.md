@@ -88,11 +88,22 @@ These bindings follow the enabled LazyVim defaults; see the
 | `leader + e` / `leader + E` | Open Explorer in project root / current directory |
 | `Enter` or `l` | Open file or expand directory |
 | `h` / `Backspace` | Collapse directory / go to parent directory |
-| `a` | Add file or directory (end directory name with `/`) |
+| `a` | Create file or directory (end directory name with `/`) |
 | `r` | Rename selected file or directory |
 | `d`, then `Enter` | Delete selected file or directory after confirmation |
 | `Tab`, then `d` | Select multiple items, then delete them |
+| `Tab`, navigate to a directory, then `m` | Move selected files or directories to that directory |
 | `u` | Refresh Explorer (does not undo deletion) |
+
+To manage a directory, navigate to it with `Enter` or `l`; use `a` and type a
+name ending in `/` to create a subdirectory, `r` to rename it, and `d`, then
+`Enter` to delete it. To move one or more items, mark each source with `Tab`,
+navigate to the destination directory, and press `m`. With no item selected,
+`m` asks for a new name/path for the item under the cursor.
+
+> [!warning]
+> Save changes in files before moving or deleting them. A delete is sent to the
+> system Trash when supported, but this depends on the local configuration.
 
 Deleted items cannot be restored with a Neovim shortcut. Recover them from the
 system Trash when available, or use `git restore -- path/to/file` in a terminal

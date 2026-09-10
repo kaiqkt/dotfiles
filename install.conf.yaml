@@ -45,6 +45,8 @@
 
 - shell:
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
+    - ['"$(brew --prefix rustup)/bin/rustup" default stable', Installing Rust stable toolchain]
+    - ['"$(brew --prefix rustup)/bin/rustup" component add clippy rust-analyzer rustfmt', Installing Rust development components]
     - [asdf plugin add java || true, Adding asdf java plugin]
     - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
     - [asdf plugin add golang || true, Adding asdf golang plugin]

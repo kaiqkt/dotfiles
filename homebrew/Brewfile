@@ -31,6 +31,7 @@ brew "gnupg"
 
 # Version manager
 brew "asdf"
+brew "rustup"
 
 # Containers
 brew "docker"

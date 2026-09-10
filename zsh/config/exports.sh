@@ -3,6 +3,8 @@
 ################################################################################
 
 path=(
+  $HOME/.cargo/bin
+  /opt/homebrew/opt/rustup/bin
   /opt/homebrew/bin
   /opt/homebrew/sbin
   $HOME/.asdf/shims

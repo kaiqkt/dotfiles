@@ -61,10 +61,11 @@ aerospace reload-config
 - **Kitty** — terminal (Nord theme)
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
-- **Neovim** — LazyVim with Go, Java, Kotlin, LSP, formatting, search, and Git integration
+- **Neovim** — LazyVim with Go, Java, Kotlin, Rust, LSP, formatting, search, and Git integration
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
 - **asdf** — version manager (Java, Kotlin, Go)
+- **rustup** — Rust toolchain manager (stable, rust-analyzer, clippy, rustfmt)
 - **Homebrew** — package manager
 
 ## Shortcuts

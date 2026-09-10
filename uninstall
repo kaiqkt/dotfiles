@@ -128,9 +128,27 @@ fi
 
 echo ""
 
-# ─── Step 5: Remove tmux plugins (optional) ──────────────────────────────────
+# ─── Step 5: Remove Rust toolchains (optional) ───────────────────────────────
 
-echo "Step 5: Remove tmux plugins"
+echo "Step 5: Remove Rust toolchains"
+echo "--------------------------------"
+read -rp "Remove rustup toolchains and Cargo-installed binaries? (y/N) " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  for rust_dir in "$HOME/.rustup" "$HOME/.cargo"; do
+    if [ -d "$rust_dir" ]; then
+      rm -rf "$rust_dir"
+      info "Removed Rust data: $rust_dir"
+    fi
+  done
+else
+  info "Skipped Rust cleanup"
+fi
+
+echo ""
+
+# ─── Step 6: Remove tmux plugins (optional) ──────────────────────────────────
+
+echo "Step 6: Remove tmux plugins"
 echo "----------------------------"
 read -rp "Remove TPM and tmux plugins? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
@@ -146,9 +164,9 @@ fi
 
 echo ""
 
-# ─── Step 6: Reset macOS defaults (optional) ─────────────────────────────────
+# ─── Step 7: Reset macOS defaults (optional) ─────────────────────────────────
 
-echo "Step 6: Reset macOS defaults"
+echo "Step 7: Reset macOS defaults"
 echo "-----------------------------"
 echo "The install script changed these macOS settings:"
 echo "  - Fast key repeat (KeyRepeat=2, InitialKeyRepeat=15)"
@@ -198,9 +216,9 @@ fi
 
 echo ""
 
-# ─── Step 7: Remove flavours data (optional) ─────────────────────────────────
+# ─── Step 8: Remove flavours data (optional) ─────────────────────────────────
 
-echo "Step 7: Remove flavours data"
+echo "Step 8: Remove flavours data"
 echo "-----------------------------"
 read -rp "Remove flavours config and Base16 template symlinks? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then

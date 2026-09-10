@@ -81,6 +81,24 @@ These bindings follow the enabled LazyVim defaults; see the
 | `leader + w m` | Toggle current-window zoom |
 | `leader + w d` | Close current window |
 
+## Explorer & File Operations
+
+| Binding | Description |
+| --- | --- |
+| `leader + e` / `leader + E` | Open Explorer in project root / current directory |
+| `Enter` or `l` | Open file or expand directory |
+| `h` / `Backspace` | Collapse directory / go to parent directory |
+| `a` | Add file or directory (end directory name with `/`) |
+| `r` | Rename selected file or directory |
+| `d`, then `Enter` | Delete selected file or directory after confirmation |
+| `Tab`, then `d` | Select multiple items, then delete them |
+| `u` | Refresh Explorer (does not undo deletion) |
+
+Deleted items cannot be restored with a Neovim shortcut. Recover them from the
+system Trash when available, or use `git restore -- path/to/file` in a terminal
+for a tracked file that has not been committed as deleted. Verify the selected
+item before confirming deletion, especially the project root.
+
 ## Code & Diagnostics
 
 | Binding | Description |
@@ -88,12 +106,14 @@ These bindings follow the enabled LazyVim defaults; see the
 | `g d` / `g r` | Go to definition / references |
 | `K` | Show hover documentation |
 | `leader + c a` | Code action |
+| `leader + c R` | Rust code action |
 | `leader + c r` | Rename symbol |
 | `leader + c f` | Format buffer |
 | `leader + c l` | LSP information |
 | `[ d` / `] d` | Previous / next diagnostic |
 | `leader + u d` | Toggle diagnostics |
 | `leader + u f` | Toggle format on save |
+| `leader + d r` | Select a Rust target to debug |
 
 ## Tools & Terminal
 
@@ -107,6 +127,17 @@ These bindings follow the enabled LazyVim defaults; see the
 | `Ctrl-/` | Terminal in project root |
 | `Esc` then `Esc` | Leave Terminal mode |
 
+## Tree-sitter
+
+| Command | Description |
+| --- | --- |
+| `:TSInstall <parser>` | Install a parser manually |
+| `:TSUpdate` | Update installed parsers |
+| `Ctrl-Space` | Expand Treesitter selection |
+
+Parsers for the configured languages and common project files are installed
+automatically on startup.
+
 ## Configuration
 
 | Item | Location |
@@ -117,6 +148,7 @@ These bindings follow the enabled LazyVim defaults; see the
 
 ## Language Tooling
 
-LazyVim's Go, Java, and Kotlin extras configure their relevant language servers,
-Tree-sitter parsers, and tooling. Mason also installs `google-java-format`,
-`ktlint`, `stylua`, and `shfmt`; formatting runs on save.
+LazyVim's Go, Java, Kotlin, and Rust extras configure their relevant language
+servers, Tree-sitter parsers, and tooling. Mason also installs `codelldb`,
+`google-java-format`, `ktlint`, `stylua`, and `shfmt`; formatting runs on save.
+Rust's stable toolchain provides `rust-analyzer`, `clippy`, and `rustfmt`.

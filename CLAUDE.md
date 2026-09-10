@@ -4,18 +4,18 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## Overview
 
-macOS development environment dotfiles for a Kotlin/Java/Go developer. Uses dotbot for symlink management, AeroSpace as window manager, Sketchybar as status bar, and flavours for Base16 theme management.
+macOS development environment dotfiles for a Kotlin/Java/Go/Rust developer. Uses dotbot for symlink management, AeroSpace as window manager, Sketchybar as status bar, and flavours for Base16 theme management.
 
 ## Stack
 
 | Layer | Technology |
 |-------|------------|
-| Languages | Java 21 (Temurin), Kotlin 2.4, Go 1.26 |
-| Version manager | asdf |
+| Languages | Java 21 (Temurin), Kotlin 2.4, Go 1.26, Rust stable |
+| Version manager | asdf (Java, Kotlin, Go), rustup (Rust) |
 | Shell | ZSH — custom prompt, FZF integration, vim mode, git worktree helpers |
 | Terminal | Kitty |
 | Multiplexer | Tmux (prefix: Ctrl+A) |
-| Editor | Neovim — LazyVim starter with Go, Java, Kotlin, LSP, completion and formatting |
+| Editor | Neovim — LazyVim starter with Go, Java, Kotlin, Rust, LSP, completion and formatting |
 | WM | AeroSpace (alt-based keybindings) |
 | Status bar | Sketchybar + JankyBorders |
 | Theme system | flavours (Base16) — generates colors from wallpaper or preset schemes |
@@ -60,6 +60,7 @@ macOS development environment dotfiles for a Kotlin/Java/Go developer. Uses dotb
 | `nvim/init.lua` | Neovim entrypoint |
 | `nvim/lua/config/` | LazyVim bootstrap, local overrides, and generated Base16 theme |
 | `nvim/lua/plugins/lazyvim.lua` | LazyVim, language extras, formatters, and theme integration |
+| `nvim/lua/plugins/treesitter.lua` | Parsers installed for configured languages and project files |
 | `intellij/idea.vmoptions` | JVM performance flags (heap, GC) for IntelliJ CE |
 | `intellij/apply.sh` | Copies vmoptions to the versioned IntelliJ config dir |
 

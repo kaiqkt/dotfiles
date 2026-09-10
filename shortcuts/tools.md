@@ -169,6 +169,25 @@ asdf set java temurin-17.0.13+11.0.LTS
 
 JAVA_HOME is set automatically via the asdf-java plugin hook sourced in `exports.sh`.
 
+## Rust (rustup)
+
+Rust uses `rustup`, with the stable toolchain and the `clippy`, `rust-analyzer`,
+and `rustfmt` components installed by dotbot.
+
+```bash
+# Verify the active toolchain
+rustup show
+
+# Update the stable toolchain
+rustup update stable
+
+# Common project commands
+cargo check
+cargo test
+cargo clippy
+cargo fmt
+```
+
 ## Brew
 
 | Alias          | Description                          |

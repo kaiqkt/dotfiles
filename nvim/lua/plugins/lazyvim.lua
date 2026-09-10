@@ -15,6 +15,7 @@ return {
   { import = "lazyvim.plugins.extras.lang.go" },
   { import = "lazyvim.plugins.extras.lang.java" },
   { import = "lazyvim.plugins.extras.lang.kotlin" },
+  { import = "lazyvim.plugins.extras.lang.rust" },
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)

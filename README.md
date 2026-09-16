@@ -24,6 +24,14 @@ The first `nvim` launch bootstraps LazyVim and installs the configured plugins,
 language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
 that first launch to verify the installation.
 
+VS Code is installed with IntelliSense, formatting, linting, tests, debugging,
+Gradle/Maven, Spring Boot, and Docker tooling for Rust, Java, and Kotlin. It
+uses the same formatters as Neovim (`rustfmt`, Google Java Format, and
+`ktlint`). On the first Kotlin project, accept the license prompt required by
+the official JetBrains language server; the Americas region and disabled data
+sharing are already configured. The `code` command is also available from the
+shell.
+
 ### Post-Install
 
 ```bash
@@ -62,6 +70,7 @@ aerospace reload-config
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
 - **Neovim** — LazyVim with Go, Java, Kotlin, Rust, LSP, formatting, search, and Git integration
+- **VS Code** — Rust, Java, Kotlin, Spring Boot, and Docker tooling
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
 - **asdf** — version manager (Java, Kotlin, Go)

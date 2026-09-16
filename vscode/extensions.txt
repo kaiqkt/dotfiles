@@ -1,0 +1,24 @@
+# Shared editor behavior
+dracula-theme.theme-dracula
+editorconfig.editorconfig
+k--kato.intellij-idea-keybindings
+redhat.vscode-yaml
+usernamehw.errorlens
+
+# Rust
+rust-lang.rust-analyzer
+vadimcn.vscode-lldb
+tamasfe.even-better-toml
+fill-labs.dependi
+
+# Java, Gradle/Maven and Spring Boot
+vscjava.vscode-java-pack
+vmware.vscode-boot-dev-pack
+josevseb.google-java-format-for-vs-code
+
+# Kotlin (official JetBrains language server)
+jetbrains.kotlin-server
+rnoro.vscode-ktlint-formatter
+
+# Containers
+ms-azuretools.vscode-containers

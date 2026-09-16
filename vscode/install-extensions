@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+VSCODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+EXTENSIONS_FILE="${VSCODE_DIR}/extensions.txt"
+CODE_BIN="$(command -v code || true)"
+
+if [[ -z "${CODE_BIN}" && -x "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" ]]; then
+  CODE_BIN="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+fi
+
+if [[ -z "${CODE_BIN}" ]]; then
+  echo "[WARN] VS Code CLI not found — skipping extension installation"
+  exit 0
+fi
+
+installed_extensions="$("${CODE_BIN}" --list-extensions)"
+
+while IFS= read -r extension || [[ -n "${extension}" ]]; do
+  [[ -z "${extension}" || "${extension}" == \#* ]] && continue
+
+  if grep -Fxiq -- "${extension}" <<<"${installed_extensions}"; then
+    echo "[INFO] VS Code extension already installed: ${extension}"
+  else
+    echo "[INFO] Installing VS Code extension: ${extension}"
+    "${CODE_BIN}" --install-extension "${extension}"
+  fi
+done <"${EXTENSIONS_FILE}"

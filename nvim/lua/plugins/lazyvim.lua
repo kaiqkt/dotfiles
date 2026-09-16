@@ -12,15 +12,13 @@ return {
       end,
     },
   },
-  { import = "lazyvim.plugins.extras.lang.go" },
-  { import = "lazyvim.plugins.extras.lang.java" },
-  { import = "lazyvim.plugins.extras.lang.kotlin" },
-  { import = "lazyvim.plugins.extras.lang.rust" },
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
+        "gofumpt",
+        "goimports",
         "google-java-format",
         "ktlint",
         "shfmt",
@@ -32,8 +30,10 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
+        go = { "goimports", "gofumpt" },
         java = { "google-java-format" },
         kotlin = { "ktlint" },
+        rust = { "rustfmt" },
         sh = { "shfmt" },
         zsh = { "shfmt" },
       },

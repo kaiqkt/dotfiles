@@ -159,7 +159,9 @@ automatically on startup.
 
 ## Language Tooling
 
-LazyVim's Go, Java, Kotlin, and Rust extras configure their relevant language
+LazyVim's Go, Java, Kotlin, PHP, and Rust extras configure their relevant language
 servers, Tree-sitter parsers, and tooling. Mason also installs `codelldb`,
-`google-java-format`, `ktlint`, `stylua`, and `shfmt`; formatting runs on save.
+`goimports`, `gofumpt`, `google-java-format`, `ktlint`, `stylua`, and `shfmt`;
+formatting runs on save.
+PHP uses the Node-based `intelephense` language server.
 Rust's stable toolchain provides `rust-analyzer`, `clippy`, and `rustfmt`.

@@ -16,3 +16,5 @@ flavours/templates/fzf/fzf
 flavours/templates/kitty/kitty
 flavours/templates/sketchybar/sketchybar
 flavours/templates/tmux/tmux
+flavours/templates/neovim/neovim
+nvim.log

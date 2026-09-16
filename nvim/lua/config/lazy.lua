@@ -23,6 +23,9 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+-- Intelephense runs on Node.js; phpactor also requires a local PHP runtime.
+vim.g.lazyvim_php_lsp = "intelephense"
+
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },

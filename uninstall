@@ -50,6 +50,8 @@ SYMLINKS=(
   ~/.editorconfig
   ~/.asdfrc
   ~/.tool-versions
+  ~/.local/bin/code
+  "$HOME/Library/Application Support/Code/User/settings.json"
 )
 
 for link in "${SYMLINKS[@]}"; do

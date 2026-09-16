@@ -41,7 +41,9 @@
     ~/.editorconfig: editorconfig
     ~/.asdfrc: asdfrc
     ~/.tool-versions: tool-versions
+    ~/.local/bin/code: scripts/code
     ~/.local/bin/git-multi: scripts/git-multi
+    "~/Library/Application Support/Code/User/settings.json": vscode/settings.json
 
 - shell:
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
@@ -51,6 +53,7 @@
     - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
     - [asdf plugin add golang || true, Adding asdf golang plugin]
     - [asdf install, Installing tool versions]
+    - [./vscode/install-extensions, Installing VS Code extensions]
     - ["test -f ~/.config/tmux/plugins/tpm/tpm || git clone --depth 1 --branch v3.1.0 https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm", Installing TPM]
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
     - description: Setting up flavours (Base16 theme manager)

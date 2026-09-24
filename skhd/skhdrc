@@ -1,4 +1,4 @@
-# Keep the AeroSpace key combinations. skhd handles shortcuts for yabai.
+# skhd handles shortcuts for yabai.
 :: service @
 
 # Focus and swap windows.

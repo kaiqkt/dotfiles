@@ -52,9 +52,9 @@ skhd --restart-service
 ```
 
 Yabai uses native macOS Spaces. Create Spaces 1–9 in Mission Control, with 1–5
-on the main display and 6–9 on the secondary display, to match the previous
-AeroSpace layout. The app placement rules and `alt+1–9` shortcuts target those
-Space indices. Disable “Automatically rearrange Spaces based on most recent use”
+on the main display and 6–9 on the secondary display. The app placement rules
+and `alt+1–9` shortcuts target those Space indices. Disable “Automatically
+rearrange Spaces based on most recent use”
 in Desktop & Dock so the numbers stay stable.
 The app placement rules register automatically as their Spaces become available.
 
@@ -142,8 +142,8 @@ python3 scripts/generate-wallpaper-theme wallpaper/rei-plush-wallpaper.png --app
 The installer installs Matugen with Cargo into `~/.local/bin`. Generation is
 noninteractive and checks contrast before writing the palette: at least 7:1
 for body text and 4.5:1 for the checked secondary text and semantic color pairs.
-These checks use solid colors; Kitty transparency and the transparent status
-bar also depend on what is behind them.
+These checks use solid colors; the translucent status bar also depends on what
+is behind it.
 
 Edit `matugen/config.toml` for semantic color anchors,
 `scripts/generate-wallpaper-theme` for Material-to-Base16 mappings, and

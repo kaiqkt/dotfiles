@@ -21,7 +21,7 @@ add_rule() {
   changed=true
 }
 
-# Match the AeroSpace app assignments once their native Spaces exist.
+# Register app assignments once their native Spaces exist.
 add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1
 add_rule dotfiles_terminals '^(Terminal|kitty)$' 2
 add_rule dotfiles_claude '^Claude$' 8

@@ -14,7 +14,7 @@ their installed paths. The user-facing setup and wallpaper instructions are in
   `shortcuts/zsh.md` when changing a documented shortcut.
 - `tmux/config/` and `tmux/scripts/` define tmux behavior. Update
   `shortcuts/tmux.md` when changing a documented shortcut.
-- `aerospace/aerospace.toml`, `sketchybar/`, `borders/`, `nvim/`, and `vscode/`
+- `yabai/`, `skhd/`, `sketchybar/`, `borders/`, `nvim/`, and `vscode/`
   contain the corresponding application configuration.
 - Git worktree helpers live in `zsh/config/worktrees.sh`. They expect a bare
   repository in `ProjectName/.bare/` and sibling worktrees.

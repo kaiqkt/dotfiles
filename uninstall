@@ -40,6 +40,10 @@ SYMLINKS=(
   ~/.claude/RTK.md
   ~/.config/opencode/opencode.json
   ~/.local/bin/git-multi
+  ~/.local/bin/set-wallpaper
+  ~/.local/bin/apply-vscode-theme
+  "$HOME/.vscode/extensions/kaiqkt.wallpaper-theme-0.1.0"
+  "$HOME/Library/Preferences/flavours/config.toml"
   ~/.config/sketchybar
   ~/.config/aerospace
   ~/.config/lazygit
@@ -226,7 +230,7 @@ read -rp "Remove flavours config and Base16 template symlinks? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   rm -f "$HOME/Library/Preferences/flavours/config.toml"
   rmdir "$HOME/Library/Preferences/flavours" 2>/dev/null || true
-  for app in kitty sketchybar tmux borders fzf neovim; do
+  for app in kitty sketchybar tmux borders fzf neovim zsh; do
     rm -f "$HOME/Library/Application Support/flavours/base16/templates/$app"
   done
   rm -rf "$HOME/Library/Application Support/flavours/base16/schemes/wallpaper" 2>/dev/null || true

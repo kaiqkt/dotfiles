@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""Merge the generated wallpaper palette into VS Code's existing settings."""
+
+import json
+import os
+from pathlib import Path
+import re
+import tempfile
+
+ROOT = Path(__file__).resolve().parent.parent
+PALETTE = ROOT / "nvim/lua/config/generated_theme.lua"
+SETTINGS = ROOT / "vscode/settings.json"
+THEME = "Wallpaper (Matugen)"
+THEME_FILE = ROOT / "vscode/wallpaper-theme/themes/wallpaper-color-theme.json"
+
+
+def read_palette():
+    source = PALETTE.read_text()
+    colors = dict(re.findall(r'(base[0-9A-F]{2}) = "#([0-9a-fA-F]{6})"', source))
+    if set(colors) != {f"base{i:02X}" for i in range(16)}:
+        raise ValueError(f"Expected 16 generated Base16 colors in {PALETTE}")
+    return {key: f"#{value.lower()}" for key, value in colors.items()}
+
+
+def customizations(colors):
+    c = lambda i: colors[f"base{i:02X}"]
+    workbench = {
+        "focusBorder": 15, "foreground": 5, "descriptionForeground": 4,
+        "activityBar.background": 0, "activityBar.foreground": 4,
+        "activityBar.inactiveForeground": 3, "activityBarBadge.background": 15,
+        "activityBarBadge.foreground": 0, "sideBar.background": 1,
+        "sideBar.foreground": 5, "sideBarTitle.foreground": 4,
+        "sideBarSectionHeader.background": 2, "sideBarSectionHeader.foreground": 5,
+        "editor.background": 0, "editor.foreground": 5,
+        "editorLineNumber.foreground": 3, "editorLineNumber.activeForeground": 4,
+        "editorCursor.foreground": 15, "editor.selectionBackground": 2,
+        "editor.inactiveSelectionBackground": 2, "editor.lineHighlightBackground": 1,
+        "editorIndentGuide.background1": 2, "editorIndentGuide.activeBackground1": 4,
+        "editorBracketMatch.background": 2, "editorBracketMatch.border": 15,
+        "editorGutter.addedBackground": 11, "editorGutter.modifiedBackground": 9,
+        "editorGutter.deletedBackground": 8, "editorError.foreground": 8,
+        "editorWarning.foreground": 9, "editorInfo.foreground": 13,
+        "editorHint.foreground": 12, "editorWidget.background": 1,
+        "editorSuggestWidget.background": 1, "editorSuggestWidget.selectedBackground": 2,
+        "editorHoverWidget.background": 1, "editorGroupHeader.tabsBackground": 0,
+        "tab.activeBackground": 0, "tab.activeForeground": 5,
+        "tab.inactiveBackground": 1, "tab.inactiveForeground": 4,
+        "tab.activeBorderTop": 15, "panel.background": 0, "panel.border": 2,
+        "panelTitle.activeBorder": 15, "statusBar.background": 1,
+        "statusBar.foreground": 5, "statusBar.border": 2,
+        "titleBar.activeBackground": 0, "titleBar.activeForeground": 4,
+        "titleBar.inactiveBackground": 0, "titleBar.inactiveForeground": 3,
+        "input.background": 1, "input.foreground": 5, "input.border": 3,
+        "dropdown.background": 1, "dropdown.foreground": 5, "dropdown.border": 3,
+        "button.background": 15, "button.foreground": 0, "button.hoverBackground": 13,
+        "list.activeSelectionBackground": 2, "list.activeSelectionForeground": 5,
+        "list.inactiveSelectionBackground": 2, "list.inactiveSelectionForeground": 5,
+        "list.hoverBackground": 1, "list.focusOutline": 15,
+        "terminal.background": 0, "terminal.foreground": 5,
+        "terminalCursor.foreground": 15, "terminal.selectionBackground": 2,
+    }
+    ui = {key: c(slot) for key, slot in workbench.items()}
+    for number, slot in enumerate((0, 8, 11, 9, 13, 14, 12, 4, 3, 8, 11, 9, 13, 14, 12, 7)):
+        ui[f"terminal.ansi{number}Color"] = c(slot)
+    rules = [
+        (["comment", "punctuation.definition.comment"], 4, "italic"),
+        (["string", "string.quoted", "string.template"], 11, None),
+        (["constant.numeric", "constant.language"], 9, None),
+        (["keyword", "storage", "storage.type", "keyword.operator"], 14, None),
+        (["entity.name.function", "support.function"], 13, None),
+        (["entity.name.type", "entity.name.class", "support.type", "support.class"], 10, None),
+        (["variable", "variable.parameter", "meta.definition.variable"], 5, None),
+        (["entity.name.tag", "entity.other.attribute-name"], 8, None),
+        (["constant.other.symbol", "support.constant", "constant.language.boolean"], 12, None),
+        (["punctuation", "meta.brace", "meta.delimiter"], 4, None),
+    ]
+    textmate = [{"scope": scopes, "settings": {"foreground": c(slot), **({"fontStyle": style} if style else {})}}
+                for scopes, slot, style in rules]
+    semantic = {
+        "class": c(10), "enum": c(10), "interface": c(10), "struct": c(10),
+        "type": c(10), "typeParameter": c(10), "function": c(13), "method": c(13),
+        "parameter": c(5), "variable": c(5), "property": c(5), "enumMember": c(12),
+        "namespace": c(14), "keyword": c(14), "macro": c(9), "string": c(11),
+        "number": c(9), "operator": c(4), "comment": {"foreground": c(4), "italic": True},
+    }
+    return {
+        "colors": ui,
+        "tokenColors": textmate,
+        "semanticTokenColors": semantic,
+    }
+
+
+def write_json(path, document):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+        temporary = Path(handle.name)
+        try:
+            json.dump(document, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            if path.exists():
+                os.fchmod(handle.fileno(), path.stat().st_mode & 0o777)
+            os.replace(temporary, path)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+
+def main():
+    settings = json.loads(SETTINGS.read_text())
+    colors = read_palette()
+    theme = {"name": THEME, "type": "dark", "semanticHighlighting": True}
+    theme.update(customizations(colors))
+    write_json(THEME_FILE, theme)
+
+    # These were a temporary Dracula overlay; the installed theme now owns them.
+    settings.pop("workbench.colorCustomizations", None)
+    settings.pop("editor.tokenColorCustomizations", None)
+    settings.pop("editor.semanticTokenColorCustomizations", None)
+    settings["workbench.colorTheme"] = THEME
+    mode = SETTINGS.stat().st_mode & 0o777
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=SETTINGS.parent, delete=False) as handle:
+        temporary = Path(handle.name)
+        try:
+            json.dump(settings, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fchmod(handle.fileno(), mode)
+            os.replace(temporary, SETTINGS)
+        finally:
+            temporary.unlink(missing_ok=True)
+    print(f"Generated {THEME} in {THEME_FILE}")
+    print(f"Selected {THEME} in {SETTINGS}")
+
+
+if __name__ == "__main__":
+    main()

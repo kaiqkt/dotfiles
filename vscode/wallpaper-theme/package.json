@@ -1,0 +1,21 @@
+{
+  "name": "wallpaper-theme",
+  "publisher": "kaiqkt",
+  "displayName": "Wallpaper Theme (Matugen)",
+  "description": "VS Code theme generated from the current wallpaper.",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+      {
+        "id": "kaiqkt-wallpaper-theme",
+        "label": "Wallpaper (Matugen)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/wallpaper-color-theme.json"
+      }
+    ]
+  }
+}

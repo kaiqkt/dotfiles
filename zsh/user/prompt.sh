@@ -5,10 +5,10 @@
 
 setopt PROMPT_SUBST
 
-# -- Colors (Nord palette) ----------------------------------------------------
-_prompt_grey="%F{#4C566A}"
-_prompt_blue="%F{#5E81AC}"
-_prompt_magenta="%F{#B48EAD}"
+# -- Colors (ANSI fallback; generated palette loaded before each prompt) ------
+_prompt_grey="%F{white}"
+_prompt_blue="%F{blue}"
+_prompt_magenta="%F{magenta}"
 _prompt_reset="%f"
 
 # -- Async worker -------------------------------------------------------------
@@ -126,6 +126,9 @@ _prompt_short_dir() {
 
 # -- Build prompt -------------------------------------------------------------
 _prompt_precmd() {
+  # Pick up wallpaper changes in existing shells on the next prompt.
+  [[ -r "$ZDOTDIR/user/generated_colors.sh" ]] && source "$ZDOTDIR/user/generated_colors.sh"
+
   # Async git + language versions (non-blocking)
   _prompt_async_start
 

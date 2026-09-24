@@ -43,12 +43,17 @@
     ~/.tool-versions: tool-versions
     ~/.local/bin/code: scripts/code
     ~/.local/bin/git-multi: scripts/git-multi
+    ~/.local/bin/set-wallpaper: scripts/set-wallpaper
+    ~/.local/bin/apply-vscode-theme: scripts/apply-vscode-theme
+    ~/.vscode/extensions/kaiqkt.wallpaper-theme-0.1.0: vscode/wallpaper-theme
+    "~/Library/Preferences/flavours/config.toml": flavours/config.toml
     "~/Library/Application Support/Code/User/settings.json": vscode/settings.json
 
 - shell:
     - [brew bundle --file=homebrew/Brewfile, Installing Homebrew packages]
     - ['"$(brew --prefix rustup)/bin/rustup" default stable', Installing Rust stable toolchain]
     - ['"$(brew --prefix rustup)/bin/rustup" component add clippy rust-analyzer rustfmt', Installing Rust development components]
+    - ['"$(brew --prefix rustup)/bin/rustup" run stable cargo install matugen --version 4.2.0 --locked --root "$HOME/.local"', Installing Matugen wallpaper palette generator]
     - [asdf plugin add java || true, Adding asdf java plugin]
     - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
     - [asdf plugin add golang || true, Adding asdf golang plugin]
@@ -58,16 +63,11 @@
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
     - description: Setting up flavours (Base16 theme manager)
       command: |
-        wallpaper="$(pwd)/wallpaper/rei-plush-wallpaper.png"
-        mkdir -p "$HOME/Library/Preferences/flavours"
-        cp "$(pwd)/flavours/config.toml" "$HOME/Library/Preferences/flavours/config.toml"
         mkdir -p "$HOME/Library/Application Support/flavours/base16/templates"
-        for app in kitty sketchybar tmux borders fzf neovim; do
-          ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
+        for app in kitty sketchybar tmux borders fzf neovim zsh; do
+          ln -sfn "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
         done
         gtimeout 60 flavours update all 2>/dev/null || true
-        gtimeout 120 python3 "$(pwd)/scripts/generate-wallpaper-theme" "$wallpaper" || true
-        flavours apply wallpaper || flavours apply nord || true
     - [./scripts/configure-displays ./wallpaper/rei-plush-wallpaper.png, Configuring displays and wallpaper]
     - description: Applying macOS defaults
       command: |

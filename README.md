@@ -70,7 +70,7 @@ aerospace reload-config
 
 - **AeroSpace** — tiling window manager
 - **Sketchybar** — custom status bar
-- **Kitty** — terminal (Nord theme)
+- **Kitty** — terminal (wallpaper theme generated with Matugen)
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
 - **Neovim** — LazyVim with Go, Java, Kotlin, Rust, LSP, formatting, search, and Git integration
@@ -80,6 +80,67 @@ aerospace reload-config
 - **asdf** — version manager (Java, Kotlin, Go)
 - **rustup** — Rust toolchain manager (stable, rust-analyzer, clippy, rustfmt)
 - **Homebrew** — package manager
+
+## Wallpaper themes
+
+Matugen 4.2.0 generates a dark Material You **Tonal Spot** palette. The adapter
+maps neutral surfaces and near-white text to Base16, harmonizes separate
+semantic colors for syntax/alerts, and uses the wallpaper's primary color for
+focus, selection and borders. Flavours renders the application configs.
+
+### Change the wallpaper
+
+After installation, run this from any directory (quote paths containing spaces):
+
+```bash
+set-wallpaper "$HOME/Pictures/My Wallpaper.jpg"
+```
+
+This changes the image on every macOS desktop and applies matching colors to
+Kitty, Neovim, Zsh, Sketchybar, Tmux, Borders, FZF and VS Code. It preserves
+display resolution, scaling, refresh rate and layout. To use an image from this
+checkout, run `set-wallpaper wallpaper/eva-red-wallpaper.jpg` from the repo root.
+The same command can be run without the installed shortcut with
+`python3 scripts/set-wallpaper /path/to/image.jpg` once Matugen and flavours are
+installed.
+
+Changes made directly in macOS Settings are not watched. If macOS refuses the
+desktop change, grant Terminal permission to control System Events and rerun
+the command; the theme may already have been applied.
+
+### Preview or apply only the theme
+
+```bash
+# Preview a Base16 palette without modifying files or the desktop
+python3 scripts/generate-wallpaper-theme wallpaper/rei-plush-wallpaper.png --stdout
+
+# Apply just the theme, keeping the desktop image
+python3 scripts/generate-wallpaper-theme wallpaper/rei-plush-wallpaper.png --apply
+```
+
+The installer installs Matugen with Cargo into `~/.local/bin`. Generation is
+noninteractive and checks contrast before writing the palette: at least 7:1
+for body text and 4.5:1 for the checked secondary text and semantic color pairs.
+These checks use solid colors; Kitty transparency and the transparent status
+bar also depend on what is behind them.
+
+Edit `matugen/config.toml` for semantic color anchors,
+`scripts/generate-wallpaper-theme` for Material-to-Base16 mappings, and
+`flavours/templates/` for application styling. Generated files are overwritten
+on every application. `flavours/config.toml` is linked into the installed
+configuration so new targets and reload hooks stay synchronized.
+
+Kitty, Sketchybar, Tmux and Borders reload on application. Neovim reloads when
+it regains focus (or with `:ThemeReload`); Zsh reads prompt colors before the
+next prompt; FZF reads colors on its next launch. After upgrading these
+dotfiles, reload Zsh and restart Neovim once to enable the new reload logic.
+VS Code uses our own Wallpaper (Matugen) theme extension for the interface,
+terminal ANSI colors, TextMate syntax and semantic syntax. The updater preserves
+other preferences in `vscode/settings.json`. Run
+`~/.local/bin/apply-vscode-theme` to regenerate and select the theme after
+editing its mappings.
+
+Run the palette regression checks with `python3 -B -m unittest discover -s tests`.
 
 ## Shortcuts
 

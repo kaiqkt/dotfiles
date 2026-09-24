@@ -117,41 +117,8 @@ configure_displays() {
 }
 
 apply_wallpaper() {
-  local wallpaper_dir wallpaper_name wallpaper
-
-  if [[ ! -f "${WALLPAPER_PATH}" ]]; then
-    warn "Wallpaper not found: ${WALLPAPER_PATH}"
-    return
-  fi
-
-  wallpaper_dir="$(cd "$(dirname "${WALLPAPER_PATH}")" && pwd -P)" || {
-    warn "Could not resolve the wallpaper directory"
-    return
-  }
-  wallpaper_name="$(basename "${WALLPAPER_PATH}")"
-  wallpaper="${wallpaper_dir}/${wallpaper_name}"
-
-  if ! command -v osascript >/dev/null 2>&1; then
-    warn "osascript is unavailable; wallpaper was not changed"
-    return
-  fi
-
-  info "Applying wallpaper to every desktop: ${wallpaper}"
-  if osascript - "${wallpaper}" <<'APPLESCRIPT'
-on run argv
-  set wallpaperFile to POSIX file (item 1 of argv)
-  tell application "System Events"
-    repeat with desktopItem in desktops
-      set picture of desktopItem to wallpaperFile
-    end repeat
-  end tell
-end run
-APPLESCRIPT
-  then
-    info "Wallpaper applied"
-  else
-    warn "Could not apply the wallpaper; allow Terminal to control System Events and run this script again"
-  fi
+  info "Generating the theme and applying wallpaper to every desktop"
+  python3 "${BASEDIR}/scripts/set-wallpaper" "${WALLPAPER_PATH}"
 }
 
 configure_displays

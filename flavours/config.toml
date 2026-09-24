@@ -2,6 +2,7 @@
   template = "kitty"
   file = "~/.config/kitty/colors.conf"
   rewrite = true
+  hook = "if pgrep -x kitty > /dev/null; then pkill -USR1 -x kitty; fi"
 
 [[items]]
   template = "neovim"
@@ -29,4 +30,9 @@
 [[items]]
   template = "fzf"
   file = "~/.fzfrc"
+  rewrite = true
+
+[[items]]
+  template = "zsh"
+  file = "~/.config/zsh/user/generated_colors.sh"
   rewrite = true

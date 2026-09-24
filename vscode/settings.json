@@ -1,6 +1,6 @@
 {
   "telemetry.telemetryLevel": "off",
-  "workbench.colorTheme": "Dracula Theme Soft",
+  "workbench.colorTheme": "Wallpaper (Matugen)",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
@@ -10,18 +10,15 @@
     "source.fixAll": "explicit"
   },
   "terminal.integrated.defaultProfile.osx": "zsh",
-
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer",
     "editor.formatOnSave": true
   },
   "rust-analyzer.check.command": "clippy",
-
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml",
     "editor.formatOnSave": true
   },
-
   "[java]": {
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
@@ -34,7 +31,6 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.import.gradle.wrapper.enabled": true,
   "gradle.nestedProjects": true,
-
   "intellij.region": "americas",
   "intellij.dataSharing": "none",
   "[kotlin]": {
@@ -49,7 +45,6 @@
     "editor.defaultFormatter": "rnoro.vscode-ktlint-formatter",
     "editor.formatOnSave": true
   },
-
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true

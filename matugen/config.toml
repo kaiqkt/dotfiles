@@ -1,0 +1,16 @@
+# Matugen only generates data; flavours owns application templates and reloads.
+[config]
+caching = false
+version_check = false
+
+# Semantic anchors harmonized with the wallpaper in HCT, separate from UI accents.
+[config.custom_colors]
+red = { color = "#d05050", blend = true }
+orange = { color = "#d08040", blend = true }
+yellow = { color = "#c0a030", blend = true }
+green = { color = "#509050", blend = true }
+cyan = { color = "#309898", blend = true }
+blue = { color = "#5070c0", blend = true }
+magenta = { color = "#a050b0", blend = true }
+
+[templates]

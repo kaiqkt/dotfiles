@@ -5,7 +5,7 @@
 --bind 'ctrl-d:preview-half-page-down'
 --bind 'ctrl-u:preview-half-page-up'
 --preview 'fzf-preview.sh {}'
---padding=0% --color='dark,fg:magenta'
+--padding=0%
 --layout=reverse
 --border-label=''
 --info=hidden
@@ -19,13 +19,15 @@
 --no-scrollbar
 --bind 'focus:transform-preview-label:[[ -n {} ]] && printf \" %s \" {}'
 --color=dark
+--color 'bg:#{{base00-hex}},fg:#{{base05-hex}},preview-bg:#{{base00-hex}},preview-fg:#{{base05-hex}}'
+--color 'input-fg:#{{base05-hex}},current-fg:#{{base05-hex}},hl:#{{base0F-hex}},prompt:#{{base0F-hex}}'
 --color 'border:#{{base02-hex}},label:#{{base03-hex}}'
---color 'input-border:#{{base03-hex}},input-label:#{{base08-hex}}'
---color 'preview-border:#{{base03-hex}},preview-label:#{{base08-hex}}'
---color 'list-border:#{{base03-hex}},list-label:#{{base08-hex}}'
+--color 'input-border:#{{base03-hex}},input-label:#{{base04-hex}}'
+--color 'preview-border:#{{base03-hex}},preview-label:#{{base04-hex}}'
+--color 'list-border:#{{base03-hex}},list-label:#{{base04-hex}}'
 --color 'gutter:#{{base01-hex}}'
 --color 'current-bg:#{{base01-hex}}'
---color 'current-hl:#{{base0A-hex}}'
+--color 'current-hl:#{{base0F-hex}}'
 --color 'list-fg:#{{base04-hex}}'
---color 'pointer:#{{base0A-hex}}'
---color 'marker:#{{base0A-hex}}'
+--color 'pointer:#{{base0F-hex}}'
+--color 'marker:#{{base0F-hex}}'

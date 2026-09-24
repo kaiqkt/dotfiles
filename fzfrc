@@ -5,7 +5,7 @@
 --bind 'ctrl-d:preview-half-page-down'
 --bind 'ctrl-u:preview-half-page-up'
 --preview 'fzf-preview.sh {}'
---padding=0% --color='dark,fg:magenta'
+--padding=0%
 --layout=reverse
 --border-label=''
 --info=hidden
@@ -19,13 +19,15 @@
 --no-scrollbar
 --bind 'focus:transform-preview-label:[[ -n {} ]] && printf \" %s \" {}'
 --color=dark
---color 'border:#4e6e94,label:#3a85bb'
---color 'input-border:#3a85bb,input-label:#b8333c'
---color 'preview-border:#3a85bb,preview-label:#b8333c'
---color 'list-border:#3a85bb,list-label:#b8333c'
---color 'gutter:#254664'
---color 'current-bg:#254664'
---color 'current-hl:#adb833'
---color 'list-fg:#86adce'
---color 'pointer:#adb833'
---color 'marker:#adb833'
+--color 'bg:#181c20,fg:#e0e2e8,preview-bg:#181c20,preview-fg:#e0e2e8'
+--color 'input-fg:#e0e2e8,current-fg:#e0e2e8,hl:#9ccbfb,prompt:#9ccbfb'
+--color 'border:#323539,label:#8c9199'
+--color 'input-border:#8c9199,input-label:#c2c7cf'
+--color 'preview-border:#8c9199,preview-label:#c2c7cf'
+--color 'list-border:#8c9199,list-label:#c2c7cf'
+--color 'gutter:#272a2f'
+--color 'current-bg:#272a2f'
+--color 'current-hl:#9ccbfb'
+--color 'list-fg:#c2c7cf'
+--color 'pointer:#9ccbfb'
+--color 'marker:#9ccbfb'

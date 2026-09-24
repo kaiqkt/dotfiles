@@ -1,6 +1,8 @@
 {
   "telemetry.telemetryLevel": "off",
   "workbench.colorTheme": "Wallpaper (Matugen)",
+  "vscode_vibrancy.type": "under-window",
+  "vscode_vibrancy.opacity": 0.60,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
@@ -48,5 +50,38 @@
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.formatOnSave": true
-  }
+  },
+  "workbench.colorCustomizations": {
+    "terminal.background": "#00000000",
+    "editorPane.background": "#1e1e1e00",
+    "editorGroupHeader.tabsBackground": "#1e1e1e00",
+    "editorGroupHeader.noTabsBackground": "#1e1e1e00",
+    "breadcrumb.background": "#1e1e1e00",
+    "editorGutter.background": "#1e1e1e00",
+    "panel.background": "#1e1e1e00",
+    "tab.activeBackground": "#1e1e1e00",
+    "tab.unfocusedActiveBackground": "#1e1e1e00",
+    "sideBar.background": "#1e1e1e99",
+    "sideBarTitle.background": "#1e1e1e99",
+    "activityBar.background": "#1e1e1e99",
+    "editor.background": "#1e1e1e99",
+    "tab.inactiveBackground": "#1e1e1e99",
+    "tab.unfocusedInactiveBackground": "#1e1e1e99",
+    "editorStickyScroll.background": "#1e1e1ebf",
+    "editorStickyScrollGutter.background": "#1e1e1ebf",
+    "sideBarStickyScroll.background": "#1e1e1ebf",
+    "panelStickyScroll.background": "#1e1e1ebf",
+    "terminalStickyScroll.background": "#1e1e1ebf",
+    "inlineChat.background": "#1e1e1ee6",
+    "editorWidget.background": "#1e1e1ee6",
+    "editorHoverWidget.background": "#1e1e1ee6",
+    "editorSuggestWidget.background": "#1e1e1ee6",
+    "notifications.background": "#1e1e1ee6",
+    "notificationCenterHeader.background": "#1e1e1ee6",
+    "menu.background": "#1e1e1ee6",
+    "quickInput.background": "#1e1e1ee6"
+  },
+  "terminal.integrated.gpuAcceleration": "off",
+  "window.systemColorTheme": "dark",
+  "window.autoDetectColorScheme": false
 }

@@ -140,6 +140,15 @@ other preferences in `vscode/settings.json`. Run
 `~/.local/bin/apply-vscode-theme` to regenerate and select the theme after
 editing its mappings.
 
+VS Code also uses [Vibrancy Continued](https://github.com/illixion/vscode-vibrancy-continued)
+for macOS background blur with `0.88` opacity, matching Kitty's opacity while
+keeping the Wallpaper (Matugen) theme. To activate it, open the Command Palette,
+run `Reload Vibrancy`, and restart VS Code when prompted. Repeat after VS Code
+updates. The extension patches VS Code's internal files, which can trigger an
+installation integrity warning. Adjust `vscode_vibrancy.opacity` in
+`vscode/settings.json` (`0` is transparent, `1` is opaque); run `Disable Vibrancy`
+and restart to remove the effect.
+
 Run the palette regression checks with `python3 -B -m unittest discover -s tests`.
 
 ## Shortcuts

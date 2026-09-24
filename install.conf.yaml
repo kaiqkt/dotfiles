@@ -33,7 +33,8 @@
     ~/.config/opencode/opencode.json: opencode/opencode.json
     ~/.config/borders: borders
     ~/.config/sketchybar: sketchybar
-    ~/.config/aerospace: aerospace
+    ~/.config/yabai: yabai
+    ~/.config/skhd: skhd
     ~/.config/lazygit: lazygit
     ~/.config/htop: htop
     ~/.config/fastfetch: fastfetch

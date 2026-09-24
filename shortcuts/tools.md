@@ -19,7 +19,7 @@ borders active_color=0xffcba6f7  # any 0xAARRGGBB value
 
 ## Sketchybar
 
-Custom status bar integrated with AeroSpace. Manage with:
+Custom status bar integrated with yabai. Manage with:
 
 | Alias             | Description                                    |
 | ----------------- | ---------------------------------------------- |

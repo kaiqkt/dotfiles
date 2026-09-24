@@ -60,7 +60,7 @@ set_artwork() {
   fi
 }
 
-MONITOR_COUNT=$(aerospace list-monitors 2>/dev/null | wc -l | tr -d ' ') || true
+MONITOR_COUNT=$(yabai -m query --displays 2>/dev/null | jq 'length') || true
 if [ "${MONITOR_COUNT:-0}" -lt 2 ]; then
   sketchybar --set "$ART_ITEM" drawing=off
   sketchybar --set "$NAME" drawing=off label="" label.drawing=off

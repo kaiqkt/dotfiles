@@ -1,7 +1,7 @@
 # AeroSpace Configuration
 # https://nikitabobko.github.io/AeroSpace/guide
 
-start-at-login = true
+start-at-login = false
 
 after-login-command = []
 after-startup-command = [

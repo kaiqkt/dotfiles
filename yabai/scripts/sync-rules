@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+
+spaces=$(yabai -m query --spaces)
+rules=$(yabai -m rule --list)
+changed=false
+
+add_rule() {
+  label=$1
+  app=$2
+  space=$3
+
+  if ! printf '%s\n' "$spaces" | jq -e --argjson index "$space" 'any(.[]; .index == $index)' >/dev/null; then
+    return
+  fi
+  if printf '%s\n' "$rules" | jq -e --arg label "$label" 'any(.[]; .label == $label)' >/dev/null; then
+    return
+  fi
+
+  yabai -m rule --add "label=$label" "app=$app" "space=$space"
+  changed=true
+}
+
+# Match the AeroSpace app assignments once their native Spaces exist.
+add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1
+add_rule dotfiles_terminals '^(Terminal|kitty)$' 2
+add_rule dotfiles_claude '^Claude$' 8
+add_rule dotfiles_spotify '^Spotify$' 9
+
+if [ "$changed" = true ]; then
+  yabai -m rule --apply
+fi

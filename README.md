@@ -41,13 +41,33 @@ shell.
 # Install tmux plugins (open tmux first, then press prefix + I)
 tmux
 
-# Open AeroSpace and grant Accessibility permission
-open -a AeroSpace
-# System Settings → Privacy & Security → Accessibility → AeroSpace → enable
+# Start the window manager and hotkey daemon
+yabai --start-service
+skhd --start-service
+# System Settings → Privacy & Security → Accessibility → enable yabai and skhd
 
-# Reload AeroSpace config
-aerospace reload-config
+# Reload their configs after editing
+yabai --restart-service
+skhd --restart-service
 ```
+
+Yabai uses native macOS Spaces. Create Spaces 1–9 in Mission Control, with 1–5
+on the main display and 6–9 on the secondary display, to match the previous
+AeroSpace layout. The app placement rules and `alt+1–9` shortcuts target those
+Space indices. Disable “Automatically rearrange Spaces based on most recent use”
+in Desktop & Dock so the numbers stay stable.
+The app placement rules register automatically as their Spaces become available.
+
+After loading the scripting addition, create this two-display layout with
+`~/.config/yabai/scripts/setup-spaces`. The script only adds missing Spaces and
+checks their final indices.
+
+The configured 90% opacity requires partially disabling macOS System Integrity
+Protection (SIP) and loading yabai's scripting addition. Follow the
+[upstream SIP instructions](https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection)
+in macOS Recovery, then [configure the scripting addition](https://github.com/asmvik/yabai/wiki/Installing-yabai-%28latest-release%29#configure-scripting-addition)
+and restart yabai. Tiling and the other supported controls work without this
+step; transparency will not.
 
 ### Requirements
 
@@ -60,7 +80,7 @@ aerospace reload-config
 
 | Step                    | Description                                                                 |
 | ----------------------- | --------------------------------------------------------------------------- |
-| AeroSpace Accessibility | System Settings → Privacy & Security → Accessibility → enable AeroSpace     |
+| yabai/skhd Accessibility | System Settings → Privacy & Security → Accessibility → enable both          |
 | Hack Nerd Font          | Installed via Brewfile — select in Kitty if not applied automatically       |
 | `~/secrets.sh`          | Create with private env vars (tokens, API keys) — sourced by zsh if present |
 | Sketchybar menu bar     | Run `sketchy:start` — hides native menu bar and starts sketchybar           |
@@ -68,7 +88,8 @@ aerospace reload-config
 
 ## Stack
 
-- **AeroSpace** — tiling window manager
+- **yabai** — tiling window manager
+- **skhd** — window manager keyboard shortcuts
 - **Sketchybar** — custom status bar
 - **Kitty** — terminal (wallpaper theme generated with Matugen)
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
@@ -147,7 +168,7 @@ Run the palette regression checks with `python3 -B -m unittest discover -s tests
 | Topic | File |
 | ----- | ---- |
 | Tmux keybinds & popups | [shortcuts/tmux.md](shortcuts/tmux.md) |
-| AeroSpace keybinds & workspaces | [shortcuts/aerospace.md](shortcuts/aerospace.md) |
+| yabai keybinds & Spaces | [shortcuts/yabai.md](shortcuts/yabai.md) |
 | ZSH aliases & functions | [shortcuts/zsh.md](shortcuts/zsh.md) |
 | Neovim keybindings | [shortcuts/nvim.md](shortcuts/nvim.md) |
 | Tools reference | [shortcuts/tools.md](shortcuts/tools.md) |

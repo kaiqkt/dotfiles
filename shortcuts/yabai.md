@@ -1,15 +1,15 @@
-# AeroSpace
+# yabai and skhd
 
 ## Workspaces
 
 | Binding         | Description                           |
 | --------------- | ------------------------------------- |
-| `alt+1-9`       | Switch to workspace                   |
-| `alt+shift+1-9` | Move window to workspace (and follow) |
+| `alt+1-9`       | Switch to native macOS Space                   |
+| `alt+shift+1-9` | Move window to Space (and follow)             |
 
 Default app assignments:
 
-| Workspace | Apps            | Monitor |
+| Space     | Apps            | Display |
 | --------- | --------------- | ------- |
 | 1         | Chrome, Safari  | 1       |
 | 2         | Kitty, Terminal | 1       |
@@ -23,7 +23,7 @@ Default app assignments:
 | Binding             | Description                     |
 | ------------------- | ------------------------------- |
 | `alt+h/j/k/l`       | Focus window left/down/up/right |
-| `alt+shift+h/j/k/l` | Move window left/down/up/right  |
+| `alt+shift+h/j/k/l` | Swap window left/down/up/right  |
 
 ## Resize
 
@@ -38,25 +38,28 @@ Default app assignments:
 
 | Binding           | Description                                          |
 | ----------------- | ---------------------------------------------------- |
-| `alt+/`           | Toggle tiles horizontal/vertical (h-tiles → v-tiles) |
-| `alt+,`           | Toggle accordion horizontal/vertical                 |
+| `alt+/`           | Rotate the BSP tree 90°                               |
+| `alt+,`           | Toggle BSP/stack layout                               |
 | `alt+shift+space` | Toggle floating/tiling                               |
-| `alt+f`           | Fullscreen                                           |
+| `alt+f`           | Zoom window to fill its Space                        |
 
 ## Service Mode (`alt+shift+;`)
 
 | Binding             | Description                      |
 | ------------------- | -------------------------------- |
-| `r`                 | Flatten workspace tree           |
+| `r`                 | Balance Space split ratios        |
 | `f`                 | Toggle floating/tiling           |
 | `backspace`         | Close all windows except current |
-| `alt+shift+h/j/k/l` | Join with adjacent window        |
+| `alt+shift+h/j/k/l` | Warp beside adjacent window      |
 | `esc`               | Exit service mode                |
+
+Service mode stays active until `esc` is pressed.
 
 ## CLI
 
 ```bash
-aerospace reload-config
-aerospace list-workspaces --all
-aerospace list-windows --all
+yabai --restart-service
+skhd --restart-service
+yabai -m query --spaces
+yabai -m query --windows
 ```

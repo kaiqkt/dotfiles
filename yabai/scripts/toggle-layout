@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+target=${1:?expected layout}
+current=$(yabai -m query --spaces --space | jq -r '.type')
+
+if [ "$current" = "$target" ]; then
+  yabai -m space --layout bsp
+else
+  yabai -m space --layout "$target"
+fi

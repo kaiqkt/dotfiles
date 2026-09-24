@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+display_count=$(yabai -m query --displays | jq 'length')
+if [ "$display_count" -ne 2 ]; then
+  echo "Expected two displays; found $display_count" >&2
+  exit 1
+fi
+
+for spec in 1:5 2:4; do
+  display=${spec%:*}
+  target=${spec#*:}
+  current=$(yabai -m query --spaces --display "$display" | jq 'length')
+
+  if [ "$current" -gt "$target" ]; then
+    echo "Display $display already has $current Spaces (target: $target)" >&2
+    exit 1
+  fi
+
+  while [ "$current" -lt "$target" ]; do
+    yabai -m space --create "$display"
+    sleep 1
+    next=$(yabai -m query --spaces --display "$display" | jq 'length')
+    if [ "$next" -le "$current" ]; then
+      echo "Space creation did not complete on display $display" >&2
+      exit 1
+    fi
+    current=$next
+  done
+done
+
+if ! yabai -m query --spaces | jq -e \
+  '[.[] | select(.display == 1) | .index] == [1,2,3,4,5] and [.[] | select(.display == 2) | .index] == [6,7,8,9]' >/dev/null; then
+  echo 'Space indices differ from 1-5 / 6-9; check Mission Control ordering' >&2
+  exit 1
+fi
+
+"$HOME/.config/yabai/scripts/sync-rules"
+sketchybar --reload

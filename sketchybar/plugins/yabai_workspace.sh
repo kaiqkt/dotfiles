@@ -3,9 +3,10 @@ set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
-WS_ID="${1:-}"
+space_index="${1:?space index required}"
+focused_space=$(yabai -m query --spaces --space 2>/dev/null | jq -r '.index')
 
-if [ "$WS_ID" = "${FOCUSED_WORKSPACE:-}" ]; then
+if [ "$space_index" = "$focused_space" ]; then
   sketchybar --set "$NAME" \
     background.drawing=on \
     background.color="$ITEM_BG_COLOR" \
@@ -20,10 +21,7 @@ else
     icon.shadow.drawing=off
 fi
 
-# Refresh app icons, show/hide based on occupancy
-apps=$(aerospace list-windows --workspace "$WS_ID" 2>/dev/null \
-       | awk -F'|' '{gsub(/^ *| *$/, "", $2); print $2}') || true
-
+apps=$(yabai -m query --windows --space "$space_index" 2>/dev/null | jq -r '.[].app') || true
 if [ -n "$apps" ]; then
   icon_strip=" "
   while IFS= read -r app; do

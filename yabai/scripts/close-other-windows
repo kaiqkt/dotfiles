@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+yabai -m query --windows --space | jq -r '.[] | select(."has-focus" == false) | .id' |
+while IFS= read -r window_id; do
+  yabai -m window "$window_id" --close
+done

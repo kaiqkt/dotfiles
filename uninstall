@@ -45,7 +45,8 @@ SYMLINKS=(
   "$HOME/.vscode/extensions/kaiqkt.wallpaper-theme-0.1.0"
   "$HOME/Library/Preferences/flavours/config.toml"
   ~/.config/sketchybar
-  ~/.config/aerospace
+  ~/.config/yabai
+  ~/.config/skhd
   ~/.config/lazygit
   ~/.config/htop
   ~/.config/fastfetch
@@ -75,11 +76,14 @@ echo ""
 
 echo "Step 2: Stop services"
 echo "----------------------"
-read -rp "Stop sketchybar, borders, AeroSpace and brew autoupdate? (y/N) " answer
+read -rp "Stop sketchybar, borders, yabai, skhd and brew autoupdate? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   brew services stop sketchybar 2>/dev/null || true
   brew services stop felixkratz/formulae/borders 2>/dev/null || true
-  osascript -e 'quit app "AeroSpace"' 2>/dev/null || true
+  yabai --stop-service 2>/dev/null || true
+  yabai --uninstall-service 2>/dev/null || true
+  skhd --stop-service 2>/dev/null || true
+  skhd --uninstall-service 2>/dev/null || true
   brew autoupdate delete 2>/dev/null || true
   info "Services stopped"
 else

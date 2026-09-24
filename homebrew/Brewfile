@@ -4,6 +4,7 @@ brew "zsh"
 brew "dotbot"
 brew "node" # Claude Code hooks (caveman) and npx-based MCP servers
 tap "domt4/autoupdate"
+tap "noworrieseh/brews"
 
 # Shell utilities
 brew "eza"
@@ -23,6 +24,7 @@ brew "flavours"
 brew "rtk"
 brew "coreutils"
 brew "imagemagick"
+brew "noworrieseh/brews/macdisp"
 
 # Git
 brew "lazygit"

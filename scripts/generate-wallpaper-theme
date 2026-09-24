@@ -176,7 +176,7 @@ def build_scheme(colors):
 
 def main():
     dotfiles = Path(__file__).resolve().parent.parent
-    image_path = Path(sys.argv[1]) if len(sys.argv) > 1 else dotfiles / "wallpaper" / "wallpaper.jpg"
+    image_path = Path(sys.argv[1]) if len(sys.argv) > 1 else dotfiles / "wallpaper" / "rei-plush-wallpaper.png"
 
     if not image_path.exists():
         print(f"Error: image not found: {image_path}", file=sys.stderr)

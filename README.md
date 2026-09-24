@@ -14,11 +14,14 @@ xcode-select --install
 git clone https://github.com/kaiqkt/dotfiles.git ~/Projects/dotfiles
 cd ~/Projects/dotfiles
 
-# 3. Run the install script (installs Homebrew + dotbot, symlinks everything, runs brew bundle)
+# 3. Run the install script (packages, symlinks, display defaults, wallpaper and themes)
 ./install
 
 # 4. Open a new terminal to load ZSH configuration
 ```
+
+Display resolution, scaling, rotation, and arrangement are preserved. The
+installer selects the highest safe refresh rate up to 60 Hz.
 
 The first `nvim` launch bootstraps LazyVim and installs the configured plugins,
 language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
@@ -61,6 +64,7 @@ aerospace reload-config
 | Hack Nerd Font          | Installed via Brewfile — select in Kitty if not applied automatically       |
 | `~/secrets.sh`          | Create with private env vars (tokens, API keys) — sourced by zsh if present |
 | Sketchybar menu bar     | Run `sketchy:start` — hides native menu bar and starts sketchybar           |
+| Wallpaper automation    | Allow Terminal to control System Events if macOS requests permission        |
 
 ## Stack
 

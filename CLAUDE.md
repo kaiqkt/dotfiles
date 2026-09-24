@@ -24,7 +24,7 @@ macOS development environment dotfiles for a Kotlin/Java/Go/Rust developer. Uses
 ## Install / Uninstall
 
 ```bash
-./install    # Homebrew + dotbot symlinks + asdf + flavours + macOS defaults + services + IntelliJ vmoptions
+./install    # Homebrew + dotbot + toolchains + display defaults + wallpaper/theme + macOS defaults + services
 ./uninstall  # Remove symlinks, optionally remove packages/plugins/defaults
 ```
 
@@ -53,6 +53,7 @@ macOS development environment dotfiles for a Kotlin/Java/Go/Rust developer. Uses
 | `flavours/config.toml` | Theme output targets + hooks |
 | `flavours/templates/` | Base16 mustache templates per app |
 | `scripts/generate-wallpaper-theme` | Extracts Base16 palette from wallpaper image |
+| `scripts/configure-displays` | Preserves the display layout, caps safe modes at 60 Hz, and applies the wallpaper |
 | `scripts/git-multi` | Configures push to GitHub + Codeberg simultaneously |
 | `tmux/tmux.conf` | Tmux entrypoint |
 | `tmux/config/` | Split configs: options, keybindings, theme |
@@ -86,9 +87,14 @@ Targets configured in `flavours/config.toml`:
 
 Generate palette from wallpaper:
 ```bash
-python3 scripts/generate-wallpaper-theme wallpaper/wallpaper.jpg
+python3 scripts/generate-wallpaper-theme wallpaper/rei-plush-wallpaper.png
 flavours apply wallpaper
 ```
+
+`./install` uses `wallpaper/rei-plush-wallpaper.png` for both the macOS desktop
+and the generated palette. Display resolution, scaling, rotation, and layout
+are preserved; `macdisp` selects the highest safe refresh rate up to 60 Hz and
+then the highest color depth for the active mode.
 
 Accent slots `base08-base0E` are always semantic (red is red, blue is blue), harmonized with the wallpaper's saturation/brightness. `base0F` is the wallpaper-anchored UI accent — used by borders `active_color`, tmux active tab / pane / popup borders / message style, and kitty active tab. Never repurpose `base0F` for text colors.
 

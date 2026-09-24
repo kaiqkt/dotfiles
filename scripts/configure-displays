@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+set -u
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEFAULT_WALLPAPER="${BASEDIR}/wallpaper/rei-plush-wallpaper.png"
+WALLPAPER_PATH="${1:-${DEFAULT_WALLPAPER}}"
+MAX_REFRESH_RATE=60
+
+info() { printf '[INFO] %s\n' "$1"; }
+warn() { printf '[WARN] %s\n' "$1" >&2; }
+
+summarize_displays() {
+  jq -r '
+    to_entries[] |
+    "[INFO] Display \(.key + 1)\n" +
+    "[INFO]   ID: \(.value.id)\n" +
+    "[INFO]   Type: \(.value.display_type // "Unknown")\n" +
+    "[INFO]   Resolution: \(.value.width)x\(.value.height)\n" +
+    "[INFO]   Hertz: \(.value.hz // "N/A")\n" +
+    "[INFO]   Scaling: \(if .value.scaling then "on" else "off" end)\n" +
+    "[INFO]   Origin: (\(.value.x // 0),\(.value.y // 0))\(if .value.is_main then " - main display" else "" end)\n" +
+    "[INFO]   Rotation: \(.value.rotation // 0)\n" +
+    "[INFO]   Enabled: \(.value.enabled)\n"
+  '
+}
+
+configure_displays() {
+  local display_json mirror_count id width height scaling x y rotation
+  local modes_json selection mode_number refresh_rate color_depth updated_json
+  local -a configs=()
+
+  if ! command -v macdisp >/dev/null 2>&1; then
+    warn "macdisp is not installed; preserving the current display settings"
+    return
+  fi
+
+  if ! command -v jq >/dev/null 2>&1; then
+    warn "jq is not installed; preserving the current display settings"
+    return
+  fi
+
+  if ! display_json="$(macdisp list --json 2>&1)"; then
+    warn "Could not read the display configuration; preserving the current settings"
+    printf '%s\n' "${display_json}" >&2
+    return
+  fi
+
+  if ! printf '%s\n' "${display_json}" | jq -e 'type == "array" and length > 0' >/dev/null; then
+    warn "macdisp returned no usable displays; preserving the current settings"
+    return
+  fi
+
+  info "Detected display configuration:"
+  printf '%s\n' "${display_json}" | summarize_displays
+
+  mirror_count="$(printf '%s\n' "${display_json}" | jq '[.[] | select(.is_mirror == true)] | length')"
+  if [[ "${mirror_count}" -gt 0 ]]; then
+    warn "Mirrored displays detected; preserving their current modes and arrangement"
+    return
+  fi
+
+  while IFS=$'\t' read -r id width height scaling x y rotation; do
+    if ! modes_json="$(macdisp modes "${id}" --json 2>&1)"; then
+      warn "Could not read supported modes for display ${id}; leaving it unchanged"
+      continue
+    fi
+
+    selection="$(printf '%s\n' "${modes_json}" | jq -r \
+      --argjson width "${width}" \
+      --argjson height "${height}" \
+      --argjson scaled "${scaling}" \
+      --argjson max_hz "${MAX_REFRESH_RATE}" '
+        [.available_modes[]?
+          | select(.width == $width and .height == $height)
+          | select((.is_scaled // false) == $scaled)
+          | select(.is_safe_for_hardware != false)
+          | select((.refresh_rate // 0) > 0 and (((.refresh_rate // 0) | round) <= $max_hz))
+          | select(.is_stretched != true and .is_interlaced != true and .is_tv_mode != true)]
+        | sort_by([(.refresh_rate // 0), (.depth // 0)])
+        | last
+        | if . == null then empty
+          else [.mode_number, (.refresh_rate // 0), (.depth // 0)] | @tsv
+          end
+      ' 2>/dev/null)"
+
+    if [[ -z "${selection}" ]]; then
+      warn "No safe mode up to ${MAX_REFRESH_RATE} Hz matches ${width}x${height} (scaling: ${scaling}) on display ${id}; leaving it unchanged"
+      continue
+    fi
+
+    IFS=$'\t' read -r mode_number refresh_rate color_depth <<<"${selection}"
+    configs+=("id:${id} mode:${mode_number} origin:(${x},${y}) degree:${rotation} enabled:true")
+    info "Display ${id}: selected ${width}x${height} @ ${refresh_rate} Hz, depth ${color_depth}"
+  done < <(printf '%s\n' "${display_json}" | jq -r '
+    .[]
+    | select(.enabled == true and .is_mirror != true)
+    | [.id, .width, .height, (.scaling // false), (.x // 0), (.y // 0), (.rotation // 0)]
+    | @tsv
+  ')
+
+  if [[ ${#configs[@]} -eq 0 ]]; then
+    warn "No safe display changes were found; preserving the current settings"
+    return
+  fi
+
+  info "Applying the current resolution and layout with refresh rate capped at ${MAX_REFRESH_RATE} Hz..."
+  if ! macdisp "${configs[@]}"; then
+    warn "The optimized display modes were rejected; macOS kept a supported configuration"
+    return
+  fi
+
+  info "Display configuration applied"
+  if updated_json="$(macdisp list --json 2>/dev/null)"; then
+    printf '%s\n' "${updated_json}" | summarize_displays
+  fi
+}
+
+apply_wallpaper() {
+  local wallpaper_dir wallpaper_name wallpaper
+
+  if [[ ! -f "${WALLPAPER_PATH}" ]]; then
+    warn "Wallpaper not found: ${WALLPAPER_PATH}"
+    return
+  fi
+
+  wallpaper_dir="$(cd "$(dirname "${WALLPAPER_PATH}")" && pwd -P)" || {
+    warn "Could not resolve the wallpaper directory"
+    return
+  }
+  wallpaper_name="$(basename "${WALLPAPER_PATH}")"
+  wallpaper="${wallpaper_dir}/${wallpaper_name}"
+
+  if ! command -v osascript >/dev/null 2>&1; then
+    warn "osascript is unavailable; wallpaper was not changed"
+    return
+  fi
+
+  info "Applying wallpaper to every desktop: ${wallpaper}"
+  if osascript - "${wallpaper}" <<'APPLESCRIPT'
+on run argv
+  set wallpaperFile to POSIX file (item 1 of argv)
+  tell application "System Events"
+    repeat with desktopItem in desktops
+      set picture of desktopItem to wallpaperFile
+    end repeat
+  end tell
+end run
+APPLESCRIPT
+  then
+    info "Wallpaper applied"
+  else
+    warn "Could not apply the wallpaper; allow Terminal to control System Events and run this script again"
+  fi
+}
+
+configure_displays
+apply_wallpaper

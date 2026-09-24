@@ -22,7 +22,7 @@ echo "Running monitoring software detection..."
 
 echo ""
 echo "Trusting third-party Homebrew taps..."
-for tap in felixkratz/formulae nikitabobko/tap domt4/autoupdate; do
+for tap in felixkratz/formulae nikitabobko/tap domt4/autoupdate noworrieseh/brews; do
   brew tap "$tap" 2>/dev/null || true
   brew trust "$tap" 2>/dev/null || true
 done

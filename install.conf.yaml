@@ -58,6 +58,7 @@
     - ["~/.config/tmux/plugins/tpm/bin/install_plugins", Installing tmux plugins]
     - description: Setting up flavours (Base16 theme manager)
       command: |
+        wallpaper="$(pwd)/wallpaper/rei-plush-wallpaper.png"
         mkdir -p "$HOME/Library/Preferences/flavours"
         cp "$(pwd)/flavours/config.toml" "$HOME/Library/Preferences/flavours/config.toml"
         mkdir -p "$HOME/Library/Application Support/flavours/base16/templates"
@@ -65,8 +66,9 @@
           ln -sf "$(pwd)/flavours/templates/$app" "$HOME/Library/Application Support/flavours/base16/templates/$app"
         done
         gtimeout 60 flavours update all 2>/dev/null || true
-        gtimeout 120 python3 "$(pwd)/scripts/generate-wallpaper-theme" "$(pwd)/wallpaper/wallpaper.jpg" || true
+        gtimeout 120 python3 "$(pwd)/scripts/generate-wallpaper-theme" "$wallpaper" || true
         flavours apply wallpaper || flavours apply nord || true
+    - [./scripts/configure-displays ./wallpaper/rei-plush-wallpaper.png, Configuring displays and wallpaper]
     - description: Applying macOS defaults
       command: |
         # Keyboard

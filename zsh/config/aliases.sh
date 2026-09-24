@@ -22,7 +22,7 @@ alias zsh:alias:edit="$EDITOR ~/.config/zsh/config/aliases.sh"
 alias t="tmux"
 alias ta="t a -t"
 alias tls="t ls"
-alias tn="t new -t"
+alias tn="t new-session -A -s"
 alias tk="t kill-session -t"
 alias tka="t kill-server"
 

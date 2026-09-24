@@ -91,6 +91,6 @@ Prefix: `Ctrl+A`
 | `t`   | `tmux`                 |
 | `ta`  | `tmux attach -t`       |
 | `tls` | `tmux ls`              |
-| `tn`  | `tmux new -t`          |
+| `tn`  | `tmux new-session -A -s` (create or attach by name) |
 | `tk`  | `tmux kill-session -t` |
 | `tka` | `tmux kill-server`     |

@@ -72,6 +72,31 @@ in macOS Recovery, then [configure the scripting addition](https://github.com/as
 and restart yabai. Tiling and the other supported controls work without this
 step; transparency will not.
 
+### Uninstall yabai and restore SIP
+
+While yabai is still installed, stop it and remove its scripting addition and
+passwordless `sudo` rule:
+
+```bash
+yabai --stop-service
+sudo yabai --uninstall-sa
+sudo rm -f /private/etc/sudoers.d/yabai
+./uninstall
+```
+
+Answer **yes** when `./uninstall` asks to remove services and Homebrew packages.
+The uninstall script cannot restore SIP because macOS requires Recovery for
+that change. Before entering Recovery, inspect `nvram boot-args`. If its only
+value is `-arm64e_preview_abi` (set for yabai on Apple Silicon), remove it with
+`sudo nvram -d boot-args`. If other boot arguments are present, preserve them
+and remove only the yabai flag.
+
+Shut down the Mac, hold the power button until startup options appear, then
+choose **Options → Continue**. In **Utilities → Terminal**, run `csrutil enable`
+and restart. Back in macOS, run `csrutil status` and confirm it reports
+`enabled`. See [Apple's Recovery instructions](https://support.apple.com/pt-br/102518)
+and [yabai's SIP restoration instructions](https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection).
+
 ### Requirements
 
 - macOS (Apple Silicon — paths assume `/opt/homebrew/`)

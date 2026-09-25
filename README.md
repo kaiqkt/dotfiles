@@ -65,7 +65,7 @@ the Brewfile installs. After updating yabai, refresh the binary hash in
 signs HEAD builds ad hoc, macOS may also require you to remove and add yabai
 again in Privacy & Security → Accessibility.
 
-The configured 90% opacity requires partially disabling macOS System Integrity
+The configured 98% opacity requires partially disabling macOS System Integrity
 Protection (SIP) and loading yabai's scripting addition. Follow the
 [upstream SIP instructions](https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection)
 in macOS Recovery, then [configure the scripting addition](https://github.com/asmvik/yabai/wiki/Installing-yabai-%28latest-release%29#configure-scripting-addition)

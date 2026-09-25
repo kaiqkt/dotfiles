@@ -9,14 +9,14 @@
 
 Default app assignments:
 
-| Space     | Apps            | Display |
-| --------- | --------------- | ------- |
-| 1         | Chrome, Safari  | 1       |
-| 2         | Kitty, Terminal | 1       |
-| 3–5       | —               | 1       |
-| 6–7       | —               | 2       |
-| 8         | Claude          | 2       |
-| 9         | Spotify         | 2       |
+| Space | Apps            | One display | Two displays |
+| ----- | --------------- | ----------- | ------------ |
+| 1     | Chrome, Safari  | 1           | 1            |
+| 2     | Kitty, Terminal | 1           | 1            |
+| 3–5   | —               | 1           | 1            |
+| 6–7   | —               | 1           | 2            |
+| 8     | Claude          | 1           | 2            |
+| 9     | Spotify         | 1           | 2            |
 
 ## Focus & Move
 
@@ -60,6 +60,7 @@ Service mode stays active until `esc` is pressed.
 ```bash
 yabai --restart-service
 skhd --restart-service
+~/.config/yabai/scripts/setup-spaces
 yabai -m query --spaces
 yabai -m query --windows
 ```

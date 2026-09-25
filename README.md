@@ -51,13 +51,14 @@ yabai --restart-service
 skhd --restart-service
 ```
 
-Yabai uses native macOS Spaces. After loading the scripting addition, run
-`~/.config/yabai/scripts/setup-spaces` with both displays connected. It adds
-missing Spaces to make 1–5 on the main display and 6–9 on the secondary display,
-then checks their indices. The app placement rules and `alt+1–9` shortcuts target
-those indices. Disable “Automatically rearrange Spaces based on most recent use”
-in Desktop & Dock so the numbers stay stable. The placement rules register as
-their Spaces become available.
+Yabai uses native macOS Spaces. At startup and when a display is connected or
+disconnected, `~/.config/yabai/scripts/setup-spaces` ensures Spaces 1–9 are on
+the available display, or Spaces 1–5 are on display 1 and 6–9 on display 2.
+You can run the script manually to recheck the layout. It moves existing Spaces
+between displays and adds missing ones; any Spaces beyond these nine are kept.
+The app placement rules and `alt+1–9` shortcuts target Spaces 1–9.
+Disable “Automatically rearrange Spaces based on most recent use” in Desktop &
+Dock so their indices stay stable.
 
 On macOS 26.6, the Space creation fix is currently only in yabai HEAD, which
 the Brewfile installs. After updating yabai, refresh the binary hash in

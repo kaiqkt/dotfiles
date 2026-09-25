@@ -6,22 +6,65 @@ count_spaces() {
   printf '%s\n' "$space_data" | jq 'length'
 }
 
+move_space() {
+  source_display=$1
+  target_display=$2
+  source_count=$(count_spaces "$source_display")
+  target_count=$(count_spaces "$target_display")
+  source_spaces=$(yabai -m query --spaces --display "$source_display")
+
+  # Move the first excess Space from display 1, or the first Space from display 2.
+  # This keeps the order of the existing Spaces when the display layout changes.
+  if [ "$source_display" -eq 1 ]; then
+    space_index=$(printf '%s\n' "$source_spaces" | jq -r '.[5].index')
+  else
+    space_index=$(printf '%s\n' "$source_spaces" | jq -r '.[0].index')
+  fi
+
+  yabai -m space "$space_index" --display "$target_display"
+  attempt=0
+  while [ "$attempt" -lt 10 ]; do
+    sleep 1
+    next_source=$(count_spaces "$source_display")
+    next_target=$(count_spaces "$target_display")
+    if [ "$next_source" -eq "$((source_count - 1))" ] &&
+      [ "$next_target" -eq "$((target_count + 1))" ]; then
+      return
+    fi
+    attempt=$((attempt + 1))
+  done
+  echo "Space move from display $source_display to $target_display did not complete" >&2
+  exit 1
+}
+
 display_data=$(yabai -m query --displays)
 display_count=$(printf '%s\n' "$display_data" | jq 'length')
-if [ "$display_count" -ne 2 ]; then
-  echo "Expected two displays; found $display_count" >&2
-  exit 1
+case "$display_count" in
+  1) targets='1:9' ;;
+  2) targets='1:5 2:4' ;;
+  *) echo "Expected one or two displays; found $display_count" >&2; exit 1 ;;
+esac
+
+if [ "$display_count" -eq 2 ]; then
+  main_count=$(count_spaces 1)
+  secondary_count=$(count_spaces 2)
+
+  while [ "$main_count" -gt 5 ]; do
+    move_space 1 2
+    main_count=$((main_count - 1))
+    secondary_count=$((secondary_count + 1))
+  done
+  while [ "$main_count" -lt 5 ] && [ "$secondary_count" -gt 4 ]; do
+    move_space 2 1
+    main_count=$((main_count + 1))
+    secondary_count=$((secondary_count - 1))
+  done
 fi
 
-for spec in 1:5 2:4; do
+for spec in $targets; do
   display=${spec%:*}
   target=${spec#*:}
   current=$(count_spaces "$display")
-
-  if [ "$current" -gt "$target" ]; then
-    echo "Display $display already has $current Spaces (target: $target)" >&2
-    exit 1
-  fi
 
   while [ "$current" -lt "$target" ]; do
     yabai -m space --create "$display"
@@ -41,9 +84,15 @@ for spec in 1:5 2:4; do
 done
 
 all_spaces=$(yabai -m query --spaces)
-if ! printf '%s\n' "$all_spaces" | jq -e \
-  '[.[] | select(.display == 1) | .index] == [1,2,3,4,5] and [.[] | select(.display == 2) | .index] == [6,7,8,9]' >/dev/null; then
-  echo 'Space indices differ from 1-5 / 6-9; check Mission Control ordering' >&2
+if ! printf '%s\n' "$all_spaces" | jq -e --argjson displays "$display_count" '
+  if $displays == 1 then
+    ([.[] | select(.display == 1) | .index][0:9] == [1,2,3,4,5,6,7,8,9]) and
+    all(.[]; .display == 1)
+  else
+    [.[] | select(.display == 1) | .index] == [1,2,3,4,5] and
+    [.[] | select(.display == 2) | .index][0:4] == [6,7,8,9]
+  end' >/dev/null; then
+  echo 'Space indices differ from the expected layout; check Mission Control ordering' >&2
   exit 1
 fi
 

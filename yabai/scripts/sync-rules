@@ -3,6 +3,13 @@ set -eu
 
 spaces=$(yabai -m query --spaces)
 rules=$(yabai -m rule --list)
+displays=$(yabai -m query --displays)
+display_count=$(printf '%s\n' "$displays" | jq 'length')
+case "$display_count" in
+  1) last_display=1 ;;
+  2) last_display=2 ;;
+  *) echo "Expected one or two displays; found $display_count" >&2; exit 1 ;;
+esac
 changed=false
 
 add_rule() {
@@ -35,8 +42,8 @@ add_rule() {
 # Register app assignments once their native Spaces exist.
 add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1 1
 add_rule dotfiles_terminals '^(Terminal|kitty)$' 2 1
-add_rule dotfiles_claude '^Claude$' 8 2
-add_rule dotfiles_spotify '^Spotify$' 9 2
+add_rule dotfiles_claude '^Claude$' 8 "$last_display"
+add_rule dotfiles_spotify '^Spotify$' 9 "$last_display"
 
 if [ "$changed" = true ]; then
   yabai -m rule --apply

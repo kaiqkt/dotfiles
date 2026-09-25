@@ -34,8 +34,11 @@ done
 for event in space_created space_destroyed display_added display_removed; do
   yabai -m signal --add event="$event" action='~/.config/yabai/scripts/sync-rules'
 done
+for event in display_added display_removed; do
+  yabai -m signal --add event="$event" action='sleep 3; ~/.config/yabai/scripts/setup-spaces || { sleep 5; ~/.config/yabai/scripts/setup-spaces; }'
+done
 
-# If Sketchybar starts first at login, rebuild its Space items once yabai is ready.
+# Build the Space layout and Sketchybar items once yabai is ready at login.
 (
   attempt=0
   until yabai -m query --spaces >/dev/null 2>&1; do
@@ -43,6 +46,8 @@ done
     [ "$attempt" -ge 20 ] && exit 0
     sleep 1
   done
-  "$HOME/.config/yabai/scripts/sync-rules"
-  sketchybar --reload >/dev/null 2>&1
+  if ! "$HOME/.config/yabai/scripts/setup-spaces"; then
+    "$HOME/.config/yabai/scripts/sync-rules"
+    sketchybar --reload >/dev/null 2>&1
+  fi
 ) &

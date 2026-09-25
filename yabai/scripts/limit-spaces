@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+# macOS can create Spaces outside setup-spaces (for example, through Mission
+# Control). Remove only unused regular Spaces beyond the configured limit.
+max_spaces=10
+
+spaces=$(yabai -m query --spaces)
+printf '%s\n' "$spaces" | jq -r --argjson max "$max_spaces" '
+  [.[] | select(.index > $max and (.windows | length) == 0 and
+                ."is-native-fullscreen" == false) | .index] | sort | reverse[]
+' | while IFS= read -r index; do
+  # Recheck immediately before deletion: macOS may have moved a window here.
+  current=$(yabai -m query --spaces --space "$index") || continue
+  if printf '%s\n' "$current" | jq -e --argjson max "$max_spaces" '
+    .index > $max and (.windows | length) == 0 and
+    ."is-native-fullscreen" == false
+  ' >/dev/null; then
+    yabai -m space "$index" --destroy
+  fi
+done

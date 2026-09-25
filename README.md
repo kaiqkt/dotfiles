@@ -55,7 +55,9 @@ Yabai uses native macOS Spaces. At startup and when a display is connected or
 disconnected, `~/.config/yabai/scripts/setup-spaces` ensures Spaces 1–9 are on
 the available display, or Spaces 1–5 are on display 1 and 6–9 on display 2.
 You can run the script manually to recheck the layout. It moves existing Spaces
-between displays and adds missing ones; any Spaces beyond these nine are kept.
+between displays and adds missing ones. A separate yabai signal removes empty,
+regular Spaces above 10 shortly after they appear. Occupied and native
+fullscreen Spaces are preserved, so macOS can still temporarily exceed 10.
 The app placement rules and `alt+1–9` shortcuts target Spaces 1–9.
 Disable “Automatically rearrange Spaces based on most recent use” in Desktop &
 Dock so their indices stay stable.

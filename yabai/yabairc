@@ -34,6 +34,7 @@ done
 for event in space_created space_destroyed display_added display_removed; do
   yabai -m signal --add event="$event" action='~/.config/yabai/scripts/sync-rules'
 done
+yabai -m signal --add event=space_created action='sleep 3; ~/.config/yabai/scripts/limit-spaces'
 for event in display_added display_removed; do
   yabai -m signal --add event="$event" action='sleep 3; ~/.config/yabai/scripts/setup-spaces || { sleep 5; ~/.config/yabai/scripts/setup-spaces; }'
 done
@@ -50,4 +51,5 @@ done
     "$HOME/.config/yabai/scripts/sync-rules"
     sketchybar --reload >/dev/null 2>&1
   fi
+  "$HOME/.config/yabai/scripts/limit-spaces"
 ) &

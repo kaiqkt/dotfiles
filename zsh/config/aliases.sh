@@ -52,6 +52,7 @@ function dc-dev() {
 alias sketchy:start="brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && killall SystemUIServer"
 alias sketchy:stop="brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && killall SystemUIServer"
 alias sketchy:restart="brew services restart sketchybar"
+alias sketchy:bar="$HOME/.config/sketchybar/select-bar"
 
 # Borders
 alias borders:start="brew services start felixkratz/formulae/borders"

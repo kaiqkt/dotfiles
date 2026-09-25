@@ -1,0 +1,190 @@
+##### Changing Defaults #####
+
+default=(
+  padding_left=5
+  padding_right=5
+  icon.font="$ICON_FONT"
+  label.font="$LABEL_FONT"
+  icon.color=$WHITE
+  label.color=$WHITE
+  icon.padding_left=10
+  icon.padding_right=0
+  label.padding_left=10
+  label.padding_right=10
+  background.corner_radius=5
+  background.color=$ITEM_BG_COLOR
+  background.height=24
+)
+sketchybar --default "${default[@]}"
+
+##### Left Items #####
+
+sketchybar --add event yabai_workspace_change
+
+##### Workspaces #####
+
+while read -r sid monitor_id; do
+    sketchybar --add item space.$sid left \
+               --set space.$sid \
+                 display="$monitor_id" \
+                 drawing=on \
+                 icon="$sid" \
+                 icon.padding_left=8 \
+                 icon.padding_right=0 \
+                 icon.shadow.distance=4 \
+                 icon.shadow.color=$SHADOW_COLOR \
+                 label.font="$APP_ICON_FONT" \
+                 label.padding_left=0 \
+                 label.padding_right=20 \
+                 label.y_offset=-1 \
+                 label.shadow.drawing=off \
+                 label.shadow.color=$SHADOW_COLOR \
+                 label.shadow.distance=4 \
+                 background.color=$ITEM_BG_COLOR \
+                 background.corner_radius=5 \
+                 background.drawing=on \
+                 background.border_color=$WORKSPACE_BORDER_COLOR \
+                 background.border_width=0 \
+                 background.height=25 \
+                 click_script="yabai -m space --focus $sid" \
+                 script="$PLUGIN_DIR/yabai_workspace.sh $sid" \
+               --subscribe space.$sid yabai_workspace_change
+done < <(yabai -m query --spaces 2>/dev/null | jq -r '.[] | "\(.index) \(.display)"')
+
+
+##### Center Items #####
+
+# Left of notch
+# Artwork thumbnail (separate item so background.image works correctly)
+sketchybar --add item music_art center \
+           --set music_art \
+             drawing=off \
+             icon.drawing=off \
+             label.drawing=off \
+             padding_left=8 \
+             padding_right=4 \
+             background.color=$TRANSPARENT \
+             background.border_width=0 \
+             background.height=22 \
+             background.corner_radius=4 \
+             background.drawing=on \
+             click_script="open -a Spotify"
+
+sketchybar --add item music center \
+           --set music \
+             script="$PLUGIN_DIR/music.sh" \
+             padding_left=0 \
+             padding_right=8 \
+             icon.drawing=off \
+             icon.padding_left=0 \
+             label.padding_left=0 \
+             label.padding_right=0 \
+             label.width=200 \
+             label.color=$GREEN \
+             click_script="open -a Spotify" \
+             update_freq=2 \
+             background.drawing=off \
+           --subscribe music media_change
+
+sketchybar --add bracket music.group music_art music \
+           --set music.group \
+             background.drawing=off
+
+# Invisible spacer — creates notch gap on all displays (adjust width: 200-220 for 14" MBP, 220-250 for 16")
+sketchybar --add item center.notch center \
+           --set center.notch \
+             width=220 \
+             icon.drawing=off \
+             label.drawing=off \
+             background.drawing=off
+
+##### Right Items #####
+
+sketchybar \
+  --add item datetime right \
+    --set datetime \
+      update_freq=30 \
+      label.font="$LABEL_FONT" \
+      label.padding_left=10 \
+      label.padding_right=10 \
+      padding_right=0 \
+      background.drawing=off \
+      script="$PLUGIN_DIR/clock.sh" \
+  \
+  --add item weather right \
+    --set weather \
+      script="$PLUGIN_DIR/weather.sh" \
+      icon="􀆭" \
+      update_freq=1800 \
+      label.padding_left=0 \
+      label.padding_right=0 \
+      icon.padding_right=4 \
+      label.color=$WHITE \
+      icon.color=$WHITE \
+      background.drawing=off \
+      click_script="open -a Weather" \
+  \
+  --add item battery right \
+    --set battery \
+      update_freq=120 \
+      label.padding_right=0 \
+      background.drawing=off \
+      script="$PLUGIN_DIR/battery.sh" \
+      --subscribe battery system_woke power_source_change \
+  \
+  --add graph cpu_usage right 42 \
+     --set cpu_usage script="$PLUGIN_DIR/cpu_usage.sh" \
+      update_freq=5 \
+      icon="􀫥" \
+      icon.drawing=on \
+      icon.padding_left=0 \
+      icon.padding_right=4 \
+      label.font="$SMALL_FONT" \
+      label.align=right \
+      label.padding_right=0 \
+      label.width=0 \
+      label.y_offset=4 \
+      background.color=$TRANSPARENT \
+      background.border_color=$TRANSPARENT \
+      background.drawing=on \
+      graph.color=$BAR_BORDER_COLOR \
+      graph.fill_color=0x44${BAR_BORDER_COLOR:4} \
+      graph.line_width=2 \
+  \
+  --add bracket cpu.bracket cpu_usage \
+     --set cpu.bracket \
+      background.drawing=off \
+  \
+  --add slider volume_slider right 80 \
+    --set volume_slider \
+      updates=on \
+      label.drawing=off \
+      icon.drawing=off \
+      slider.width=0 \
+      padding_left=0 \
+      padding_right=0 \
+      background.color=$BAR_COLOR \
+      slider.highlight_color=$BAR_BORDER_COLOR \
+      slider.background.height=6 \
+      slider.background.corner_radius=3 \
+      slider.background.color=$SLIDER_BG_COLOR \
+      slider.knob="⬤" \
+      slider.knob.font="$KNOB_FONT" \
+      slider.knob.y_offset=0 \
+      slider.knob.color=$WHITE \
+      script="$PLUGIN_DIR/volume.sh" \
+      --subscribe volume_slider mouse.clicked mouse.scrolled \
+  \
+  --add item volume right \
+    --set volume \
+      script="$PLUGIN_DIR/volume.sh" \
+      icon.padding_left=10 \
+      icon.padding_right=4 \
+      label.drawing=off \
+      background.color=$BAR_COLOR \
+      --subscribe volume volume_change mouse.clicked mouse.scrolled
+
+##### Force all scripts to run the first time #####
+sketchybar --update
+
+sketchybar --trigger yabai_workspace_change

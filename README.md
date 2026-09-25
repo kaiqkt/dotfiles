@@ -117,6 +117,13 @@ and [yabai's SIP restoration instructions](https://github.com/asmvik/yabai/wiki/
 | Sketchybar menu bar     | Run `sketchy:start` — hides native menu bar and starts sketchybar           |
 | Wallpaper automation    | Allow Terminal to control System Events if macOS requests permission        |
 
+SketchyBar has two selectable profiles: `sketchy:bar edge` keeps the current
+full-width layout; `sketchy:bar floating` adds margins and rounded corners.
+Run `sketchy:bar` to list profiles. Switching reloads the bar immediately and
+stores the choice outside the checkout, so it persists without changing Git
+files. To add another profile, create a script in `sketchybar/bars/`; it can
+source `sketchybar/items.sh` to reuse the current widgets.
+
 ## Stack
 
 - **yabai** — tiling window manager

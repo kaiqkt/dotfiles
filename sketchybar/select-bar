@@ -1,0 +1,57 @@
+#!/bin/sh
+set -eu
+
+config_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+state_dir="$HOME/.local/state/sketchybar"
+state_file="$state_dir/active-bar"
+active=edge
+if [ -r "$state_file" ]; then
+  IFS= read -r active < "$state_file" || true
+fi
+case "$active" in
+  ''|[!a-z]*|*[!a-z0-9_-]*) active=edge ;;
+esac
+[ -f "$config_dir/bars/$active.sh" ] || active=edge
+
+usage() {
+  printf 'Usage: sketchy:bar [list|current|PROFILE]\n' >&2
+  exit 2
+}
+
+case "${1:-list}" in
+  list)
+    [ "$#" -eq 0 ] || [ "$#" -eq 1 ] || usage
+    for profile in "$config_dir"/bars/*.sh; do
+      [ -f "$profile" ] || continue
+      name=${profile##*/}
+      name=${name%.sh}
+      if [ "$name" = "$active" ]; then
+        printf '* %s\n' "$name"
+      else
+        printf '  %s\n' "$name"
+      fi
+    done
+    ;;
+  current)
+    [ "$#" -eq 1 ] || usage
+    printf '%s\n' "$active"
+    ;;
+  *)
+    [ "$#" -eq 1 ] || usage
+    name=$1
+    case "$name" in
+      ''|[!a-z]*|*[!a-z0-9_-]*) usage ;;
+    esac
+    if [ ! -f "$config_dir/bars/$name.sh" ]; then
+      printf 'Unknown SketchyBar profile: %s\n' "$name" >&2
+      exit 1
+    fi
+    mkdir -p "$state_dir"
+    temporary=$(mktemp "$state_dir/.active-bar.XXXXXX")
+    trap 'rm -f "$temporary"' EXIT HUP INT TERM
+    printf '%s\n' "$name" > "$temporary"
+    mv -f "$temporary" "$state_file"
+    trap - EXIT HUP INT TERM
+    sketchybar --reload "$config_dir/sketchybarrc"
+    ;;
+esac

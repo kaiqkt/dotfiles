@@ -9,11 +9,22 @@ add_rule() {
   label=$1
   app=$2
   space=$3
+  display=$4
 
-  if ! printf '%s\n' "$spaces" | jq -e --argjson index "$space" 'any(.[]; .index == $index)' >/dev/null; then
+  if printf '%s\n' "$rules" | jq -e --arg label "$label" --arg app "$app" --argjson index "$space" \
+    'any(.[]; .label == $label and .app == $app and .space == $index)' >/dev/null &&
+    printf '%s\n' "$spaces" | jq -e --argjson index "$space" --argjson display "$display" \
+      'any(.[]; .index == $index and .display == $display)' >/dev/null; then
     return
   fi
+
   if printf '%s\n' "$rules" | jq -e --arg label "$label" 'any(.[]; .label == $label)' >/dev/null; then
+    yabai -m rule --remove "$label"
+    changed=true
+  fi
+
+  if ! printf '%s\n' "$spaces" | jq -e --argjson index "$space" --argjson display "$display" \
+    'any(.[]; .index == $index and .display == $display)' >/dev/null; then
     return
   fi
 
@@ -22,10 +33,10 @@ add_rule() {
 }
 
 # Register app assignments once their native Spaces exist.
-add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1
-add_rule dotfiles_terminals '^(Terminal|kitty)$' 2
-add_rule dotfiles_claude '^Claude$' 8
-add_rule dotfiles_spotify '^Spotify$' 9
+add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1 1
+add_rule dotfiles_terminals '^(Terminal|kitty)$' 2 1
+add_rule dotfiles_claude '^Claude$' 8 2
+add_rule dotfiles_spotify '^Spotify$' 9 2
 
 if [ "$changed" = true ]; then
   yabai -m rule --apply

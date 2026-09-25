@@ -51,16 +51,19 @@ yabai --restart-service
 skhd --restart-service
 ```
 
-Yabai uses native macOS Spaces. Create Spaces 1–9 in Mission Control, with 1–5
-on the main display and 6–9 on the secondary display. The app placement rules
-and `alt+1–9` shortcuts target those Space indices. Disable “Automatically
-rearrange Spaces based on most recent use”
-in Desktop & Dock so the numbers stay stable.
-The app placement rules register automatically as their Spaces become available.
+Yabai uses native macOS Spaces. After loading the scripting addition, run
+`~/.config/yabai/scripts/setup-spaces` with both displays connected. It adds
+missing Spaces to make 1–5 on the main display and 6–9 on the secondary display,
+then checks their indices. The app placement rules and `alt+1–9` shortcuts target
+those indices. Disable “Automatically rearrange Spaces based on most recent use”
+in Desktop & Dock so the numbers stay stable. The placement rules register as
+their Spaces become available.
 
-After loading the scripting addition, create this two-display layout with
-`~/.config/yabai/scripts/setup-spaces`. The script only adds missing Spaces and
-checks their final indices.
+On macOS 26.6, the Space creation fix is currently only in yabai HEAD, which
+the Brewfile installs. After updating yabai, refresh the binary hash in
+`/private/etc/sudoers.d/yabai` before restarting its service. Because Homebrew
+signs HEAD builds ad hoc, macOS may also require you to remove and add yabai
+again in Privacy & Security → Accessibility.
 
 The configured 90% opacity requires partially disabling macOS System Integrity
 Protection (SIP) and loading yabai's scripting addition. Follow the

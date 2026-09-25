@@ -1,7 +1,13 @@
 #!/bin/sh
 set -eu
 
-display_count=$(yabai -m query --displays | jq 'length')
+count_spaces() {
+  space_data=$(yabai -m query --spaces --display "$1")
+  printf '%s\n' "$space_data" | jq 'length'
+}
+
+display_data=$(yabai -m query --displays)
+display_count=$(printf '%s\n' "$display_data" | jq 'length')
 if [ "$display_count" -ne 2 ]; then
   echo "Expected two displays; found $display_count" >&2
   exit 1
@@ -10,7 +16,7 @@ fi
 for spec in 1:5 2:4; do
   display=${spec%:*}
   target=${spec#*:}
-  current=$(yabai -m query --spaces --display "$display" | jq 'length')
+  current=$(count_spaces "$display")
 
   if [ "$current" -gt "$target" ]; then
     echo "Display $display already has $current Spaces (target: $target)" >&2
@@ -19,8 +25,13 @@ for spec in 1:5 2:4; do
 
   while [ "$current" -lt "$target" ]; do
     yabai -m space --create "$display"
-    sleep 1
-    next=$(yabai -m query --spaces --display "$display" | jq 'length')
+    attempt=0
+    next=$current
+    while [ "$next" -le "$current" ] && [ "$attempt" -lt 10 ]; do
+      sleep 1
+      next=$(count_spaces "$display")
+      attempt=$((attempt + 1))
+    done
     if [ "$next" -le "$current" ]; then
       echo "Space creation did not complete on display $display" >&2
       exit 1
@@ -29,7 +40,8 @@ for spec in 1:5 2:4; do
   done
 done
 
-if ! yabai -m query --spaces | jq -e \
+all_spaces=$(yabai -m query --spaces)
+if ! printf '%s\n' "$all_spaces" | jq -e \
   '[.[] | select(.display == 1) | .index] == [1,2,3,4,5] and [.[] | select(.display == 2) | .index] == [6,7,8,9]' >/dev/null; then
   echo 'Space indices differ from 1-5 / 6-9; check Mission Control ordering' >&2
   exit 1

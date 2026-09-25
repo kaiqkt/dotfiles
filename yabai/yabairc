@@ -31,7 +31,9 @@ done
 for event in space_created space_destroyed display_added display_removed; do
   yabai -m signal --add event="$event" action='sketchybar --reload'
 done
-yabai -m signal --add event=space_created action='~/.config/yabai/scripts/sync-rules'
+for event in space_created space_destroyed display_added display_removed; do
+  yabai -m signal --add event="$event" action='~/.config/yabai/scripts/sync-rules'
+done
 
 # If Sketchybar starts first at login, rebuild its Space items once yabai is ready.
 (

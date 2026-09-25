@@ -3,7 +3,7 @@
 export WHITE=0xffe0e2e8
 export TRANSPARENT=0x00000000
 
-export BAR_COLOR=0x00000000
+export BAR_COLOR=0xFA181c20
 export BAR_BORDER_COLOR=0xCC9ccbfb
 export ITEM_BG_COLOR=0x4a272a2f
 export RED=0xffffb1c1

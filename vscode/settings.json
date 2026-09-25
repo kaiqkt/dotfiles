@@ -1,6 +1,7 @@
 {
   "telemetry.telemetryLevel": "off",
   "workbench.colorTheme": "Wallpaper (Matugen)",
+  "workbench.iconTheme": "symbols",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,

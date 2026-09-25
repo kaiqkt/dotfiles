@@ -186,8 +186,8 @@ next prompt; FZF reads colors on its next launch. After upgrading these
 dotfiles, reload Zsh and restart Neovim once to enable the new reload logic.
 VS Code uses our own Wallpaper (Matugen) theme extension for the interface,
 terminal ANSI colors, TextMate syntax and semantic syntax. The updater preserves
-other preferences in `vscode/settings.json`. Run
-`~/.local/bin/apply-vscode-theme` to regenerate and select the theme after
+other preferences in `vscode/settings.json`. Symbols provides the file icons.
+Run `~/.local/bin/apply-vscode-theme` to regenerate and select the theme after
 editing its mappings.
 
 Run the palette regression checks with `python3 -B -m unittest discover -s tests`.

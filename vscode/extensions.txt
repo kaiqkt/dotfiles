@@ -2,6 +2,7 @@
 dracula-theme.theme-dracula
 editorconfig.editorconfig
 k--kato.intellij-idea-keybindings
+miguelsolorio.symbols
 redhat.vscode-yaml
 usernamehw.errorlens
 

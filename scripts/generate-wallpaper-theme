@@ -83,7 +83,6 @@ def contrast(first, second):
 
 
 def validate_scheme(bases):
-    # Check the actual pairs our templates use, before changing any files.
     pairs = [(5, 0, 7), (4, 2, 4.5), (5, 2, 4.5), (3, 0, 4.5)]
     pairs += [(i, 0, 4.5) for i in range(8, 16)]
     pairs += [(i, 1, 4.5) for i in range(8, 16)]
@@ -102,7 +101,6 @@ def scheme_yaml(bases):
 
 def write_scheme(path, content):
     path.parent.mkdir(parents=True, exist_ok=True)
-    # Keep the old scheme intact if writing is interrupted.
     with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False) as handle:
         temporary = Path(handle.name)
         try:
@@ -119,7 +117,6 @@ def apply_scheme():
 
 
 def set_wallpaper(image_path):
-    # argv avoids interpolating filenames into AppleScript source.
     run(["osascript", "-", str(image_path)], input='''on run argv
   set wallpaperFile to POSIX file (item 1 of argv)
   tell application "System Events"

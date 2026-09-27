@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Fuzzy find tmux sessions - Enter to switch, Ctrl-X to kill
 
 current_session=$(tmux display-message -p '#S')
 

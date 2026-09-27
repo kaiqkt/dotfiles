@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Browse git log with fzf and preview diffs
 git log --oneline --color=always --decorate | \
   fzf --no-tmux --ansi --no-sort --style=default \
       --header 'Git log (Enter to view, Ctrl-O to checkout)' \

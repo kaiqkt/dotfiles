@@ -67,7 +67,6 @@ if [ "${MONITOR_COUNT:-0}" -lt 2 ]; then
   exit 0
 fi
 
-# Single osascript call — avoids 5x AppleScript VM forks per update cycle
 SPOTIFY_INFO=$(osascript 2>/dev/null <<'EOF'
 if application "Spotify" is running then
   tell application "Spotify"
@@ -89,13 +88,11 @@ if [ -n "$SPOTIFY_INFO" ]; then
     LABEL="$(truncate_str "$TRACK — $ARTIST")"
     ART_FILE=$(fetch_artwork "$TRACK" "$ART_URL") || true
     set_artwork "$ART_FILE"
-    # width=208: label.width(200) + padding_right(8). art item adds ~34px → total 242px fixed.
     sketchybar --set "$NAME" drawing=on label="$LABEL" label.drawing=on width=208
     exit 0
   fi
 fi
 
-# Fallback: rmpc + jq (local MPD)
 if command -v rmpc >/dev/null && command -v jq >/dev/null; then
   RAW_STATE=$(rmpc status | jq -r '.state' 2>/dev/null) || true
   STATE="$(echo "$RAW_STATE" | tr '[:upper:]' '[:lower:]')"
@@ -111,8 +108,6 @@ if command -v rmpc >/dev/null && command -v jq >/dev/null; then
   fi
 fi
 
-# Nothing playing — keep fixed-width invisible placeholder so center items don't drift.
-# Total width 242 = art(34) + music(208) when playing; spacer absorbs that gap when stopped.
 sketchybar --set "$ART_ITEM" drawing=off
 sketchybar --set "$NAME" drawing=on label="" label.drawing=off width=242
 

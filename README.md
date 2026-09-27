@@ -59,6 +59,9 @@ between displays and adds missing ones. A separate yabai signal removes empty,
 regular Spaces above 10 shortly after they appear. Occupied and native
 fullscreen Spaces are preserved, so macOS can still temporarily exceed 10.
 The app placement rules and `alt+1–9` shortcuts target Spaces 1–9.
+Keep "Show Items On Desktop" enabled and set "Click wallpaper to reveal
+Desktop" to "Only in Stage Manager" in Desktop & Dock. Disabling the Finder
+Desktop prevents yabai from focusing empty Spaces, including via SketchyBar.
 Disable “Automatically rearrange Spaces based on most recent use” in Desktop &
 Dock so their indices stay stable.
 

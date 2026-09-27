@@ -4,9 +4,9 @@ set -euo pipefail
 source "$CONFIG_DIR/colors.sh"
 
 space_index="${1:?space index required}"
-focused_space=$(yabai -m query --spaces --space 2>/dev/null | jq -r '.index')
+visible=$(yabai -m query --spaces --space "$space_index" 2>/dev/null | jq -r '."is-visible"') || exit 0
 
-if [ "$space_index" = "$focused_space" ]; then
+if [ "$visible" = true ]; then
   sketchybar --set "$NAME" \
     background.drawing=on \
     background.color="$ITEM_BG_COLOR" \

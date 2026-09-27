@@ -112,7 +112,6 @@ def main():
     theme.update(customizations(colors))
     write_json(THEME_FILE, theme)
 
-    # These were a temporary Dracula overlay; the installed theme now owns them.
     settings.pop("workbench.colorCustomizations", None)
     settings.pop("editor.tokenColorCustomizations", None)
     settings.pop("editor.semanticTokenColorCustomizations", None)

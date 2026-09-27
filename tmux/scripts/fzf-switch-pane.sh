@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Fuzzy find and switch to a tmux pane
 panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
 current_pane=$(tmux display-message -p '#I:#P')
 

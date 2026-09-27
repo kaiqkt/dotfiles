@@ -1,23 +1,15 @@
-################################################################################
-# Pure ZSH prompt (replaces Starship)
-# Features: directory, git branch, git status, ruby/node version, ssh hostname
-################################################################################
-
 setopt PROMPT_SUBST
 
-# -- Colors (ANSI fallback; generated palette loaded before each prompt) ------
 _prompt_grey="%F{white}"
 _prompt_blue="%F{blue}"
 _prompt_magenta="%F{magenta}"
 _prompt_reset="%f"
 
-# -- Async worker -------------------------------------------------------------
 _prompt_git_info=""
 _prompt_lang_info=""
 _prompt_async_fd=""
 
 _prompt_async_worker() {
-  # Git info
   local git_result="NONE"
   local branch
   branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
@@ -50,12 +42,10 @@ _prompt_async_worker() {
     git_result="${branch}${status_str}"
   fi
 
-  # Language versions (only check if relevant files exist)
   local ruby_ver="" node_ver=""
   [[ -f Gemfile || -f .ruby-version ]] && ruby_ver=$(ruby -e 'print RUBY_VERSION' 2>/dev/null)
   [[ -f package.json || -f .node-version || -f .nvmrc ]] && node_ver=$(node --version 2>/dev/null) && node_ver="${node_ver#v}"
 
-  # Output all results on one line, tab-separated
   print "${git_result}\t${ruby_ver}\t${node_ver}"
 }
 
@@ -82,7 +72,6 @@ _prompt_format_langs() {
 }
 
 _prompt_async_start() {
-  # Clean up any existing worker
   if [[ -n "$_prompt_async_fd" ]] && { true <&$_prompt_async_fd } 2>/dev/null; then
     zle -F $_prompt_async_fd
     exec {_prompt_async_fd}<&-
@@ -97,12 +86,10 @@ _prompt_async_callback() {
   local fd=$1
   local result=""
   IFS= read -r -u "$fd" result
-  # Clean up fd
   zle -F "$fd"
   exec {fd}<&-
   _prompt_async_fd=""
 
-  # Parse tab-separated results
   local git_part="${result%%	*}"
   local rest="${result#*	}"
   local ruby_part="${rest%%	*}"
@@ -113,7 +100,6 @@ _prompt_async_callback() {
   zle reset-prompt
 }
 
-# -- Directory shortener ------------------------------------------------------
 _prompt_short_dir() {
   local full="${PWD/#$HOME/~}"
   local parts=("${(@s:/:)full}")
@@ -124,22 +110,16 @@ _prompt_short_dir() {
   fi
 }
 
-# -- Build prompt -------------------------------------------------------------
 _prompt_precmd() {
-  # Pick up wallpaper changes in existing shells on the next prompt.
   [[ -r "$ZDOTDIR/user/generated_colors.sh" ]] && source "$ZDOTDIR/user/generated_colors.sh"
 
-  # Async git + language versions (non-blocking)
   _prompt_async_start
 
-  # SSH hostname
   local host=""
   [[ -n "$SSH_TTY" ]] && host="%m "
 
-  # Directory (full path, bold grey)
   local dir="${_prompt_grey}%B$(_prompt_short_dir)%b${_prompt_reset}"
 
-  # Prompt character (red on error)
   local char="%(?:%F{white}:%F{red})❯${_prompt_reset}"
 
   PROMPT=$'\n'"${host}${dir} \${_prompt_git_info}\${_prompt_lang_info}

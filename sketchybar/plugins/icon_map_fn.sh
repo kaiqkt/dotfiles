@@ -1,4 +1,3 @@
-### START-OF-ICON-MAP
 function icon_map() {
   case "$1" in
   "Live")
@@ -714,7 +713,6 @@ function icon_map() {
     ;;
   esac
 }
-### END-OF-ICON-MAP
 
 icon_map "$1"
 

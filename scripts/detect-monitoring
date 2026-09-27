@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Detects common employee monitoring, activity tracking, and keylogging software on macOS.
-# Run during dotfiles install or anytime with: ./scripts/detect-monitoring
 
 set -euo pipefail
 
@@ -32,12 +30,9 @@ echo -e "${BOLD}=========================================${RESET}"
 echo -e "${BOLD}  Monitoring & Tracking Software Check${RESET}"
 echo -e "${BOLD}=========================================${RESET}"
 
-# --- Known monitoring apps (name:bundle_id pairs) ---
 section "Checking for known monitoring applications..."
 
-# Format: "Display Name|bundle.id|search_term"
 monitoring_apps=(
-  # Activity & productivity monitoring
   "Hubstaff|com.hubstaff|hubstaff"
   "ActivTrak|com.activtrak|activtrak"
   "Teramind|com.teramind|teramind"
@@ -52,9 +47,7 @@ monitoring_apps=(
   "CurrentWare|com.currentware|currentware"
   "Prodoscore|com.prodoscore|prodoscore"
   "Kickidler|com.kickidler|kickidler"
-  # Screen capture & surveillance
   "ScreenshotMonitor|com.screenshotmonitor|screenshotmonitor"
-  # MDM & endpoint management
   "Jamf|com.jamfsoftware|jamf"
   "Kandji|io.kandji|kandji"
   "Mosyle|com.mosyle|mosyle"
@@ -62,7 +55,6 @@ monitoring_apps=(
   "Addigy|com.addigy|addigy"
   "Fleet|com.fleetdm|fleetdm"
   "Munki|com.googlecode.munki|munki"
-  # Endpoint security
   "CrowdStrike Falcon|com.crowdstrike.falcon|crowdstrike"
   "SentinelOne|com.sentinelone|sentinelone"
   "Carbon Black|com.vmware.carbonblack|carbon black"
@@ -73,12 +65,10 @@ monitoring_apps=(
   "Absolute|com.absolute|absolute"
   "Tanium|com.tanium|tanium"
   "Zscaler|com.zscaler|zscaler"
-  # Communication monitoring
   "Aware|com.awarehq|awarehq"
   "Securiti|com.securiti|securiti"
 )
 
-# Get list of installed apps once (fast filesystem check)
 installed_apps=$(find /Applications -maxdepth 3 -name "*.app" 2>/dev/null | tr '[:upper:]' '[:lower:]')
 
 for entry in "${monitoring_apps[@]}"; do
@@ -87,29 +77,24 @@ for entry in "${monitoring_apps[@]}"; do
   bundle_id="${remainder%%|*}"
   search_term="${remainder##*|}"
 
-  # Check in /Applications
   if echo "$installed_apps" | grep -qi "$search_term"; then
     warn "$app_name (found in /Applications)"
     continue
   fi
 
-  # Check running processes
   if pgrep -fi "$search_term" &>/dev/null; then
     warn "$app_name (running process detected)"
     continue
   fi
 done
 
-# --- Running processes ---
 section "Checking running processes..."
 
 monitoring_processes=(
   hubstaff activtrak teramind timedoctor veriato interguard
   desktime workpuls clevercontrol staffcop controlio currentware
   prodoscore kickidler screenshotmonitor
-  # MDM agents
   jamf kandji mosyle hexnode addigy fleetd munki
-  # Endpoint agents
   falcon sentinelagent cbagent ciscoamp sophos symantec mcafee
   absolute tanium zscaler
 )
@@ -121,7 +106,6 @@ for proc in "${monitoring_processes[@]}"; do
   fi
 done
 
-# --- Launch agents & daemons ---
 section "Checking launch agents and daemons..."
 
 launch_dirs=(
@@ -144,7 +128,6 @@ for dir in "${launch_dirs[@]}"; do
   done
 done
 
-# --- System Extensions & Profiles ---
 section "Checking MDM profiles..."
 
 if profiles status 2>/dev/null | grep -qi "enrolled"; then
@@ -156,7 +139,6 @@ else
   info "Could not determine MDM enrollment status"
 fi
 
-# Check for configuration profiles
 profile_count=$(profiles list 2>/dev/null | grep -c "attribute" || true)
 profile_count=$(echo "$profile_count" | tr -d '[:space:]')
 profile_count=${profile_count:-0}
@@ -164,7 +146,6 @@ if [ "$profile_count" -gt 0 ]; then
   info "$profile_count configuration profile(s) installed (run 'profiles list' to inspect)"
 fi
 
-# --- System extensions ---
 section "Checking system extensions..."
 
 if systemextensionsctl list 2>/dev/null | grep -Ei "crowdstrike|sentinel|carbon|cisco|sophos|symantec|mcafee|zscaler|tanium|absolute" | grep -qi "enabled"; then
@@ -173,12 +154,10 @@ if systemextensionsctl list 2>/dev/null | grep -Ei "crowdstrike|sentinel|carbon|
   done < <(systemextensionsctl list 2>/dev/null | grep -Ei "crowdstrike|sentinel|carbon|cisco|sophos|symantec|mcafee|zscaler|tanium|absolute")
 fi
 
-# --- Accessibility & input monitoring permissions (TCC) ---
 section "Checking TCC permissions (apps with input monitoring/screen capture access)..."
 
 tcc_db="/Library/Application Support/com.apple.TCC/TCC.db"
 if [ -r "$tcc_db" ]; then
-  # Check for input monitoring (kTCCServiceListenEvent) and screen capture (kTCCServiceScreenCapture)
   for service in kTCCServiceListenEvent kTCCServiceScreenCapture kTCCServiceAccessibility; do
     clients=$(sqlite3 "$tcc_db" "SELECT client FROM access WHERE service='$service' AND auth_value=2;" 2>/dev/null || true)
     if [ -n "$clients" ]; then
@@ -191,7 +170,6 @@ else
   info "Cannot read TCC database (requires Full Disk Access). Run with sudo for deeper check."
 fi
 
-# --- Network monitoring (content filters / DNS proxies) ---
 section "Checking network content filters..."
 
 proxy_active=$(scutil --proxy 2>/dev/null | grep -E "HTTPEnable|HTTPSEnable|SOCKSEnable|ProxyAutoConfigEnable" | grep -v ": 0$" || true)
@@ -202,14 +180,12 @@ if [ -n "$proxy_active" ]; then
   done
 fi
 
-# Check for network extensions
 if systemextensionsctl list 2>/dev/null | grep -i "networkextension" | grep -qi "enabled"; then
   while IFS= read -r line; do
     info "Network extension: $line"
   done < <(systemextensionsctl list 2>/dev/null | grep -i "networkextension")
 fi
 
-# --- DNS configuration ---
 section "Checking DNS configuration..."
 
 dns_servers=$(scutil --dns 2>/dev/null | grep "nameserver\[" | head -5 || true)
@@ -220,7 +196,6 @@ if [ -n "$dns_servers" ]; then
   done
 fi
 
-# --- Certificate trust store ---
 section "Checking for custom CA certificates..."
 
 custom_certs=$(security find-certificate -a -p /Library/Keychains/System.keychain 2>/dev/null | \
@@ -232,7 +207,6 @@ if [ "$custom_certs" -gt 0 ]; then
   info "Run 'security dump-keychain /Library/Keychains/System.keychain' to inspect"
 fi
 
-# --- Summary ---
 echo ""
 echo -e "${BOLD}=========================================${RESET}"
 if [ "$found_count" -gt 0 ]; then

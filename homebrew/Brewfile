@@ -1,12 +1,10 @@
-# Core
 brew "git"
 brew "zsh"
 brew "dotbot"
-brew "node" # Claude Code hooks (caveman) and npx-based MCP servers
+brew "node"
 tap "domt4/autoupdate"
 tap "noworrieseh/brews"
 
-# Shell utilities
 brew "eza"
 brew "fzf"
 brew "fd"
@@ -26,31 +24,25 @@ brew "coreutils"
 brew "imagemagick"
 brew "noworrieseh/brews/macdisp"
 
-# Git
 brew "lazygit"
 brew "diff-so-fancy", args: ["HEAD"]
 brew "gnupg"
 
-# Version manager
 brew "asdf"
 brew "rustup"
 
-# Containers
 brew "docker"
 brew "colima"
 brew "docker-compose"
 
 brew "cloudflare-speed-cli"
 
-# Terminal & multiplexer
 brew "tmux"
 brew "neovim"
 cask "kitty"
 
-# Music
 brew "nowplaying-cli"
 
-# Sketchybar + borders
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/sketchybar"
 brew "felixkratz/formulae/borders"
@@ -58,15 +50,12 @@ cask "font-sketchybar-app-font"
 cask "font-hack-nerd-font"
 cask "sf-symbols"
 
-# Window manager
 tap "asmvik/formulae"
 brew "asmvik/formulae/yabai", args: ["HEAD"]
 brew "asmvik/formulae/skhd"
 
-# Security
 cask "lulu"
 
-# Apps
 cask "claude-code"
 cask "spotify"
 cask "bitwarden"

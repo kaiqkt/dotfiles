@@ -72,20 +72,20 @@
     - [./scripts/configure-displays ./wallpaper/rei-plush-wallpaper.png, Configuring displays and wallpaper]
     - description: Applying macOS defaults
       command: |
-        # Keyboard
         defaults write NSGlobalDomain KeyRepeat -int 2
         defaults write NSGlobalDomain InitialKeyRepeat -int 15
         defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-        # Dock
         defaults write com.apple.dock autohide -bool true
         defaults write com.apple.dock autohide-delay -float 0
         defaults write com.apple.dock autohide-time-modifier -float 0.3
         defaults write com.apple.dock mru-spaces -bool false
-        # Finder
         defaults write com.apple.finder AppleShowAllFiles -bool true
         defaults write com.apple.finder ShowPathbar -bool true
         defaults write com.apple.finder ShowStatusBar -bool true
-        defaults write com.apple.finder CreateDesktop -bool false
+        defaults write com.apple.finder CreateDesktop -bool true
+        defaults write com.apple.WindowManager StandardHideDesktopIcons -bool false
+        defaults write com.apple.WindowManager HideDesktop -bool false
+        defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
         defaults write com.apple.finder NewWindowTarget -string "PfHm"
         defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"
         defaults write com.apple.finder FinderSpawnTab -bool true
@@ -94,7 +94,6 @@
         defaults write com.apple.finder WarnOnEmptyTrash -bool true
         defaults write com.apple.finder FXRemoveOldTrashItems -bool true
         defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-        # Misc
         defaults write NSGlobalDomain AppleShowAllExtensions -bool true
         defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
         defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false

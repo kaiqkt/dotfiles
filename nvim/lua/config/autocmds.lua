@@ -1,4 +1,3 @@
--- LazyVim provides the default autocommands. Add local autocommands here.
 vim.api.nvim_create_autocmd("FocusGained", {
   group = vim.api.nvim_create_augroup("wallpaper_theme", { clear = true }),
   callback = function()

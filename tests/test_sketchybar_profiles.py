@@ -64,6 +64,41 @@ class SketchybarProfilesTests(unittest.TestCase):
             self.assertEqual(run(str(config / "select-bar"), "current").stdout,
                              "floating\n")
 
+    def test_empty_visible_spaces_are_highlighted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            yabai = root / "yabai"
+            yabai.write_text(
+                '#!/bin/sh\n'
+                'if [ "$3" = "--spaces" ]; then\n'
+                '  case ",$VISIBLE_SPACES," in\n'
+                '    *",$5,"*) printf \'{"is-visible":true}\\n\' ;;\n'
+                '    *) printf \'{"is-visible":false}\\n\' ;;\n'
+                '  esac\n'
+                'else\n'
+                '  printf \'[]\\n\'\n'
+                'fi\n'
+            )
+            yabai.chmod(0o755)
+            sketchybar = root / "sketchybar"
+            sketchybar.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOCK_LOG"\n')
+            sketchybar.chmod(0o755)
+            log = root / "calls.log"
+            environment = os.environ.copy()
+            environment.update({
+                "CONFIG_DIR": str(CONFIG),
+                "VISIBLE_SPACES": "5,8",
+                "MOCK_LOG": str(log),
+                "PATH": f"{root}:{environment['PATH']}",
+            })
+            plugin = CONFIG / "plugins/yabai_workspace.sh"
+            for index, expected in ((5, "on"), (8, "on"), (4, "off")):
+                environment["NAME"] = f"space.{index}"
+                subprocess.run([str(plugin), str(index)], env=environment,
+                               check=True)
+                calls = log.read_text().splitlines()
+                self.assertIn(f"background.drawing={expected}", calls[-2])
+
 
 if __name__ == "__main__":
     unittest.main()

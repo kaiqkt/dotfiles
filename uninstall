@@ -20,7 +20,6 @@ echo "This will undo changes made by the install script."
 echo "Your dotfiles repo will NOT be deleted — only the symlinks and system changes."
 echo ""
 
-# ─── Step 1: Remove symlinks ─────────────────────────────────────────────────
 
 echo "Step 1: Remove symlinks"
 echo "-----------------------"
@@ -71,8 +70,6 @@ done
 
 echo ""
 
-# ─── Step 2: Stop services and quit apps ─────────────────────────────────────
-# Must run BEFORE brew uninstall so .app bundles can be removed cleanly.
 
 echo "Step 2: Stop services"
 echo "----------------------"
@@ -92,7 +89,6 @@ fi
 
 echo ""
 
-# ─── Step 3: Uninstall Homebrew packages (optional) ──────────────────────────
 
 echo "Step 3: Uninstall Homebrew packages"
 echo "------------------------------------"
@@ -115,7 +111,6 @@ fi
 
 echo ""
 
-# ─── Step 4: Remove asdf plugins and tool versions ───────────────────────────
 
 echo "Step 4: Remove asdf plugins and tool versions"
 echo "----------------------------------------------"
@@ -138,7 +133,6 @@ fi
 
 echo ""
 
-# ─── Step 5: Remove Rust toolchains (optional) ───────────────────────────────
 
 echo "Step 5: Remove Rust toolchains"
 echo "--------------------------------"
@@ -156,7 +150,6 @@ fi
 
 echo ""
 
-# ─── Step 6: Remove tmux plugins (optional) ──────────────────────────────────
 
 echo "Step 6: Remove tmux plugins"
 echo "----------------------------"
@@ -174,7 +167,6 @@ fi
 
 echo ""
 
-# ─── Step 7: Reset macOS defaults (optional) ─────────────────────────────────
 
 echo "Step 7: Reset macOS defaults"
 echo "-----------------------------"
@@ -189,7 +181,6 @@ echo "  - Hide menu bar"
 echo ""
 read -rp "Reset these to macOS defaults? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-  # Keyboard
   defaults delete NSGlobalDomain KeyRepeat 2>/dev/null || true
   defaults delete NSGlobalDomain InitialKeyRepeat 2>/dev/null || true
   defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool true
@@ -204,6 +195,9 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
   defaults write com.apple.finder ShowPathbar -bool false
   defaults write com.apple.finder ShowStatusBar -bool false
   defaults write com.apple.finder CreateDesktop -bool true
+  defaults delete com.apple.WindowManager StandardHideDesktopIcons 2>/dev/null || true
+  defaults delete com.apple.WindowManager HideDesktop 2>/dev/null || true
+  defaults delete com.apple.WindowManager EnableStandardClickToShowDesktop 2>/dev/null || true
   defaults delete com.apple.finder NewWindowTarget 2>/dev/null || true
   defaults delete com.apple.finder NewWindowTargetPath 2>/dev/null || true
   defaults write com.apple.finder FinderSpawnTab -bool false
@@ -226,7 +220,6 @@ fi
 
 echo ""
 
-# ─── Step 8: Remove flavours data (optional) ─────────────────────────────────
 
 echo "Step 8: Remove flavours data"
 echo "-----------------------------"

@@ -6,8 +6,6 @@ function zsh_add_file() {
   [ -f "$1" ] && source "$1"
 }
 
-# Usage: zsh_add_plugin <owner/repo> [tag]
-# Pinning to a tag protects against a compromised plugin repo; bump tags manually.
 function zsh_add_plugin() {
   PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
   PLUGIN_REF="${2:-}"

@@ -1,5 +1,3 @@
-##### Changing Defaults #####
-
 default=(
   padding_left=5
   padding_right=5
@@ -17,11 +15,9 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
-##### Left Items #####
 
 sketchybar --add event yabai_workspace_change
 
-##### Workspaces #####
 
 while read -r sid monitor_id; do
     sketchybar --add item space.$sid left \
@@ -48,14 +44,11 @@ while read -r sid monitor_id; do
                  background.height=25 \
                  click_script="yabai -m space --focus $sid" \
                  script="$PLUGIN_DIR/yabai_workspace.sh $sid" \
-               --subscribe space.$sid yabai_workspace_change
+               --subscribe space.$sid yabai_workspace_change space_change
 done < <(yabai -m query --spaces 2>/dev/null | jq -r '.[] | "\(.index) \(.display)"')
 
 
-##### Center Items #####
 
-# Left of notch
-# Artwork thumbnail (separate item so background.image works correctly)
 sketchybar --add item music_art center \
            --set music_art \
              drawing=off \
@@ -90,7 +83,6 @@ sketchybar --add bracket music.group music_art music \
            --set music.group \
              background.drawing=off
 
-# Invisible spacer — creates notch gap on all displays (adjust width: 200-220 for 14" MBP, 220-250 for 16")
 sketchybar --add item center.notch center \
            --set center.notch \
              width=220 \
@@ -98,7 +90,6 @@ sketchybar --add item center.notch center \
              label.drawing=off \
              background.drawing=off
 
-##### Right Items #####
 
 sketchybar \
   --add item datetime right \
@@ -184,7 +175,6 @@ sketchybar \
       background.color=$BAR_COLOR \
       --subscribe volume volume_change mouse.clicked mouse.scrolled
 
-##### Force all scripts to run the first time #####
 sketchybar --update
 
 sketchybar --trigger yabai_workspace_change

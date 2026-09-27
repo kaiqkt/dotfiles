@@ -1,24 +1,16 @@
-################################################################################
-# Aliases
-################################################################################
-
-# General
 alias ls="eza -s type"
 alias la="ls -la"
 alias grep="grep --color=auto"
 alias git_unlock="rm -f .git/index.lock"
 alias v="nvim"
 
-# Lazygit
 alias lazygit="lazygit -ucd ~/.config/lazygit/"
 
-# ZSH
 alias zsh:reload='source $ZDOTDIR/.zshrc'
 alias zsh:edit="$EDITOR $ZDOTDIR/.zshrc"
 alias zsh:alias="cat ~/.config/zsh/config/aliases.sh"
 alias zsh:alias:edit="$EDITOR ~/.config/zsh/config/aliases.sh"
 
-# Tmux
 alias t="tmux"
 alias ta="t a -t"
 alias tls="t ls"
@@ -26,11 +18,9 @@ alias tn="t new-session -A -s"
 alias tk="t kill-session -t"
 alias tka="t kill-server"
 
-# Brew
 alias brew:upgrade="brew upgrade"
 alias brew:bundle="brew bundle --file ~/.Brewfile"
 
-# Docker Compose
 alias dc="docker compose"
 alias dcr="docker compose run --rm"
 alias dce="docker compose exec"
@@ -48,21 +38,17 @@ function dc-dev() {
   docker-attach app
 }
 
-# Sketchybar
 alias sketchy:start="brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && killall SystemUIServer"
 alias sketchy:stop="brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && killall SystemUIServer"
 alias sketchy:restart="brew services restart sketchybar"
 alias sketchy:bar="$HOME/.config/sketchybar/select-bar"
 
-# Borders
 alias borders:start="brew services start felixkratz/formulae/borders"
 alias borders:stop="brew services stop felixkratz/formulae/borders"
 alias borders:restart="brew services restart felixkratz/formulae/borders"
 
-# IntelliJ
 alias idea='open -na "IntelliJ IDEA CE" --args'
 
-# Utilities
 function list_colors() {
   for i in {0..255}; do
     printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"

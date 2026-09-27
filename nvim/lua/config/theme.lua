@@ -30,7 +30,6 @@ function M.setup()
   local ok, colors = pcall(require, "config.generated_theme")
   colors = ok and colors or fallback
   require("base16-colorscheme").setup(colors)
-  -- base0F belongs to UI chrome; keep punctuation neutral and escapes semantic.
   for _, group in ipairs({ "Delimiter", "@punctuation.delimiter", "@punctuation.bracket", "@tag.delimiter" }) do
     vim.api.nvim_set_hl(0, group, { fg = colors.base05 })
   end

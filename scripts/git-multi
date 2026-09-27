@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# Multi Git Push
-# Configures automatic push to GitHub + Codeberg
-#
-# Usage:
-#   git-multi -u kaiqkt
-#   git-multi -u kaiqkt -r repo
-#
-# After setup:
-#   git push
-#
-# Pushes automatically to both remotes.
 
 set -euo pipefail
 
@@ -54,13 +43,11 @@ if [[ -z "$USER" ]]; then
   usage
 fi
 
-# Must be inside git repo
 if ! git rev-parse --is-inside-work-tree &>/dev/null; then
   echo "Error: not inside a git repository."
   exit 1
 fi
 
-# Infer repo name
 if [[ -z "$REPO" ]]; then
   inferred=$(git remote get-url origin 2>/dev/null | sed 's/.*[:/]\([^/]*\)\.git$/\1/' || true)
 
@@ -79,7 +66,6 @@ if [[ -z "$REPO" ]]; then
   exit 1
 fi
 
-# URLs
 GITHUB_URL="git@github.com:${USER}/${REPO}.git"
 CODEBERG_URL="git@codeberg.org:${USER}/${REPO}.git"
 
@@ -89,7 +75,6 @@ echo "  Codeberg: $CODEBERG_URL"
 echo "  GitHub:   $GITHUB_URL"
 echo ""
 
-# Create or update origin — fetch from Codeberg (primary)
 if ! git remote get-url origin &>/dev/null; then
   echo "No origin found — creating origin."
   git remote add origin "$CODEBERG_URL"
@@ -98,7 +83,6 @@ else
   git remote set-url origin "$CODEBERG_URL"
 fi
 
-# Configure push URLs — Codeberg first, then GitHub
 git config --unset-all remote.origin.pushurl 2>/dev/null || true
 
 git config --add remote.origin.pushurl "$CODEBERG_URL"

@@ -13,8 +13,6 @@ move_space() {
   target_count=$(count_spaces "$target_display")
   source_spaces=$(yabai -m query --spaces --display "$source_display")
 
-  # Move the first excess Space from display 1, or the first Space from display 2.
-  # This keeps the order of the existing Spaces when the display layout changes.
   if [ "$source_display" -eq 1 ]; then
     space_index=$(printf '%s\n' "$source_spaces" | jq -r '.[5].index')
   else

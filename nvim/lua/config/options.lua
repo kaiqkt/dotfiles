@@ -1,5 +1,3 @@
--- LazyVim loads its default options before plugin startup. Keep only local
--- overrides here.
 local rustup_bin = "/opt/homebrew/opt/rustup/bin"
 local path = vim.split(vim.env.PATH or "", ":", { plain = true })
 

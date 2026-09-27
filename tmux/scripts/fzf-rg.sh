@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Live interactive ripgrep with file preview
-# Type to search, Enter to edit in popup, Ctrl-S to edit in caller pane
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
 
 RESULT_FILE=/tmp/tmux-fzf-result

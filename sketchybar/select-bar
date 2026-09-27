@@ -4,14 +4,14 @@ set -eu
 config_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 state_dir="$HOME/.local/state/sketchybar"
 state_file="$state_dir/active-bar"
-active=edge
+active=main
 if [ -r "$state_file" ]; then
   IFS= read -r active < "$state_file" || true
 fi
 case "$active" in
-  ''|[!a-z]*|*[!a-z0-9_-]*) active=edge ;;
+  ''|[!a-z]*|*[!a-z0-9_-]*) active=main ;;
 esac
-[ -f "$config_dir/bars/$active.sh" ] || active=edge
+[ -f "$config_dir/bars/$active.sh" ] || active=main
 
 usage() {
   printf 'Usage: sketchy:bar [list|current|PROFILE]\n' >&2

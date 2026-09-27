@@ -19,42 +19,16 @@ sketchybar --default "${default[@]}"
 sketchybar --add event yabai_workspace_change
 
 
-while read -r sid monitor_id; do
-    sketchybar --add item space.$sid left \
-               --set space.$sid \
-                 display="$monitor_id" \
-                 drawing=on \
-                 icon="$sid" \
-                 icon.padding_left=8 \
-                 icon.padding_right=0 \
-                 icon.shadow.distance=4 \
-                 icon.shadow.color=$SHADOW_COLOR \
-                 label.font="$APP_ICON_FONT" \
-                 label.padding_left=0 \
-                 label.padding_right=20 \
-                 label.y_offset=-1 \
-                 label.shadow.drawing=off \
-                 label.shadow.color=$SHADOW_COLOR \
-                 label.shadow.distance=4 \
-                 background.color=$ITEM_BG_COLOR \
-                 background.corner_radius=5 \
-                 background.drawing=on \
-                 background.border_color=$WORKSPACE_BORDER_COLOR \
-                 background.border_width=0 \
-                 background.height=25 \
-                 click_script="yabai -m space --focus $sid" \
-                 script="$PLUGIN_DIR/yabai_workspace.sh $sid" \
-               --subscribe space.$sid yabai_workspace_change space_change
-done < <(yabai -m query --spaces 2>/dev/null | jq -r '.[] | "\(.index) \(.display)"')
+source "$CONFIG_DIR/spaces/main.sh"
 
+sketchybar --add event spotify_change com.spotify.client.PlaybackStateChanged
 
-
-sketchybar --add item music_art center \
+sketchybar --add item music_art left \
            --set music_art \
              drawing=off \
              icon.drawing=off \
              label.drawing=off \
-             padding_left=8 \
+             padding_left=18 \
              padding_right=4 \
              background.color=$TRANSPARENT \
              background.border_width=0 \
@@ -63,25 +37,49 @@ sketchybar --add item music_art center \
              background.drawing=on \
              click_script="open -a Spotify"
 
-sketchybar --add item music center \
+sketchybar --add item music left \
            --set music \
-             script="$PLUGIN_DIR/music.sh" \
-             padding_left=0 \
+             script="$PLUGIN_DIR/music.sh compact" \
+             padding_left=8 \
              padding_right=8 \
              icon.drawing=off \
              icon.padding_left=0 \
              label.padding_left=0 \
              label.padding_right=0 \
-             label.width=200 \
+             label.width=dynamic \
              label.color=$GREEN \
              click_script="open -a Spotify" \
-             update_freq=2 \
+             update_freq=15 \
              background.drawing=off \
-           --subscribe music media_change
+           --subscribe music spotify_change system_woke
 
 sketchybar --add bracket music.group music_art music \
            --set music.group \
              background.drawing=off
+
+for control in previous toggle next; do
+  case "$control" in
+    previous) control_icon="⏮︎" ;;
+    toggle) control_icon="⏸︎" ;;
+    next) control_icon="⏭︎" ;;
+  esac
+  sketchybar --add item "music.$control" left \
+             --set "music.$control" \
+               drawing=off \
+               width=24 \
+               padding_left=2 \
+               padding_right=2 \
+               icon="$control_icon" \
+               icon.font="$ICON_FONT" \
+               icon.color="$WHITE" \
+               icon.width=24 \
+               icon.align=center \
+               icon.padding_left=0 \
+               icon.padding_right=0 \
+               label.drawing=off \
+               background.drawing=off \
+               click_script="$PLUGIN_DIR/music_control.sh $control"
+done
 
 sketchybar --add item center.notch center \
            --set center.notch \
@@ -114,6 +112,7 @@ sketchybar \
       icon.color=$WHITE \
       background.drawing=off \
       click_script="open -a Weather" \
+      --subscribe weather system_woke \
   \
   --add item battery right \
     --set battery \
@@ -173,7 +172,10 @@ sketchybar \
       icon.padding_right=4 \
       label.drawing=off \
       background.color=$BAR_COLOR \
-      --subscribe volume volume_change mouse.clicked mouse.scrolled
+      --subscribe volume volume_change mouse.clicked mouse.scrolled system_woke
+
+sketchybar --set volume_slider background.color="$TRANSPARENT" background.drawing=off \
+           --set volume background.color="$TRANSPARENT" background.drawing=off
 
 sketchybar --update
 

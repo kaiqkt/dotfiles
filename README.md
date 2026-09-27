@@ -120,12 +120,19 @@ and [yabai's SIP restoration instructions](https://github.com/asmvik/yabai/wiki/
 | Sketchybar menu bar     | Run `sketchy:start` — hides native menu bar and starts sketchybar           |
 | Wallpaper automation    | Allow Terminal to control System Events if macOS requests permission        |
 
-SketchyBar has two selectable profiles: `sketchy:bar edge` keeps the current
-full-width layout; `sketchy:bar floating` adds margins and rounded corners.
-Run `sketchy:bar` to list profiles. Switching reloads the bar immediately and
-stores the choice outside the checkout, so it persists without changing Git
-files. To add another profile, create a script in `sketchybar/bars/`; it can
-source `sketchybar/items.sh` to reuse the current widgets.
+SketchyBar uses the `main` profile: a full-width bar with horizontal spaces in
+a light pill, one app icon per occupied space, a dark active space, and dots for
+empty spaces. Spotify appears after the spaces while playing or paused, with
+previous, play/pause, and next controls, including with a single monitor.
+When Spotify is paused, an MPD track currently playing takes priority.
+Clicking Spotify's title opens Spotify; MPD titles have no click action.
+On narrower displays, the title is shortened and artwork is omitted to leave
+room for playback controls. Spotify notifications update the player immediately,
+with a 15-second polling fallback. Spaces recover from temporary yabai failures
+on their next refresh (at most 30 seconds after yabai becomes available).
+Weather shows `—` when its latest request fails.
+`sketchy:bar main` selects and reloads this profile; `sketchy:bar` lists available
+profiles.
 
 ## Stack
 

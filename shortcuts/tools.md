@@ -21,15 +21,14 @@ borders active_color=0xffcba6f7  # any 0xAARRGGBB value
 
 Custom status bar integrated with yabai. Manage with:
 
-| Command                | Description                               |
-| ---------------------- | ----------------------------------------- |
-| `sketchy:start`        | Start service + hide native menu bar      |
-| `sketchy:stop`         | Stop service + restore native menu bar    |
-| `sketchy:restart`      | Restart service (picks up config changes) |
-| `sketchy:bar`          | List available bar profiles               |
-| `sketchy:bar current`  | Show the active profile                   |
-| `sketchy:bar edge`     | Use the full-width bar                    |
-| `sketchy:bar floating` | Use the floating bar with margins         |
+| Command                       | Description                               |
+| ----------------------------- | ----------------------------------------- |
+| `sketchy:start`               | Start service + hide native menu bar      |
+| `sketchy:stop`                | Stop service + restore native menu bar    |
+| `sketchy:restart`             | Restart service (picks up config changes) |
+| `sketchy:bar`                 | List available bar profiles               |
+| `sketchy:bar current`         | Show the active profile                   |
+| `sketchy:bar main`            | Use the main bar with app icons           |
 
 Profiles: `~/.config/sketchybar/bars/`. The selection persists in
 `~/.local/state/sketchybar/active-bar` and survives service restarts.

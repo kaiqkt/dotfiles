@@ -1,4 +1,4 @@
-"""Verify SketchyBar profile selection persists and rejects unknown profiles."""
+"""Verify the main SketchyBar profile and its space icons."""
 
 import os
 from pathlib import Path
@@ -12,7 +12,7 @@ CONFIG = Path(__file__).resolve().parents[1] / "sketchybar"
 
 
 class SketchybarProfilesTests(unittest.TestCase):
-    def test_switches_profiles_without_changing_config_files(self):
+    def test_main_is_default_and_removed_profiles_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             config = root / "config"
@@ -22,7 +22,7 @@ class SketchybarProfilesTests(unittest.TestCase):
                 shutil.copy2(CONFIG / filename, config / filename)
             for filename in ("colors.sh", "fonts.sh"):
                 (config / filename).write_text("")
-            for name in ("edge", "floating"):
+            for name in ("main",):
                 (bars / f"{name}.sh").write_text(
                     f'printf "%s\\n" "{name}" >> "$MOCK_LOG"\n'
                 )
@@ -44,60 +44,74 @@ class SketchybarProfilesTests(unittest.TestCase):
                 return subprocess.run(arguments, env=environment, check=check,
                                       capture_output=True, text=True)
 
-            self.assertIn("* edge", run(str(config / "select-bar")).stdout)
+            self.assertEqual(run(str(config / "select-bar")).stdout, "* main\n")
             run(str(config / "sketchybarrc"))
-            self.assertEqual(log.read_text(), "edge\n")
+            self.assertEqual(log.read_text(), "main\n")
 
-            run(str(config / "select-bar"), "floating")
+            run(str(config / "select-bar"), "main")
             self.assertEqual(
                 (root / ".local/state/sketchybar/active-bar").read_text(),
-                "floating\n",
+                "main\n",
             )
             run(str(config / "sketchybarrc"))
-            self.assertIn("floating\n", log.read_text())
+            self.assertIn("main\n", log.read_text())
             self.assertIn("reload:--reload", log.read_text())
 
-            rejected = run(str(config / "select-bar"), "missing", check=False)
-            self.assertNotEqual(rejected.returncode, 0)
-            traversal = run(str(config / "select-bar"), "../edge", check=False)
+            for removed in ("edge", "floating", "floating-custom"):
+                rejected = run(str(config / "select-bar"), removed, check=False)
+                self.assertNotEqual(rejected.returncode, 0)
+            traversal = run(str(config / "select-bar"), "../main", check=False)
             self.assertNotEqual(traversal.returncode, 0)
             self.assertEqual(run(str(config / "select-bar"), "current").stdout,
-                             "floating\n")
+                             "main\n")
 
-    def test_empty_visible_spaces_are_highlighted(self):
+            (root / ".local/state/sketchybar/active-bar").write_text("edge\n")
+            self.assertEqual(run(str(config / "select-bar"), "current").stdout,
+                             "main\n")
+            run(str(config / "sketchybarrc"))
+            self.assertTrue(log.read_text().endswith("main\n"))
+
+    def test_main_shows_one_app_or_empty_dot(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             yabai = root / "yabai"
             yabai.write_text(
                 '#!/bin/sh\n'
-                'if [ "$3" = "--spaces" ]; then\n'
-                '  case ",$VISIBLE_SPACES," in\n'
-                '    *",$5,"*) printf \'{"is-visible":true}\\n\' ;;\n'
-                '    *) printf \'{"is-visible":false}\\n\' ;;\n'
-                '  esac\n'
-                'else\n'
-                '  printf \'[]\\n\'\n'
-                'fi\n'
+                'case "$3" in\n'
+                '  --spaces) printf \'[{"index":2,"is-visible":%s}]\\n\' "$MOCK_VISIBLE" ;;\n'
+                '  --windows) printf \'%s\\n\' "$MOCK_WINDOWS" ;;\n'
+                'esac\n'
             )
             yabai.chmod(0o755)
             sketchybar = root / "sketchybar"
-            sketchybar.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOCK_LOG"\n')
+            sketchybar.write_text('#!/bin/sh\nif [ "$1" = --query ]; then echo \'{"items":["space.2"]}\'; else printf "%s\\n" "$*" >> "$MOCK_LOG"; fi\n')
             sketchybar.chmod(0o755)
             log = root / "calls.log"
             environment = os.environ.copy()
             environment.update({
                 "CONFIG_DIR": str(CONFIG),
-                "VISIBLE_SPACES": "5,8",
                 "MOCK_LOG": str(log),
+                "NAME": "space.2",
                 "PATH": f"{root}:{environment['PATH']}",
             })
-            plugin = CONFIG / "plugins/yabai_workspace.sh"
-            for index, expected in ((5, "on"), (8, "on"), (4, "off")):
-                environment["NAME"] = f"space.{index}"
-                subprocess.run([str(plugin), str(index)], env=environment,
-                               check=True)
-                calls = log.read_text().splitlines()
-                self.assertIn(f"background.drawing={expected}", calls[-2])
+            plugin = CONFIG / "plugins/yabai_workspace_main.sh"
+
+            environment.update({
+                "MOCK_VISIBLE": "true",
+                "MOCK_WINDOWS": '[{"space":2,"app":"Safari","has-focus":false},'
+                                '{"space":2,"app":"Code","has-focus":true}]',
+            })
+            subprocess.run([str(plugin), "2"], env=environment, check=True)
+            active = log.read_text()
+            self.assertIn("background.drawing=on", active)
+            self.assertIn("label=:code:", active)
+            self.assertNotIn(":safari:", active)
+
+            environment.update({"MOCK_VISIBLE": "false", "MOCK_WINDOWS": "[]"})
+            subprocess.run([str(plugin), "2"], env=environment, check=True)
+            empty = log.read_text().splitlines()[-1]
+            self.assertIn("background.drawing=off", empty)
+            self.assertIn("label=●", empty)
 
 
 if __name__ == "__main__":

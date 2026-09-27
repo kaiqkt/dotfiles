@@ -11,6 +11,7 @@ set_icons() {
     [1-9]|[1-2][0-9]) ICON="􀊥" ;;
     *)              ICON="􀊣" ;;
   esac
+  if [ "${MUTED:-false}" = true ]; then ICON="􀊣"; fi
   sketchybar --set volume icon="$ICON" \
              --set volume_slider slider.percentage="$VOLUME"
 }
@@ -25,23 +26,39 @@ toggle_slider() {
   fi
 }
 
-if [ "${SENDER:-}" = "volume_change" ] || [ "${SENDER:-}" = "forced_update" ]; then
-  VOLUME=$(osascript -e 'output volume of (get volume settings)')
-  set_icons "$VOLUME"
+read_volume() {
+  local settings
+  settings=$(osascript -e 'set v to get volume settings' -e 'return (output volume of v as string) & "|" & (output muted of v as string)') || return 1
+  IFS='|' read -r VOLUME MUTED <<< "$settings"
+  [[ "$VOLUME" =~ ^[0-9]+$ ]] && [ "$VOLUME" -le 100 ]
+}
 
-elif [ "${SENDER:-}" = "mouse.clicked" ] && [ "$NAME" = "volume" ]; then
-  toggle_slider
-
-elif [ "${SENDER:-}" = "mouse.clicked" ] && [ "$NAME" = "volume_slider" ]; then
-  osascript -e "set volume output volume $PERCENTAGE"
-  set_icons "$PERCENTAGE"
-
-elif [ "${SENDER:-}" = "mouse.scrolled" ]; then
-  CURRENT=$(osascript -e 'output volume of (get volume settings)')
-  DELTA=$([ "$SCROLL_DELTA" -gt 0 ] && echo 5 || echo -5)
-  NEW=$(( CURRENT + DELTA ))
-  if [ "$NEW" -gt 100 ]; then NEW=100; fi
-  if [ "$NEW" -lt 0 ]; then NEW=0; fi
-  osascript -e "set volume output volume $NEW"
-  set_icons "$NEW"
-fi
+case "${SENDER:-}" in
+  volume_change|forced_update|system_woke)
+    read_volume || exit 0
+    set_icons "$VOLUME"
+    ;;
+  mouse.clicked)
+    if [ "$NAME" = volume ]; then
+      toggle_slider
+    else
+      [[ "${PERCENTAGE:-}" =~ ^[0-9]+$ ]] || exit 0
+      [ "$PERCENTAGE" -le 100 ] || exit 0
+      osascript -e "set volume output volume $PERCENTAGE"
+      read_volume || exit 0
+      set_icons "$VOLUME"
+    fi
+    ;;
+  mouse.scrolled)
+    [[ "${SCROLL_DELTA:-}" =~ ^-?[0-9]+$ ]] || exit 0
+    [ "$SCROLL_DELTA" -ne 0 ] || exit 0
+    read_volume || exit 0
+    if [ "$SCROLL_DELTA" -gt 0 ]; then DELTA=5; else DELTA=-5; fi
+    NEW=$(( VOLUME + DELTA ))
+    if [ "$NEW" -gt 100 ]; then NEW=100; fi
+    if [ "$NEW" -lt 0 ]; then NEW=0; fi
+    osascript -e "set volume output volume $NEW"
+    read_volume || exit 0
+    set_icons "$VOLUME"
+    ;;
+esac

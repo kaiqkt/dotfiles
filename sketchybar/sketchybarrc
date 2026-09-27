@@ -5,14 +5,14 @@ source "$CONFIG_DIR/fonts.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 state_file="$HOME/.local/state/sketchybar/active-bar"
-bar=edge
+bar=main
 if [[ -r "$state_file" ]]; then
   IFS= read -r bar < "$state_file" || true
 fi
 
 if [[ ! "$bar" =~ ^[a-z][a-z0-9_-]*$ || ! -f "$CONFIG_DIR/bars/$bar.sh" ]]; then
-  printf 'Unknown SketchyBar profile: %s; using edge\n' "$bar" >&2
-  bar=edge
+  printf 'Unknown SketchyBar profile: %s; using main\n' "$bar" >&2
+  bar=main
 fi
 
 source "$CONFIG_DIR/bars/$bar.sh"

@@ -3,7 +3,7 @@ set -euo pipefail
 
 source "$CONFIG_DIR/colors.sh"
 
-raw=$(top -l 1 | awk '/CPU usage/ {print $3}' | sed 's/%//')
+raw=$(top -l 1 | awk '/CPU usage/ {gsub(/%/, "", $7); print 100 - $7}')
 if [ -z "$raw" ]; then exit 0; fi
 load=$(printf "%.0f" "$raw")
 normalized=$(echo "$raw / 100" | bc -l)

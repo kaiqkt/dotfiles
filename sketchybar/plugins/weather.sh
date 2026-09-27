@@ -7,10 +7,14 @@ LAT="-23.5505"
 LON="-46.6333"
 URL="https://api.open-meteo.com/v1/forecast?latitude=$LAT&longitude=$LON&current=temperature_2m&timezone=auto&temperature_unit=celsius"
 
-DATA=$(curl -s --max-time 5 "$URL") || exit 0
-TEMP=$(echo "$DATA" | jq -r '.current.temperature_2m') || exit 0
+unavailable() {
+  sketchybar --set "$NAME" label="—" label.color="$WHITE"
+  exit 0
+}
+DATA=$(curl -fsS --connect-timeout 2 --max-time 5 "$URL" 2>/dev/null) || unavailable
+TEMP=$(echo "$DATA" | jq -er '.current.temperature_2m | numbers') || unavailable
 
-if [ -z "$TEMP" ] || [ "$TEMP" = "null" ]; then exit 0; fi
+if [ -z "$TEMP" ] || [ "$TEMP" = "null" ]; then unavailable; fi
 
 TEMP_LABEL="$(printf "%.0f°C" "$TEMP")"
 

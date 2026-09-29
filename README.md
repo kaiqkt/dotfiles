@@ -130,6 +130,10 @@ On narrower displays, the title is shortened and artwork is omitted to leave
 room for playback controls. Spotify notifications update the player immediately,
 with a 15-second polling fallback. Spaces recover from temporary yabai failures
 on their next refresh (at most 30 seconds after yabai becomes available).
+Native fullscreen Spaces are included. Space creation, removal, and display
+changes update only the space items in one batch, preserving the other widgets.
+Workspace events are grouped over 200 ms and processed by one worker at a time;
+events arriving during a refresh trigger another pass.
 Weather shows `—` when its latest request fails.
 `sketchy:bar main` selects and reloads this profile; `sketchy:bar` lists available
 profiles.

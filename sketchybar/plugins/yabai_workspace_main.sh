@@ -6,15 +6,24 @@ source "$CONFIG_DIR/fonts.sh"
 
 spaces=$(yabai -m query --spaces 2>/dev/null) || exit 0
 printf '%s' "$spaces" | jq -e 'type == "array" and length > 0' >/dev/null || exit 0
-# After a failed initial query, rebuild the missing items on the next refresh.
+# Empty/invalid IPC replies are transient, never a reason to reload the bar.
+bar=$(sketchybar --query bar) || exit 0
+printf '%s' "$bar" | jq -e 'type == "object" and (.items | type == "array")' >/dev/null || exit 0
+controller=$(sketchybar --query spaces.controller) || exit 0
+printf '%s' "$controller" | jq -e 'type == "object"' >/dev/null || exit 0
+signature=$(printf '%s' "$spaces" | jq -c '[.[] | [.id, .index, .display]]')
+previous=$(printf '%s' "$controller" | jq -r '.label.value // ""')
 expected=$(printf '%s' "$spaces" | jq -c '[.[].index] | sort')
-actual=$(sketchybar --query bar | jq -c '[.items[] | select(test("^space\\.[0-9]+$")) | split(".")[1] | tonumber] | sort') || exit 0
-if [ "$expected" != "$actual" ]; then
-  sketchybar --reload
-  exit 0
-fi
+actual=$(printf '%s' "$bar" | jq -c '[.items[] | select(test("^space\\.[0-9]+$")) | split(".")[1] | tonumber] | sort')
 windows=$(yabai -m query --windows 2>/dev/null) || exit 0
+printf '%s' "$windows" | jq -e 'type == "array"' >/dev/null || exit 0
 updates=()
+if [ "$signature" != "$previous" ] || [ "$expected" != "$actual" ]; then
+  # SketchyBar uses POSIX basic regex: + is literal, use [0-9][0-9]*.
+  updates+=(--remove '/^spaces\.group\.[0-9][0-9]*$/' --remove '/^space\.[0-9][0-9]*$/')
+  source "$CONFIG_DIR/spaces/build.sh"
+  updates+=(--set spaces.controller label="$signature")
+fi
 while IFS=$'\t' read -r sid visible app; do
   if [ -n "$app" ]; then
     label=$("$CONFIG_DIR/plugins/icon_map_fn.sh" "$app")

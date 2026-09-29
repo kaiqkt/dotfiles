@@ -21,11 +21,8 @@ yabai -m config window_opacity_duration       0.0
 yabai -m config active_window_opacity        0.98
 yabai -m config normal_window_opacity        0.98
 
-for event in space_changed display_changed window_created window_destroyed window_moved window_minimized window_deminimized application_activated; do
+for event in space_changed space_created space_destroyed display_changed display_added display_removed window_created window_destroyed window_moved window_minimized window_deminimized application_activated; do
   yabai -m signal --add event="$event" action='sketchybar --trigger yabai_workspace_change'
-done
-for event in space_created space_destroyed display_added display_removed; do
-  yabai -m signal --add event="$event" action='sketchybar --reload'
 done
 for event in space_created space_destroyed display_added display_removed; do
   yabai -m signal --add event="$event" action='~/.config/yabai/scripts/sync-rules'

@@ -1,6 +1,7 @@
 """Regression checks for widget failures, metadata, and recovery."""
 import json
 import os
+import shlex
 from pathlib import Path
 import subprocess
 import tempfile
@@ -121,9 +122,79 @@ sketchybar() {
 }
 '''
         calls = self.run_plugin('yabai_workspace_main', mocks)
-        self.assertEqual(calls, '--reload\n')
+        self.assertNotIn('--reload', calls)
+        self.assertIn('--add item space.1', calls)
+        self.assertIn('--move space.1 before spaces.controller', calls)
         (self.root / 'log').write_text('')
         calls = self.run_plugin('yabai_workspace_main', 'yabai() { return 1; }')
+        self.assertEqual(calls, '')
+
+    def test_fullscreen_topology_changes_without_reloading_widgets(self):
+        normal = [dict(id=10, index=1, display=1),
+                  dict(id=20, index=2, display=2)]
+        fullscreen = [normal[0], dict(id=30, index=2, display=1,
+                                    **{'is-native-fullscreen': True}),
+                      dict(id=20, index=3, display=2)]
+        moved = [dict(id=10, index=1, display=2), normal[1]]
+        mocks = '''
+yabai() {
+  if [ "$3" = --spaces ]; then echo "$MOCK_SPACES"; else echo '[]'; fi
+}
+sketchybar() {
+  if [ "$1" = --query ]; then
+    if [ "$2" = bar ]; then echo "$MOCK_BAR"; else echo "$MOCK_CONTROLLER"; fi
+  else printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
+}
+'''
+        for before, after in ((normal, fullscreen), (fullscreen, normal),
+                              (normal, moved), (normal, normal)):
+            with self.subTest(before=before, after=after):
+                (self.root / 'log').write_text('')
+                signature = json.dumps([[s['id'], s['index'], s['display']]
+                                        for s in before], separators=(',', ':'))
+                self.env.update(
+                    MOCK_SPACES=json.dumps(after),
+                    MOCK_BAR=json.dumps({'items': [f"space.{s['index']}" for s in before]}),
+                    MOCK_CONTROLLER=json.dumps({'label': {'value': signature}}))
+                calls = self.run_plugin('yabai_workspace_main', mocks)
+                self.assertNotIn('--reload', calls)
+                self.assertNotIn('--remove music', calls)
+                if before == after:
+                    self.assertNotIn('--add', calls)
+                else:
+                    for space in after:
+                        self.assertIn(f"--set space.{space['index']} display={space['display']}", calls)
+                        self.assertIn(f"click_script=yabai -m space --focus {space['index']}", calls)
+                    self.assertEqual(calls.count('--remove'), 2)
+
+    def test_workspace_cleanup_matches_native_basic_regex(self):
+        calls = self.run_plugin('yabai_workspace_main', '''
+yabai() { echo '[{"index":1,"display":1}]'; }
+sketchybar() {
+  if [ "$1" = --query ]; then echo '{"items":["space.1","space.10"]}';
+  else printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
+}
+''')
+        args = shlex.split(calls)
+        patterns = [args[i + 1][1:-1] for i, arg in enumerate(args)
+                    if arg == '--remove']
+        names = ['space.1', 'space.10', 'spaces.group.1', 'spaces.group.12',
+                 'spaces.controller', 'music', 'music.group']
+        removed = set()
+        for pattern in patterns:
+            # grep defaults to POSIX BRE, as does SketchyBar's regcomp(..., 0).
+            result = subprocess.run(['grep', pattern], input='\n'.join(names),
+                                    capture_output=True, text=True, check=True)
+            removed.update(result.stdout.splitlines())
+        self.assertEqual(removed, set(names[:4]))
+
+    def test_empty_bar_reply_does_not_rebuild_or_reload(self):
+        calls = self.run_plugin('yabai_workspace_main', '''
+yabai() { echo '[{"index":1,"display":1}]'; }
+sketchybar() {
+  if [ "$1" != --query ]; then printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
+}
+''')
         self.assertEqual(calls, '')
 
 

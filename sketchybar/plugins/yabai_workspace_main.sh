@@ -11,9 +11,9 @@ bar=$(sketchybar --query bar) || exit 0
 printf '%s' "$bar" | jq -e 'type == "object" and (.items | type == "array")' >/dev/null || exit 0
 controller=$(sketchybar --query spaces.controller) || exit 0
 printf '%s' "$controller" | jq -e 'type == "object"' >/dev/null || exit 0
-signature=$(printf '%s' "$spaces" | jq -c '[.[] | [.id, .index, .display]]')
+signature=$(printf '%s' "$spaces" | jq -c '[.[] | [.id, .display]]')
 previous=$(printf '%s' "$controller" | jq -r '.label.value // ""')
-expected=$(printf '%s' "$spaces" | jq -c '[.[].index] | sort')
+expected=$(printf '%s' "$spaces" | jq -c '[.[].id] | sort')
 actual=$(printf '%s' "$bar" | jq -c '[.items[] | select(test("^space\\.[0-9]+$")) | split(".")[1] | tonumber] | sort')
 windows=$(yabai -m query --windows 2>/dev/null) || exit 0
 printf '%s' "$windows" | jq -e 'type == "array"' >/dev/null || exit 0
@@ -45,5 +45,15 @@ done < <(jq -rn --argjson spaces "$spaces" --argjson windows "$windows" '
   $spaces[] | . as $space |
   [$windows[] | select(.space == $space.index and .app? != null and .app != "")] |
   (map(select(."has-focus" == true))[0] // .[0] // {}) as $window |
-  [$space.index, $space."is-visible", ($window.app // "")] | @tsv')
+  [$space.id, $space."is-visible", ($window.app // "")] | @tsv')
+# Keep the entire left section in order, including after recovering a stale bar.
+# Reordering only workspace items leaves displaced music controls in front.
+order=()
+while IFS= read -r item; do
+  order+=("$item")
+done < <(jq -rn --argjson spaces "$spaces" --argjson bar "$bar" '
+  ($spaces[] | "space.\(.id)"),
+  (["spaces.controller", "music_art", "music", "music.previous", "music.toggle", "music.next"][] |
+    . as $name | select($bar.items | index($name)))')
+updates+=(--reorder "${order[@]}")
 [ "${#updates[@]}" -eq 0 ] || sketchybar "${updates[@]}"

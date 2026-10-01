@@ -10,13 +10,21 @@ case "$display_count" in
   2) last_display=2 ;;
   *) echo "Expected one or two displays; found $display_count" >&2; exit 1 ;;
 esac
-changed=false
 
 add_rule() {
   label=$1
   app=$2
-  space=$3
+  ordinal=$3
   display=$4
+  # Native fullscreen Spaces shift Mission Control indices, not desktop slots.
+  space=$(printf '%s\n' "$spaces" | jq -r --argjson ordinal "$ordinal" '
+    [.[] | select(."is-native-fullscreen" != true)] | .[$ordinal - 1].index // empty')
+  if [ -z "$space" ]; then
+    if printf '%s\n' "$rules" | jq -e --arg label "$label" 'any(.[]; .label == $label)' >/dev/null; then
+      yabai -m rule --remove "$label"
+    fi
+    return
+  fi
 
   if printf '%s\n' "$rules" | jq -e --arg label "$label" --arg app "$app" --argjson index "$space" \
     'any(.[]; .label == $label and .app == $app and .space == $index)' >/dev/null &&
@@ -27,7 +35,6 @@ add_rule() {
 
   if printf '%s\n' "$rules" | jq -e --arg label "$label" 'any(.[]; .label == $label)' >/dev/null; then
     yabai -m rule --remove "$label"
-    changed=true
   fi
 
   if ! printf '%s\n' "$spaces" | jq -e --argjson index "$space" --argjson display "$display" \
@@ -36,7 +43,6 @@ add_rule() {
   fi
 
   yabai -m rule --add "label=$label" "app=$app" "space=$space"
-  changed=true
 }
 
 add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1 1
@@ -44,6 +50,5 @@ add_rule dotfiles_terminals '^(Terminal|kitty)$' 2 1
 add_rule dotfiles_claude '^Claude$' 8 "$last_display"
 add_rule dotfiles_spotify '^Spotify$' 9 "$last_display"
 
-if [ "$changed" = true ]; then
-  yabai -m rule --apply
-fi
+# Register placement for new windows only. Reapplying here would move windows
+# the user already placed whenever fullscreen changes the Space indices.

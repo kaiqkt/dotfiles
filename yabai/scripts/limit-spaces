@@ -5,14 +5,14 @@ max_spaces=10
 
 spaces=$(yabai -m query --spaces)
 printf '%s\n' "$spaces" | jq -r --argjson max "$max_spaces" '
-  [.[] | select(.index > $max and (.windows | length) == 0 and
-                ."is-native-fullscreen" == false) | .index] | sort | reverse[]
-' | while IFS= read -r index; do
-  current=$(yabai -m query --spaces --space "$index") || continue
-  if printf '%s\n' "$current" | jq -e --argjson max "$max_spaces" '
-    .index > $max and (.windows | length) == 0 and
-    ."is-native-fullscreen" == false
-  ' >/dev/null; then
-    yabai -m space "$index" --destroy
-  fi
+  [.[] | select(."is-native-fullscreen" == false)] | .[$max:] |
+  reverse[] | select((.windows | length) == 0) | .id
+' | while IFS= read -r id; do
+  current=$(yabai -m query --spaces) || continue
+  # Resolve again by ID: fullscreen transitions may have renumbered the list.
+  index=$(printf '%s\n' "$current" | jq -r --argjson max "$max_spaces" --argjson id "$id" '
+    [.[] | select(."is-native-fullscreen" == false)] | .[$max:] |
+    .[] | select(.id == $id and (.windows | length) == 0) | .index
+  ')
+  [ -z "$index" ] || yabai -m space "$index" --destroy
 done

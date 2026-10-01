@@ -55,15 +55,21 @@ Yabai uses native macOS Spaces. At startup and when a display is connected or
 disconnected, `~/.config/yabai/scripts/setup-spaces` ensures Spaces 1–9 are on
 the available display, or Spaces 1–5 are on display 1 and 6–9 on display 2.
 You can run the script manually to recheck the layout. It moves existing Spaces
-between displays and adds missing ones. A separate yabai signal removes empty,
-regular Spaces above 10 shortly after they appear. Occupied and native
-fullscreen Spaces are preserved, so macOS can still temporarily exceed 10.
-The app placement rules and `alt+1–9` shortcuts target Spaces 1–9.
+between displays and adds missing ones. Setup and the ten-desktop limit count
+only regular desktops; native fullscreen Spaces do not consume a slot. The
+limiter removes only empty regular desktops beyond the tenth.
+The app placement rules and `alt+1–9` shortcuts target regular desktops 1–9,
+even when fullscreen temporarily shifts their Mission Control indices.
+Placement rules apply to new windows; fullscreen transitions do not reapply
+them to windows you have already placed.
+`~/.config/yabai/scripts/select-space 2` focuses the second regular desktop;
+adding `--move` moves the window and
+follows it. The same helper accepts `id:ID` for SketchyBar clicks.
 Keep "Show Items On Desktop" enabled and set "Click wallpaper to reveal
 Desktop" to "Only in Stage Manager" in Desktop & Dock. Disabling the Finder
 Desktop prevents yabai from focusing empty Spaces, including via SketchyBar.
 Disable “Automatically rearrange Spaces based on most recent use” in Desktop &
-Dock so their indices stay stable.
+Dock so the regular desktops keep their order.
 
 On macOS 26.6, the Space creation fix is currently only in yabai HEAD, which
 the Brewfile installs. After updating yabai, refresh the binary hash in
@@ -130,8 +136,10 @@ On narrower displays, the title is shortened and artwork is omitted to leave
 room for playback controls. Spotify notifications update the player immediately,
 with a 15-second polling fallback. Spaces recover from temporary yabai failures
 on their next refresh (at most 30 seconds after yabai becomes available).
-Native fullscreen Spaces are included. Space creation, removal, and display
-changes update only the space items in one batch, preserving the other widgets.
+Native fullscreen Spaces are included. Items and clicks use stable Space IDs
+instead of temporary Mission Control indices. Space creation, removal, and
+display changes update the space items in one batch and restore the order of
+the left section: Spaces, artwork, track title, then playback controls.
 Workspace events are grouped over 200 ms and processed by one worker at a time;
 events arriving during a refresh trigger another pass.
 Weather shows `—` when its latest request fails.

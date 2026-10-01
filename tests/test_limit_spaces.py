@@ -29,7 +29,7 @@ fi
 
 
 class LimitSpacesTests(unittest.TestCase):
-    def run_limiter(self, extras):
+    def run_limiter(self, extras, fullscreen_first=False):
         with tempfile.TemporaryDirectory() as directory:
             directory = Path(directory)
             yabai = directory / "yabai"
@@ -40,7 +40,12 @@ class LimitSpacesTests(unittest.TestCase):
                 {"index": index, "windows": [], "is-native-fullscreen": False}
                 for index in range(1, 11)
             ]
-            spaces.write_text(json.dumps(initial + extras))
+            initial += extras
+            if fullscreen_first:
+                initial.insert(0, {"windows": [99], "is-native-fullscreen": True})
+            for index, space in enumerate(initial, 1):
+                space.update(id=index * 10, index=index)
+            spaces.write_text(json.dumps(initial))
             environment = os.environ.copy()
             environment["PATH"] = f"{directory}:{environment['PATH']}"
             environment["MOCK_SPACES"] = str(spaces)
@@ -53,6 +58,18 @@ class LimitSpacesTests(unittest.TestCase):
             {"index": 12, "windows": [], "is-native-fullscreen": False},
         ])
         self.assertEqual(len(remaining), 10)
+
+    def test_fullscreen_does_not_consume_regular_desktop_limit(self):
+        remaining = self.run_limiter([], fullscreen_first=True)
+        self.assertEqual(len(remaining), 11)
+        self.assertEqual(remaining[-1]["id"], 110)
+
+    def test_removes_only_eleventh_regular_desktop_with_fullscreen(self):
+        remaining = self.run_limiter([
+            {"windows": [], "is-native-fullscreen": False},
+        ], fullscreen_first=True)
+        self.assertEqual(len(remaining), 11)
+        self.assertEqual(remaining[-1]["id"], 110)
 
     def test_preserves_occupied_and_fullscreen_spaces(self):
         remaining = self.run_limiter([

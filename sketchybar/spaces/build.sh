@@ -25,10 +25,10 @@ while read -r sid monitor_id; do
                background.drawing=off \
                background.height=26 \
                background.corner_radius=8 \
-               click_script="yabai -m space --focus $sid" \
+               click_script="$HOME/.config/yabai/scripts/select-space id:$sid" \
                updates=off
              --move "space.$sid" before spaces.controller)
-done < <(printf '%s' "$spaces" | jq -r '.[] | "\(.index) \(.display)"')
+done < <(printf '%s' "$spaces" | jq -r '.[] | "\(.id) \(.display)"')
 
 seen_displays=" "
 for monitor_id in "${space_displays[@]}"; do

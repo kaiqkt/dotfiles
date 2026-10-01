@@ -19,24 +19,24 @@ alt - 0x2B : ~/.config/yabai/scripts/toggle-layout stack
 alt + shift - space : yabai -m window --toggle float
 alt - f : yabai -m window --toggle zoom-fullscreen
 
-alt - 1 : yabai -m space --focus 1
-alt - 2 : yabai -m space --focus 2
-alt - 3 : yabai -m space --focus 3
-alt - 4 : yabai -m space --focus 4
-alt - 5 : yabai -m space --focus 5
-alt - 6 : yabai -m space --focus 6
-alt - 7 : yabai -m space --focus 7
-alt - 8 : yabai -m space --focus 8
-alt - 9 : yabai -m space --focus 9
-alt + shift - 1 : yabai -m window --space 1 && yabai -m space --focus 1
-alt + shift - 2 : yabai -m window --space 2 && yabai -m space --focus 2
-alt + shift - 3 : yabai -m window --space 3 && yabai -m space --focus 3
-alt + shift - 4 : yabai -m window --space 4 && yabai -m space --focus 4
-alt + shift - 5 : yabai -m window --space 5 && yabai -m space --focus 5
-alt + shift - 6 : yabai -m window --space 6 && yabai -m space --focus 6
-alt + shift - 7 : yabai -m window --space 7 && yabai -m space --focus 7
-alt + shift - 8 : yabai -m window --space 8 && yabai -m space --focus 8
-alt + shift - 9 : yabai -m window --space 9 && yabai -m space --focus 9
+alt - 1 : ~/.config/yabai/scripts/select-space 1
+alt - 2 : ~/.config/yabai/scripts/select-space 2
+alt - 3 : ~/.config/yabai/scripts/select-space 3
+alt - 4 : ~/.config/yabai/scripts/select-space 4
+alt - 5 : ~/.config/yabai/scripts/select-space 5
+alt - 6 : ~/.config/yabai/scripts/select-space 6
+alt - 7 : ~/.config/yabai/scripts/select-space 7
+alt - 8 : ~/.config/yabai/scripts/select-space 8
+alt - 9 : ~/.config/yabai/scripts/select-space 9
+alt + shift - 1 : ~/.config/yabai/scripts/select-space 1 --move
+alt + shift - 2 : ~/.config/yabai/scripts/select-space 2 --move
+alt + shift - 3 : ~/.config/yabai/scripts/select-space 3 --move
+alt + shift - 4 : ~/.config/yabai/scripts/select-space 4 --move
+alt + shift - 5 : ~/.config/yabai/scripts/select-space 5 --move
+alt + shift - 6 : ~/.config/yabai/scripts/select-space 6 --move
+alt + shift - 7 : ~/.config/yabai/scripts/select-space 7 --move
+alt + shift - 8 : ~/.config/yabai/scripts/select-space 8 --move
+alt + shift - 9 : ~/.config/yabai/scripts/select-space 9 --move
 
 alt + shift - 0x29 ; service
 service < escape ; default

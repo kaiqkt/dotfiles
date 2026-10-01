@@ -78,7 +78,7 @@ class SketchybarProfilesTests(unittest.TestCase):
             yabai.write_text(
                 '#!/bin/sh\n'
                 'case "$3" in\n'
-                '  --spaces) printf \'[{"index":2,"is-visible":%s}]\\n\' "$MOCK_VISIBLE" ;;\n'
+                '  --spaces) printf \'[{"id":2,"index":2,"display":1,"is-visible":%s}]\\n\' "$MOCK_VISIBLE" ;;\n'
                 '  --windows) printf \'%s\\n\' "$MOCK_WINDOWS" ;;\n'
                 'esac\n'
             )

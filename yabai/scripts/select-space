@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+# Numeric slots count regular desktops; id:<id> also selects fullscreen Spaces.
+target=${1:?Usage: select-space <1-9|id:ID> [--move]}
+spaces=$(yabai -m query --spaces)
+case "$target" in
+  id:*) index=$(printf '%s\n' "$spaces" | jq -er --argjson id "${target#id:}" \
+    '.[] | select(.id == $id) | .index') ;;
+  [1-9]) index=$(printf '%s\n' "$spaces" | jq -er --argjson slot "$target" \
+    '[.[] | select(."is-native-fullscreen" != true)] | .[$slot - 1].index // empty') ;;
+  *) echo "Invalid desktop: $target" >&2; exit 1 ;;
+esac
+
+if [ "${2:-}" = --move ]; then
+  yabai -m window --space "$index"
+fi
+yabai -m space --focus "$index"

@@ -4,8 +4,12 @@
 
 | Binding         | Description                           |
 | --------------- | ------------------------------------- |
-| `alt+1-9`       | Switch to native macOS Space                   |
-| `alt+shift+1-9` | Move window to Space (and follow)             |
+| `alt+1-9`       | Switch to regular desktop 1–9                 |
+| `alt+shift+1-9` | Move window to regular desktop (and follow)   |
+
+Native fullscreen Spaces do not count toward these numbers. Shortcuts keep
+targeting the same regular desktops while fullscreen is open. App assignments
+below apply to new windows, preserving manually placed windows.
 
 Default app assignments:
 
@@ -61,6 +65,8 @@ Service mode stays active until `esc` is pressed.
 yabai --restart-service
 skhd --restart-service
 ~/.config/yabai/scripts/setup-spaces
+~/.config/yabai/scripts/select-space 2
+~/.config/yabai/scripts/select-space 2 --move
 yabai -m query --spaces
 yabai -m query --windows
 ```

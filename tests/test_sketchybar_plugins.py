@@ -115,7 +115,7 @@ top() { printf 'CPU usage: 5.0%% user, 85.0%% sys, 10.0%% idle\\n'; }
 
     def test_space_recovery_and_transient_query_failure(self):
         mocks = '''
-yabai() { echo '[{"index":1,"is-visible":true}]'; }
+yabai() { echo '[{"id":1,"index":1,"is-visible":true}]'; }
 sketchybar() {
   if [ "$1" = --query ]; then echo '{"items":[]}';
   else printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
@@ -136,6 +136,7 @@ sketchybar() {
                                     **{'is-native-fullscreen': True}),
                       dict(id=20, index=3, display=2)]
         moved = [dict(id=10, index=1, display=2), normal[1]]
+        renumbered = [normal[0], dict(id=20, index=3, display=2)]
         mocks = '''
 yabai() {
   if [ "$3" = --spaces ]; then echo "$MOCK_SPACES"; else echo '[]'; fi
@@ -147,29 +148,35 @@ sketchybar() {
 }
 '''
         for before, after in ((normal, fullscreen), (fullscreen, normal),
-                              (normal, moved), (normal, normal)):
+                              (normal, moved), (normal, normal), (normal, renumbered)):
             with self.subTest(before=before, after=after):
                 (self.root / 'log').write_text('')
-                signature = json.dumps([[s['id'], s['index'], s['display']]
+                signature = json.dumps([[s['id'], s['display']]
                                         for s in before], separators=(',', ':'))
                 self.env.update(
                     MOCK_SPACES=json.dumps(after),
-                    MOCK_BAR=json.dumps({'items': [f"space.{s['index']}" for s in before]}),
+                    MOCK_BAR=json.dumps({'items': ['music.previous', 'music.toggle', 'music.next'] +
+                                        [f"space.{s['id']}" for s in before] +
+                                        ['spaces.controller', 'music_art', 'music']}),
                     MOCK_CONTROLLER=json.dumps({'label': {'value': signature}}))
                 calls = self.run_plugin('yabai_workspace_main', mocks)
                 self.assertNotIn('--reload', calls)
                 self.assertNotIn('--remove music', calls)
-                if before == after:
+                order = shlex.split(calls.split('--reorder ')[1])
+                self.assertEqual(order, [f"space.{s['id']}" for s in after] +
+                                 ['spaces.controller', 'music_art', 'music',
+                                  'music.previous', 'music.toggle', 'music.next'])
+                if before == after or after == renumbered:
                     self.assertNotIn('--add', calls)
                 else:
                     for space in after:
-                        self.assertIn(f"--set space.{space['index']} display={space['display']}", calls)
-                        self.assertIn(f"click_script=yabai -m space --focus {space['index']}", calls)
+                        self.assertIn(f"--set space.{space['id']} display={space['display']}", calls)
+                        self.assertIn(f"/scripts/select-space id:{space['id']}", calls)
                     self.assertEqual(calls.count('--remove'), 2)
 
     def test_workspace_cleanup_matches_native_basic_regex(self):
         calls = self.run_plugin('yabai_workspace_main', '''
-yabai() { echo '[{"index":1,"display":1}]'; }
+yabai() { echo '[{"id":1,"index":1,"display":1}]'; }
 sketchybar() {
   if [ "$1" = --query ]; then echo '{"items":["space.1","space.10"]}';
   else printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
@@ -190,7 +197,7 @@ sketchybar() {
 
     def test_empty_bar_reply_does_not_rebuild_or_reload(self):
         calls = self.run_plugin('yabai_workspace_main', '''
-yabai() { echo '[{"index":1,"display":1}]'; }
+yabai() { echo '[{"id":1,"index":1,"display":1}]'; }
 sketchybar() {
   if [ "$1" != --query ]; then printf '%s\\n' "$*" >> "$MOCK_LOG"; fi
 }

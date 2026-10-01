@@ -3,7 +3,7 @@ set -eu
 
 count_spaces() {
   space_data=$(yabai -m query --spaces --display "$1")
-  printf '%s\n' "$space_data" | jq 'length'
+  printf '%s\n' "$space_data" | jq '[.[] | select(."is-native-fullscreen" != true)] | length'
 }
 
 move_space() {
@@ -14,9 +14,9 @@ move_space() {
   source_spaces=$(yabai -m query --spaces --display "$source_display")
 
   if [ "$source_display" -eq 1 ]; then
-    space_index=$(printf '%s\n' "$source_spaces" | jq -r '.[5].index')
+    space_index=$(printf '%s\n' "$source_spaces" | jq -r '[.[] | select(."is-native-fullscreen" != true)][5].index')
   else
-    space_index=$(printf '%s\n' "$source_spaces" | jq -r '.[0].index')
+    space_index=$(printf '%s\n' "$source_spaces" | jq -r '[.[] | select(."is-native-fullscreen" != true)][0].index')
   fi
 
   yabai -m space "$space_index" --display "$target_display"
@@ -83,14 +83,14 @@ done
 
 all_spaces=$(yabai -m query --spaces)
 if ! printf '%s\n' "$all_spaces" | jq -e --argjson displays "$display_count" '
+  [.[] | select(."is-native-fullscreen" != true)] |
   if $displays == 1 then
-    ([.[] | select(.display == 1) | .index][0:9] == [1,2,3,4,5,6,7,8,9]) and
-    all(.[]; .display == 1)
+    length >= 9 and all(.[]; .display == 1)
   else
-    [.[] | select(.display == 1) | .index] == [1,2,3,4,5] and
-    [.[] | select(.display == 2) | .index][0:4] == [6,7,8,9]
+    ([.[] | select(.display == 1)] | length) == 5 and
+    ([.[] | select(.display == 2)] | length) >= 4
   end' >/dev/null; then
-  echo 'Space indices differ from the expected layout; check Mission Control ordering' >&2
+  echo 'Desktop counts differ from the expected layout' >&2
   exit 1
 fi
 

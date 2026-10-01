@@ -28,12 +28,26 @@ language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
 that first launch to verify the installation.
 
 VS Code is installed with IntelliSense, formatting, linting, tests, debugging,
-Gradle/Maven, Spring Boot, and Docker tooling for Rust, Java, and Kotlin. It
-uses the same formatters as Neovim (`rustfmt`, Google Java Format, and
-`ktlint`). On the first Kotlin project, accept the license prompt required by
-the official JetBrains language server; the Americas region and disabled data
-sharing are already configured. The `code` command is also available from the
-shell.
+Gradle/Maven, Spring Boot, Docker, and SQLFluff tooling for Rust, Java, Kotlin,
+and SQL. It uses the same formatters as Neovim (`rustfmt`, Google Java Format,
+and `ktlint`); SQL files use SQLFluff for linting and formatting on save.
+Set the SQL dialect in the project's `.sqlfluff` or `pyproject.toml`; no dialect
+is forced in the global VS Code settings. For example, a PostgreSQL project
+can use this `.sqlfluff`:
+
+```ini
+[sqlfluff]
+dialect = postgres
+```
+
+Without a configured dialect, SQLFluff cannot lint or format SQL. For a
+standalone file, set `sqlfluff.dialect` in VS Code to the appropriate dialect.
+Clear that setting when returning to projects that configure their own dialect,
+as the extension passes it as a command-line override.
+
+On the first Kotlin project, accept the license prompt required by the official
+JetBrains language server; the Americas region and disabled data sharing are
+already configured. The `code` command is also available from the shell.
 
 ### Post-Install
 
@@ -155,7 +169,7 @@ profiles.
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
 - **Neovim** — LazyVim with Go, Java, Kotlin, Rust, LSP, formatting, search, and Git integration
-- **VS Code** — Rust, Java, Kotlin, Spring Boot, and Docker tooling
+- **VS Code** — Rust, Java, Kotlin, SQL, Spring Boot, and Docker tooling
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
 - **asdf** — version manager (Java, Kotlin, Go)

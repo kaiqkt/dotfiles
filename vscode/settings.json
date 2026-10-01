@@ -11,6 +11,10 @@
     "source.fixAll": "explicit"
   },
   "terminal.integrated.defaultProfile.osx": "zsh",
+  "sqlfluff.executablePath": "sqlfluff",
+  "sqlfluff.linter.run": "onSave",
+  "sqlfluff.linter.diagnosticSeverity": "error",
+  "sqlfluff.format.enabled": true,
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer",
     "editor.formatOnSave": true
@@ -48,6 +52,10 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "sqlfluff.vscode-sqlfluff",
     "editor.formatOnSave": true
   }
 }

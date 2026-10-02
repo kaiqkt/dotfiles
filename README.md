@@ -36,9 +36,23 @@ larger VM to this limit requires deleting and recreating that VM, which removes
 its Docker images, containers, and volumes.
 
 VS Code is installed with IntelliSense, formatting, linting, tests, debugging,
-Gradle/Maven, Spring Boot, Docker, and SQLFluff tooling for Rust, Java, Kotlin,
-and SQL. It uses the same formatters as Neovim (`rustfmt`, Google Java Format,
-and `ktlint`); SQL files use SQLFluff for linting and formatting on save.
+Gradle/Maven, Spring Boot, Docker, and SQLFluff tooling for Go, Rust, Java,
+Kotlin, and SQL. It uses the same formatting tools as Neovim (`gofumpt`,
+`rustfmt`, Google Java Format, and `ktlint`).
+
+Go uses the official `golang.go` extension with `gopls` for IntelliSense,
+navigation, refactoring, diagnostics, and Staticcheck analysis. Saving a Go
+file formats it with `gofumpt` and organizes imports through `gopls`. The
+installer adds `gopls` and Delve (`dlv`) to the asdf-managed Go toolchain for
+language features and debugging; the extension also provides test execution.
+After switching Go toolchains, use `Go: Install/Update Tools` in the Command
+Palette to install `gopls` and `dlv` for that toolchain, then run `asdf reshim golang`.
+
+Markdown Preview Enhanced provides a live preview with synchronized scrolling,
+Mermaid diagrams, and math rendering. With a Markdown file open, run
+`Markdown Preview Enhanced: Open Preview to the Side` from the Command Palette.
+
+SQL files use SQLFluff for linting and formatting on save.
 Set the SQL dialect in the project's `.sqlfluff` or `pyproject.toml`; no dialect
 is forced in the global VS Code settings. For example, a PostgreSQL project
 can use this `.sqlfluff`:
@@ -177,7 +191,7 @@ profiles.
 - **Tmux** — terminal multiplexer (prefix: `Ctrl+A`)
 - **ZSH** — shell with custom prompt, FZF integration, vim mode
 - **Neovim** — LazyVim with Go, Java, Kotlin, Rust, LSP, formatting, search, and Git integration
-- **VS Code** — Rust, Java, Kotlin, SQL, Spring Boot, and Docker tooling
+- **VS Code** — Go, Rust, Java, Kotlin, SQL, Markdown preview, Spring Boot, and Docker tooling
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
 - **asdf** — version manager (Java, Kotlin, Go)

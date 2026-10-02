@@ -5,6 +5,9 @@ miguelsolorio.symbols
 redhat.vscode-yaml
 usernamehw.errorlens
 sqlfluff.vscode-sqlfluff
+shd101wyy.markdown-preview-enhanced
+
+golang.go
 
 rust-lang.rust-analyzer
 vadimcn.vscode-lldb

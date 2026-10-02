@@ -1,0 +1,78 @@
+#!/bin/bash
+set -euo pipefail
+
+# Temporary macOS 27.0.1 workaround until upstream yabai supports this Dock.
+repo_dir=$(cd "$(dirname "$0")/.." && pwd)
+yabai_link=/opt/homebrew/bin/yabai
+sudoers_file=/private/etc/sudoers.d/yabai
+dock_binary=/System/Library/CoreServices/Dock.app/Contents/MacOS/Dock
+expected_build=26A434
+expected_dock_hash=b704affba65f732ffd6676c3bb22c94abc737ee73af8bdf29a5ef02650cde33e
+source_revision=ad0a12d63f639534a296a1d065b0d04979f1b4db
+
+if [ "${1:-}" = --admin ]; then
+  [ "$(id -u)" -eq 0 ] || exit 1
+  owner=$(stat -f %Su "$repo_dir")
+  owner_uid=$(id -u "$owner")
+  hash=$(shasum -a 256 "$yabai_link" | awk '{print $1}')
+  backup=$(mktemp /private/tmp/yabai-sudoers.XXXXXX)
+  candidate=$(mktemp /private/etc/sudoers.d/yabai.XXXXXX)
+  cp "$sudoers_file" "$backup"
+  trap 'cp "$backup" "$sudoers_file"; rm -f "$backup" "$candidate"' ERR
+  printf '%s ALL=(root) NOPASSWD: sha256:%s %s --load-sa\n' "$owner" "$hash" "$yabai_link" > "$candidate"
+  chmod 0440 "$candidate"
+  visudo -cf "$candidate"
+  mv -f "$candidate" "$sudoers_file"
+  SUDO_UID="$owner_uid" "$yabai_link" --load-sa
+  rm -f "$backup"
+  trap - ERR
+  exit 0
+fi
+
+[ "$(sw_vers -buildVersion)" = "$expected_build" ] || {
+  echo "This workaround is only checked for macOS build $expected_build" >&2
+  exit 1
+}
+actual_dock_hash=$(shasum -a 256 "$dock_binary" | awk '{print $1}')
+[ "$actual_dock_hash" = "$expected_dock_hash" ] || {
+  echo 'Dock changed; verify the macOS 27 offsets before installing yabai' >&2
+  exit 1
+}
+[ -L "$yabai_link" ] || { echo "$yabai_link is not a symlink" >&2; exit 1; }
+[ -f "$sudoers_file" ] || { echo "$sudoers_file is missing" >&2; exit 1; }
+
+build_dir=$(mktemp -d /private/tmp/yabai-27.XXXXXX)
+trap 'rm -rf "$build_dir"' EXIT
+git clone --depth 1 https://github.com/AhsanFazal/yabai.git "$build_dir/source"
+actual_revision=$(git -C "$build_dir/source" rev-parse HEAD)
+[ "$actual_revision" = "$source_revision" ] || {
+  echo "Fork changed (got $actual_revision); review the new revision first" >&2
+  exit 1
+}
+make -C "$build_dir/source" install
+codesign -fs - "$build_dir/source/bin/yabai"
+
+mkdir -p "$HOME/.local/bin" "$HOME/.local/state"
+patched_binary="$HOME/.local/bin/yabai-macos27"
+cp "$build_dir/source/bin/yabai" "$patched_binary"
+chmod 0755 "$patched_binary"
+codesign --verify "$patched_binary"
+
+original_link=$(readlink "$yabai_link")
+if [ "$original_link" = "$patched_binary" ]; then
+  original_link=$(cat "$HOME/.local/state/yabai-homebrew-link")
+else
+  printf '%s\n' "$original_link" > "$HOME/.local/state/yabai-homebrew-link"
+fi
+"$yabai_link" --stop-service
+ln -sfn "$patched_binary" "$yabai_link"
+
+if ! osascript -e "do shell script \"/bin/bash $repo_dir/scripts/install-yabai-macos27 --admin\" with administrator privileges"; then
+  ln -sfn "$original_link" "$yabai_link"
+  "$yabai_link" --start-service
+  echo 'Administrator authorization failed; restored the Homebrew yabai link' >&2
+  exit 1
+fi
+
+"$yabai_link" --start-service
+echo 'Patched yabai installed. If macOS requests Accessibility again, re-enable yabai and restart its service.'

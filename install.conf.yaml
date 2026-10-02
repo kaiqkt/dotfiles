@@ -101,5 +101,7 @@
         defaults write NSGlobalDomain AppleShowAllExtensions -bool true
         defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
         defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
-        defaults write NSGlobalDomain _HIHideMenuBar -bool true
+        defaults write NSGlobalDomain _HIHideMenuBar -bool false
+        osascript -e 'tell application "System Events" to set autohide menu bar of dock preferences to true'
+        osascript -e 'tell application "System Events" to set autohide menu bar of dock preferences to false'
         killall Dock Finder SystemUIServer &>/dev/null || true

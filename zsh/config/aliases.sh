@@ -38,9 +38,9 @@ function dc-dev() {
   docker-attach app
 }
 
-alias sketchy:start="brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && killall SystemUIServer"
-alias sketchy:stop="brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && killall SystemUIServer"
-alias sketchy:restart="brew services restart sketchybar"
+alias sketchy:start="env -u TMUX brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'"
+alias sketchy:stop="env -u TMUX brew services stop sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool false && osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to false'"
+alias sketchy:restart="env -u TMUX brew services restart sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'"
 alias sketchy:bar="$HOME/.config/sketchybar/select-bar"
 
 alias borders:start="brew services start felixkratz/formulae/borders"

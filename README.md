@@ -113,6 +113,15 @@ the Brewfile installs. After updating yabai, refresh the binary hash in
 signs HEAD builds ad hoc, macOS may also require you to remove and add yabai
 again in Privacy & Security → Accessibility.
 
+On macOS 27.0.1 build 26A434, upstream yabai HEAD cannot load its scripting
+addition, so Space creation, movement, and some focus commands fail. Run
+`./scripts/install-yabai-macos27` for the temporary workaround. It checks the
+Dock binary, builds a pinned [macOS 27 fork](https://github.com/AhsanFazal/yabai),
+updates the yabai sudo rule through a macOS administrator prompt, and restarts
+the service. Re-enable yabai in Accessibility if macOS asks. A Homebrew upgrade
+can replace this temporary binary; rerun the script after verifying the new
+macOS build is supported.
+
 The configured 98% opacity requires partially disabling macOS System Integrity
 Protection (SIP) and loading yabai's scripting addition. Follow the
 [upstream SIP instructions](https://github.com/asmvik/yabai/wiki/Disabling-System-Integrity-Protection)
@@ -159,12 +168,15 @@ and [yabai's SIP restoration instructions](https://github.com/asmvik/yabai/wiki/
 | yabai/skhd Accessibility | System Settings → Privacy & Security → Accessibility → enable both          |
 | Hack Nerd Font          | Installed via Brewfile — select in Kitty if not applied automatically       |
 | `~/secrets.sh`          | Create with private env vars (tokens, API keys) — sourced by zsh if present |
-| Sketchybar menu bar     | Run `sketchy:start` — hides native menu bar and starts sketchybar           |
+| Sketchybar menu bar     | Optional: run `sketchy:start` to replace the native menu bar; `sketchy:stop` restores it |
 | Wallpaper automation    | Allow Terminal to control System Events if macOS requests permission        |
 
-SketchyBar uses the `main` profile: a full-width bar with horizontal spaces in
-a light pill, one app icon per occupied space, a dark active space, and dots for
-empty spaces. Spotify appears after the spaces while playing or paused, with
+The macOS menu bar is visible by default. SketchyBar remains installed but is
+started only with `sketchy:start`; `sketchy:stop` restores the native bar.
+When enabled, SketchyBar uses the `main` profile: a full-width bar with
+horizontal spaces in a light pill, one app icon per occupied space, a dark
+active space, and dots for empty spaces. Spotify appears after the spaces while
+playing or paused, with
 previous, play/pause, and next controls, including with a single monitor.
 When Spotify is paused, an MPD track currently playing takes priority.
 Clicking Spotify's title opens Spotify; MPD titles have no click action.

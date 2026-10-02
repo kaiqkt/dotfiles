@@ -95,4 +95,4 @@ if ! printf '%s\n' "$all_spaces" | jq -e --argjson displays "$display_count" '
 fi
 
 "$HOME/.config/yabai/scripts/sync-rules"
-sketchybar --reload
+sketchybar --reload >/dev/null 2>&1 || true

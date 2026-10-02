@@ -27,6 +27,14 @@ The first `nvim` launch bootstraps LazyVim and installs the configured plugins,
 language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
 that first launch to verify the installation.
 
+Colima uses the linked `colima/colima.yaml` configuration: 6 CPUs, 8 GiB of
+memory, and a 15 GiB disk for container data. Start it with `colima start`.
+The VM's system disk and metadata use additional space on macOS, so the
+`~/.colima` folder can exceed 15 GiB even with this data disk limit.
+Colima can grow an existing disk but cannot shrink it; changing an existing
+larger VM to this limit requires deleting and recreating that VM, which removes
+its Docker images, containers, and volumes.
+
 VS Code is installed with IntelliSense, formatting, linting, tests, debugging,
 Gradle/Maven, Spring Boot, Docker, and SQLFluff tooling for Rust, Java, Kotlin,
 and SQL. It uses the same formatters as Neovim (`rustfmt`, Google Java Format,

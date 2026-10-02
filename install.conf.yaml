@@ -21,6 +21,7 @@
     ~/.zshenv: zshenv
     ~/.config/zsh: zsh
     ~/.Brewfile: homebrew/Brewfile
+    ~/.colima/default/colima.yaml: colima/colima.yaml
     ~/.config/kitty: kitty
     ~/.config/nvim: nvim
     ~/.fzfrc: fzfrc

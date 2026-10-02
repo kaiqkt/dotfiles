@@ -28,6 +28,7 @@ SYMLINKS=(
   ~/.zshenv
   ~/.config/zsh
   ~/.Brewfile
+  ~/.colima/default/colima.yaml
   ~/.config/kitty
   ~/.config/nvim
   ~/.fzfrc

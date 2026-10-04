@@ -6,5 +6,3 @@ tags
 *.class
 build/
 out/
-
-**/.claude/settings.local.json

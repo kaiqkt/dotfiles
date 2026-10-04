@@ -47,3 +47,8 @@ For shell edits, check syntax with `bash -n` or `zsh -n` as appropriate.
 - Document changed user commands in `README.md` and changed shortcuts in the
   matching `shortcuts/` page.
 - Use Conventional Commits: `<type>[optional scope]: <description>`.
+
+## Shared agent tools
+
+For compact command output, read `ai/RTK.md`. Use RTK explicitly when useful;
+keep native commands available for exact output and unsupported operations.

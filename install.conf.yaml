@@ -12,10 +12,6 @@
 - create:
     ~/.local/bin:
       mode: 0755
-    ~/.config/opencode:
-      mode: 0755
-    ~/.claude:
-      mode: 0755
 
 - link:
     ~/.zshenv: zshenv
@@ -28,10 +24,7 @@
     ~/.config/tmux: tmux
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
-    ~/.claude/settings.json: claude/settings.json
-    ~/.claude/CLAUDE.md: claude/CLAUDE.md
-    ~/.claude/RTK.md: claude/RTK.md
-    ~/.config/opencode/opencode.json: opencode/opencode.json
+    ~/.config/ai: ai
     ~/.config/borders: borders
     ~/.config/sketchybar: sketchybar
     ~/.config/yabai: yabai

@@ -19,7 +19,7 @@ Default app assignments:
 | 2     | Kitty, Terminal | 1           | 1            |
 | 3–5   | —               | 1           | 1            |
 | 6–7   | —               | 1           | 2            |
-| 8     | Claude          | 1           | 2            |
+| 8     | —               | 1           | 2            |
 | 9     | Spotify         | 1           | 2            |
 
 ## Focus & Move

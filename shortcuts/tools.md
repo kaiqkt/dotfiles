@@ -65,6 +65,7 @@ Also available as tmux popup: `prefix + g g`
 | `,` / `.`       | Page up / down                               |
 | `<` / `>`       | Top / bottom of list                         |
 | `Space`         | Select                                       |
+| `V`             | Toggle range selection                       |
 | `Enter` / `y`   | Confirm                                      |
 | `d`             | Remove / delete                              |
 | `n` / `e` / `o` | New / edit / open file                       |
@@ -80,7 +81,6 @@ Also available as tmux popup: `prefix + g g`
 | `Ctrl+S`        | Filtering menu                               |
 | `W` / `Ctrl+E`  | Diffing menu                                 |
 | `Ctrl+O`        | Copy selection to clipboard                  |
-| `Alt+Enter`     | Append newline in editor                     |
 | `@`             | Extras menu                                  |
 | `Ctrl+W`        | Toggle whitespace in diff                    |
 | `x` / `?`       | Help menu                                    |
@@ -126,13 +126,14 @@ Also available as tmux popup: `prefix + g g`
 | `p`            | Pick (mid-rebase)                   |
 | `t`            | Revert                              |
 | `g`            | Reset options                       |
-| `c` / `C`      | Cherry-pick copy / copy range       |
+| `c` / `C`      | Copy selected commits for cherry-pick |
+| `Ctrl+F`       | Set fixup message                   |
 | `v`            | Paste cherry-picked commits         |
 | `Ctrl+X`       | Reset cherry-pick                   |
 | `T`            | Tag commit                          |
 | `Space`        | Checkout commit                     |
 | `Ctrl+J/K`     | Move commit down / up               |
-| `Ctrl+Y`       | Copy commit message                 |
+| `Ctrl+Y`       | Menu to copy a commit attribute     |
 
 ### Stash / Commit Files / Main / Submodules
 
@@ -140,7 +141,6 @@ Also available as tmux popup: `prefix + g g`
 | ------------- | --------- | ----------------------------------- |
 | Stash         | `g`       | Pop stash                           |
 | Commit files  | `c`       | Checkout file                       |
-| Main (diff)   | `v` / `V` | Toggle drag select                  |
 | Main (diff)   | `a`       | Toggle hunk                         |
 | Main (diff)   | `b`       | Pick both hunks (merge)             |
 | Submodules    | `i`       | Init                                |
@@ -215,10 +215,13 @@ cargo fmt
 | `docker-attach` | Attach to running compose container by service name     |
 | `dc-dev`        | Start `app` service, watch for changes, attach to shell |
 
-## Claude Code
+## AI agents
+
+Repository instructions live in `AGENTS.md`. Shared RTK instructions live in
+`ai/RTK.md`, linked to `~/.config/ai/RTK.md`.
 
 ```bash
-npm install -g @anthropic-ai/claude-code
+rtk git status
+rtk git diff
+rtk gain
 ```
-
-Config symlinked from `claude/settings.json` → `~/.claude/settings.json`.

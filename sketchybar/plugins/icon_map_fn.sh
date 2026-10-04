@@ -114,9 +114,6 @@ function icon_map() {
   "Citrix Workspace" | "Citrix Viewer")
     icon_result=":citrix:"
     ;;
-  "Claude")
-    icon_result=":claude:"
-    ;;
   "ClickUp")
     icon_result=":click_up:"
     ;;

@@ -6,7 +6,6 @@ gui:
   mainPanelSplitMode: 'flexible'
   language: 'auto'
   theme:
-    lightTheme: false
     activeBorderColor:
       - green
     inactiveBorderColor:
@@ -15,8 +14,6 @@ gui:
       - black
     selectedLineBgColor:
       - reverse
-    selectedRangeBgColor:
-      - blue
     cherryPickedCommitBgColor:
       - blue
     cherryPickedCommitFgColor:
@@ -38,8 +35,6 @@ git:
   merging:
     manualCommit: false
     args: ''
-  pull:
-    mode: 'auto'
   skipHookPrefix: WIP
   autoFetch: true
   branchLogCmd: "git log --graph --color=always --abbrev-commit --date=relative --decorate --date=relative --pretty=medium --oneline {{branchName}} --"
@@ -48,82 +43,62 @@ git:
   parseEmoji: true
   allBranchesLogCmds:
     - git log --graph --all --color=always --abbrev-commit --decorate --date=relative  --pretty=medium
-os:
-  editPreset: ''
-  edit: ''
-  editAtLine: '{{editor}} {{filename}}'
-  editAtLineAndWait: ''
-  open: ''
-  openLink: ''
 refresher:
   refreshInterval: 3
   fetchInterval: 5
 update:
   method: background
   days: 1
-reporting: 'undetermined'
 confirmOnQuit: false
 quitOnTopLevelReturn: true
 disableStartupPopups: true
 notARepository: 'skip'
 keybinding:
   universal:
-    quit: 'q'
-    quit-alt1: '<c-c>'
+    quit: ['q', '<ctrl+c>']
     return: '<esc>'
     quitWithoutChangingDirectory: 'Q'
     togglePanel: '<tab>'
-    prevItem: '<up>'
-    nextItem: '<down>'
-    prevItem-alt: 'k'
-    nextItem-alt: 'j'
+    prevItem: ['<up>', 'k']
+    nextItem: ['<down>', 'j']
     prevPage: ','
     nextPage: '.'
     gotoTop: '<'
     gotoBottom: '>'
-    prevBlock: '<left>'
-    nextBlock: '<right>'
-    prevBlock-alt: 'h'
-    nextBlock-alt: 'l'
+    prevBlock: ['<left>', 'h']
+    nextBlock: ['<right>', 'l']
     nextMatch: 'n'
     prevMatch: 'N'
-    optionMenu: 'x'
-    optionMenu-alt1: '?'
+    optionMenu: ['x', '?']
+    toggleRangeSelect: 'V'
     select: '<space>'
     goInto: '<enter>'
-    openRecentRepos: '<c-r>'
-    confirm: '<enter>'
-    confirm-alt1: 'y'
+    openRecentRepos: '<ctrl+r>'
+    confirm: ['<enter>', 'y']
     remove: 'd'
     new: 'n'
     edit: 'e'
     openFile: 'o'
-    scrollUpMain: '<pgup>'
-    scrollDownMain: '<pgdown>'
-    scrollUpMain-alt1: 'K'
-    scrollDownMain-alt1: 'J'
-    scrollUpMain-alt2: '<c-u>'
-    scrollDownMain-alt2: '<c-d>'
+    scrollUpMain: ['<pgup>', 'K', '<ctrl+u>']
+    scrollDownMain: ['<pgdown>', 'J', '<ctrl+d>']
     executeShellCommand: ':'
     createRebaseOptionsMenu: 'm'
     pushFiles: 'P'
     pullFiles: 'p'
     refresh: 'R'
-    createPatchOptionsMenu: '<c-p>'
+    createPatchOptionsMenu: '<ctrl+p>'
     nextTab: ']'
     prevTab: '['
     nextScreenMode: '+'
     prevScreenMode: '_'
     undo: 'z'
-    redo: '<c-z>'
-    filteringMenu: '<c-s>'
-    diffingMenu: 'W'
-    diffingMenu-alt: '<c-e>'
-    copyToClipboard: '<c-o>'
+    redo: '<ctrl+z>'
+    filteringMenu: '<ctrl+s>'
+    diffingMenu: ['W', '<ctrl+e>']
+    copyToClipboard: '<ctrl+o>'
     submitEditorText: '<enter>'
-    appendNewline: '<a-enter>'
     extrasMenu: '@'
-    toggleWhitespaceInDiffView: '<c-w>'
+    toggleWhitespaceInDiffView: '<ctrl+w>'
   status:
     checkForUpdate: 'u'
     recentRepos: '<enter>'
@@ -160,25 +135,23 @@ keybinding:
     markCommitAsFixup: 'f'
     createFixupCommit: 'F'
     squashAboveCommits: 'S'
-    moveDownCommit: '<c-j>'
-    moveUpCommit: '<c-k>'
+    moveDownCommit: '<ctrl+j>'
+    moveUpCommit: '<ctrl+k>'
     amendToCommit: 'A'
     pickCommit: 'p'
     revertCommit: 't'
-    cherryPickCopy: 'c'
-    cherryPickCopyRange: 'C'
+    cherryPickCopy: ['c', 'C']
+    setFixupMessage: '<ctrl+f>'
     pasteCommits: 'v'
     tagCommit: 'T'
     checkoutCommit: '<space>'
-    resetCherryPick: '<c-x>'
-    copyCommitMessageToClipboard: '<c-y>'
+    resetCherryPick: '<ctrl+x>'
+    copyCommitAttributeToClipboard: '<ctrl+y>'
   stash:
     popStash: 'g'
   commitFiles:
     checkoutCommitFile: 'c'
   main:
-    toggleDragSelect: 'v'
-    toggleDragSelect-alt: 'V'
     toggleSelectHunk: 'a'
     pickBothHunks: 'b'
   submodules:

@@ -47,7 +47,6 @@ add_rule() {
 
 add_rule dotfiles_browsers '^(Safari|Google Chrome)$' 1 1
 add_rule dotfiles_terminals '^(Terminal|kitty)$' 2 1
-add_rule dotfiles_claude '^Claude$' 8 "$last_display"
 add_rule dotfiles_spotify '^Spotify$' 9 "$last_display"
 
 # Register placement for new windows only. Reapplying here would move windows

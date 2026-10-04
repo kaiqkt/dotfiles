@@ -76,7 +76,7 @@ class YabaiWorkspaceTests(unittest.TestCase):
             rules = json.loads((self.root / 'rules').read_text())
             self.assertEqual({r['label']: r['space'] for r in rules}, {
                 'dotfiles_browsers': 1, 'dotfiles_terminals': 2 + fullscreen,
-                'dotfiles_claude': 8 + fullscreen, 'dotfiles_spotify': 9 + fullscreen,
+                'dotfiles_spotify': 9 + fullscreen,
             })
             self.assertFalse(any('--apply' in c or c[1] == 'window' for c in calls))
 

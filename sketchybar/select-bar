@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-config_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+config_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 state_dir="$HOME/.local/state/sketchybar"
 state_file="$state_dir/active-bar"
 active=main

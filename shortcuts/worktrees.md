@@ -19,15 +19,19 @@ Most commands must run from the project root (the dir containing `.bare/`).
 | ---------------------------------------- | ------------------------------------------------------------------------------------ |
 | `wt:init <remote-url> [folder]`          | Clone repo as bare into `<folder>/.bare` and `cd` into it                            |
 | `wt:add <branch>`                        | Check out existing remote branch as worktree                                         |
-| `wt:create <branch> [base]`              | Create new branch + worktree from `base` (arg > `wt:config defaultBase` > `master`)  |
+| `wt:create <branch> [base]`              | Create new branch + worktree from `base` (arg > `wt:config defaultBase` > repository default branch)  |
 | `wt:list`                                | List worktree branch names, one per line                                             |
-| `wt:info`                                | Table: git dirty, docker status, ports, hash, last commit, ahead/behind master       |
+| `wt:info`                                | Table: git dirty, docker status, ports, hash, last commit, ahead/behind base branch       |
 | `wt:update`                              | `git fetch --all --prune` into `.bare`                                               |
 | `wt:rename <old> <new>`                  | Rename worktree directory + branch (fixes submodule paths)                           |
 | `wt:remove <branch-or-path> [--force]`   | Stop containers, remove worktree, prune refs, delete branch (confirms unless force)  |
 | `wt:cleanup`                             | Interactive per-row prompt — `y` delete, `f` force-delete, anything else skip        |
 | `wt:config [<key> [<value>\|--unset]]`   | Read/write `wt.*` config on the bare repo                                            |
 | `wt:help`                                | Show full inline help                                                                |
+
+Removal refuses local changes unless `--force` (or `f` in cleanup) is used.
+Git also protects locked worktrees and worktrees with submodules. A clean
+worktree can be removed while its unmerged branch is retained.
 
 ## Post-create automation
 

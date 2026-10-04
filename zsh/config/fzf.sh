@@ -21,16 +21,19 @@ fcd() {
 }
 
 fe() {
-  IFS=$'\n' files=($(fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | \
-    fzf --query="$1" --multi --select-1 --exit-0))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+  local -a files
+  files=("${(@f)$(fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | \
+    fzf --query="${1:-}" --multi --select-1 --exit-0)}")
+  [[ -n "${files[1]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
 fo() {
-  IFS=$'\n' out=("$(fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | \
-    fzf --query="$1" --exit-0 --expect=ctrl-o)")
-  key=$(head -1 <<<"$out")
-  file=$(head -2 <<<"$out" | tail -1)
+  local -a out
+  local key file
+  out=("${(@f)$(fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | \
+    fzf --query="${1:-}" --exit-0 --expect=ctrl-o)}")
+  key=${out[1]}
+  file=${out[2]}
   if [[ -n "$file" ]]; then
     [[ "$key" = ctrl-o ]] && open "$file" || ${EDITOR:-vim} "$file"
   fi

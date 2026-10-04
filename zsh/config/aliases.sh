@@ -27,15 +27,20 @@ alias dce="docker compose exec"
 alias dcw="docker compose watch"
 
 function docker-attach() {
-  docker attach $(docker compose ps -q $1)
+  local container
+  container=$(docker compose ps -q "${1:?Usage: docker-attach <service>}") || return 1
+  [[ -n "$container" ]] || { echo "No running container for service '$1'."; return 1; }
+  docker attach "$container"
 }
 
 function dc-dev() {
+  (
   dc up -d app || return 1
   dcw &
   local watch_pid=$!
   trap "kill $watch_pid 2>/dev/null" EXIT INT TERM
   docker-attach app
+  )
 }
 
 alias sketchy:start="env -u TMUX brew services start sketchybar && defaults write NSGlobalDomain _HIHideMenuBar -bool true && osascript -e 'tell application \"System Events\" to set autohide menu bar of dock preferences to true'"

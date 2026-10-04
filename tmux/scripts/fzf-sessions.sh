@@ -2,12 +2,12 @@
 set -euo pipefail
 
 
-current_session=$(tmux display-message -p '#S')
+current_session=$(tmux display-message -p '#{session_id}')
 
-reload_cmd="tmux list-sessions -F '#S (#{session_windows} windows) #{?session_attached, attached,}'"
+reload_cmd="tmux list-sessions -F '#{session_id} #S (#{session_windows} windows) #{?session_attached, attached,}'"
 
 eval "$reload_cmd" \
-  | fzf --no-tmux +m --reverse --exit-0 --no-preview \
+  | fzf --no-tmux +m --reverse --exit-0 --no-preview --with-nth=2.. \
     --header "Enter: switch | Ctrl-X: kill | Ctrl-A: new | Ctrl-R: rename" \
     --bind "ctrl-x:execute-silent(
       session=\$(echo {} | awk '{print \$1}');

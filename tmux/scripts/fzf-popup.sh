@@ -2,22 +2,17 @@
 set -euo pipefail
 
 
-WINDOW_ID=$(tmux list-panes -a -F '#{pane_id} #{window_id}' | awk -v pane="${TMUX_PANE:-}" '$1 != pane {print $2}' | head -1)
-
-if [[ -z "$WINDOW_ID" ]]; then
-  WINDOW_ID=$(tmux display-message -p '#{window_id}')
-fi
-
-CALLER_PANE=$(tmux list-panes -t "$WINDOW_ID" -F '#{pane_id} #{pane_active}' | awk '$2 == 1 {print $1}')
+CALLER_PANE=$(tmux display-message -p -t "${TMUX_PANE:-}" '#{pane_id}')
 export CALLER_PANE
+WINDOW_ID=$(tmux display-message -p -t "$CALLER_PANE" '#{window_id}')
+TMUX_FZF_RESULT_FILE=$(mktemp "${TMPDIR:-/tmp}/tmux-fzf.XXXXXX")
+export TMUX_FZF_RESULT_FILE
 
 ORIG_STYLE=$(tmux show -t "$WINDOW_ID" -wv window-style 2>/dev/null || true)
 ORIG_ACTIVE_STYLE=$(tmux show -t "$WINDOW_ID" -wv window-active-style 2>/dev/null || true)
 
-tmux set -t "$WINDOW_ID" -w window-style "fg=#464f62,bg=#1c1f26"
-tmux set -t "$WINDOW_ID" -w window-active-style "fg=#464f62,bg=#1c1f26"
-
 restore() {
+  rm -f "$TMUX_FZF_RESULT_FILE"
   if [[ -n "$ORIG_STYLE" ]]; then
     tmux set -t "$WINDOW_ID" -w window-style "$ORIG_STYLE" 2>/dev/null || true
   else
@@ -31,4 +26,8 @@ restore() {
 }
 trap restore EXIT
 
+tmux set -t "$WINDOW_ID" -w window-style "fg=colour8"
+tmux set -t "$WINDOW_ID" -w window-active-style "fg=colour8"
+
 "$@"
+"$(dirname "$0")/fzf-open-result.sh"

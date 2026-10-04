@@ -33,6 +33,9 @@ cd ~/Projects/dotfiles
 Display resolution, scaling, rotation, and arrangement are preserved. The
 installer selects the highest safe refresh rate up to 60 Hz.
 
+The installer starts Sketchybar, Borders, yabai, and skhd. It can be invoked
+from another directory using its full path.
+
 The first `nvim` launch bootstraps LazyVim and installs the configured plugins,
 language servers, formatters, and Tree-sitter parsers. Run `:LazyHealth` after
 that first launch to verify the installation.
@@ -221,6 +224,9 @@ profiles.
 - **Homebrew** — package manager
 
 ## Wallpaper themes
+
+VS Code receives the generated terminal ANSI colors. Existing custom color
+overrides in `vscode/settings.json` are preserved and can override the theme.
 
 Matugen 4.2.0 generates a dark Material You **Tonal Spot** palette. The adapter
 maps neutral surfaces and near-white text to Base16, harmonizes separate

@@ -19,7 +19,7 @@
   template = "tmux"
   file = "~/.config/tmux/config/theme.conf"
   rewrite = true
-  hook = "pgrep -x tmux > /dev/null && tmux source-file ~/.config/tmux/config/theme.conf || true"
+  hook = "pgrep -x tmux > /dev/null && tmux source-file ~/.config/tmux/tmux.conf || true"
 
 [[items]]
   template = "borders"

@@ -12,19 +12,21 @@ Options:
   -r, --repo   Repository name (inferred from git if omitted)
   -h, --help   Show help
 EOF
-  exit 0
+  exit "${1:-0}"
 }
 
-USER=""
+GIT_MULTI_USER=""
 REPO=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -u|--user)
-      USER="$2"
+      [[ $# -ge 2 && -n "$2" && "$2" != -* ]] || { echo "Error: -u requires a username." >&2; usage 2; }
+      GIT_MULTI_USER="$2"
       shift 2
       ;;
     -r|--repo)
+      [[ $# -ge 2 && -n "$2" && "$2" != -* ]] || { echo "Error: -r requires a repository name." >&2; usage 2; }
       REPO="$2"
       shift 2
       ;;
@@ -33,14 +35,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       echo "Unknown option: $1"
-      usage
+      usage 2
       ;;
   esac
 done
 
-if [[ -z "$USER" ]]; then
+if [[ -z "$GIT_MULTI_USER" ]]; then
   echo "Error: -u <username> required."
-  usage
+  usage 2
 fi
 
 if ! git rev-parse --is-inside-work-tree &>/dev/null; then
@@ -49,7 +51,10 @@ if ! git rev-parse --is-inside-work-tree &>/dev/null; then
 fi
 
 if [[ -z "$REPO" ]]; then
-  inferred=$(git remote get-url origin 2>/dev/null | sed 's/.*[:/]\([^/]*\)\.git$/\1/' || true)
+  inferred=$(git remote get-url origin 2>/dev/null || true)
+  inferred=${inferred%/}
+  inferred=${inferred##*/}
+  inferred=${inferred%.git}
 
   if [[ -n "$inferred" ]]; then
     REPO="$inferred"
@@ -66,8 +71,8 @@ if [[ -z "$REPO" ]]; then
   exit 1
 fi
 
-GITHUB_URL="git@github.com:${USER}/${REPO}.git"
-CODEBERG_URL="git@codeberg.org:${USER}/${REPO}.git"
+GITHUB_URL="git@github.com:${GIT_MULTI_USER}/${REPO}.git"
+CODEBERG_URL="git@codeberg.org:${GIT_MULTI_USER}/${REPO}.git"
 
 echo ""
 echo "Configuring multi-push origin (fetch: Codeberg, push: both):"

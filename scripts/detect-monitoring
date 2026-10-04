@@ -74,7 +74,6 @@ installed_apps=$(find /Applications -maxdepth 3 -name "*.app" 2>/dev/null | tr '
 for entry in "${monitoring_apps[@]}"; do
   app_name="${entry%%|*}"
   remainder="${entry#*|}"
-  bundle_id="${remainder%%|*}"
   search_term="${remainder##*|}"
 
   if echo "$installed_apps" | grep -qi "$search_term"; then
@@ -130,10 +129,11 @@ done
 
 section "Checking MDM profiles..."
 
-if profiles status 2>/dev/null | grep -qi "enrolled"; then
+mdm_status=$(profiles status -type enrollment 2>/dev/null) || mdm_status=''
+if printf '%s\n' "$mdm_status" | grep -Eqi '(MDM enrollment|Enrolled via DEP):[[:space:]]*Yes'; then
   warn "This Mac is enrolled in MDM (Mobile Device Management)"
   info "Run 'profiles show' for details on installed profiles"
-elif profiles status 2>/dev/null | grep -qi "not enrolled"; then
+elif printf '%s\n' "$mdm_status" | grep -Eqi 'MDM enrollment:[[:space:]]*No'; then
   echo -e "${GREEN}  [OK]${RESET} Not enrolled in MDM"
 else
   info "Could not determine MDM enrollment status"

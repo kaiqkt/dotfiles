@@ -1,7 +1,24 @@
 function _wt:require_bare() {
-  if [[ ! -d ".bare" ]]; then
+  if [[ $(git -C .bare rev-parse --is-bare-repository 2>/dev/null) != true ]]; then
     echo "Error: no .bare found in $(pwd). Navigate to project root first."
     return 1
+  fi
+}
+
+function _wt:default_base() {
+  local bare=$1 configured branch
+  configured=$(git -C "$bare" config wt.defaultBase 2>/dev/null)
+  if [[ -n "$configured" ]]; then
+    print -r -- "$configured"
+    return
+  fi
+  branch=$(git -C "$bare" symbolic-ref --short HEAD 2>/dev/null)
+  if [[ -n "$branch" ]] && git -C "$bare" show-ref --verify --quiet "refs/heads/$branch"; then
+    print -r -- "$branch"
+  elif git -C "$bare" show-ref --verify --quiet refs/heads/main; then
+    print main
+  else
+    print master
   fi
 }
 
@@ -45,7 +62,7 @@ function _wt:next_app_port() {
   local base_redis=$(_wt:default_port REDIS_PORT 6379)
 
   local -A taken
-  local port
+  local port key
   for key in APP_PORT DB_PORT REDIS_PORT; do
     while IFS= read -r port; do
       taken[$port]=1
@@ -102,9 +119,16 @@ function _wt:destroy() {
   local wt_path=$1 branch=$2 force=$3
 
   if [[ -d "$wt_path" ]]; then
+    if [[ "$force" != true && -n $(git -C "$wt_path" status --porcelain --untracked-files=all) ]]; then
+      echo "Error: '$wt_path' has local changes. Use --force to discard them."
+      return 1
+    fi
     docker compose -f "$wt_path/docker-compose.yml" --env-file "$wt_path/.env" down &>/dev/null || true
-    git -C "$wt_path" submodule deinit --all -f 2>/dev/null
-    rm -rf "$wt_path"
+    if [[ "$force" == true ]]; then
+      git -C .bare worktree remove --force "$wt_path" || return 1
+    else
+      git -C .bare worktree remove "$wt_path" || return 1
+    fi
   fi
 
   git -C .bare worktree prune
@@ -148,9 +172,10 @@ function wt:init() {
     return 1
   fi
   local folder="${2:-$(basename "$1" .git)}"
-  mkdir "$folder"
-  git clone --bare "$1" "$folder/.bare"
-  cd "$folder" && git -C .bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+  mkdir "$folder" || return 1
+  git clone --bare "$1" "$folder/.bare" || return 1
+  cd "$folder" || return 1
+  git -C .bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*' || return 1
   git -C .bare fetch
 }
 
@@ -168,6 +193,8 @@ function wt:info() {
   bare=$(_wt:bare) || { echo "Error: no .bare found in or above $(pwd)."; return 1; }
 
   local -a wt_branches wt_hashes wt_dates wt_ahead wt_dirty wt_docker wt_ports
+  local base=$(_wt:default_base "$bare")
+  local i
   local wt_branch wt_hash wt_date_str wt_counts wt_behind wt_a wt_ahead_str
   local wt_path_str wt_port_str p_app p_db p_redis
   local max_br=6 max_date=16 max_ahead=9 max_port=14
@@ -190,7 +217,7 @@ function wt:info() {
       wt_dates+=("$wt_date_str")
       (( ${#wt_date_str} > max_date )) && max_date=${#wt_date_str}
 
-      wt_counts=$(git -C "$bare" rev-list --left-right --count "master...$wt_branch" 2>/dev/null)
+      wt_counts=$(git -C "$bare" rev-list --left-right --count "$base...$wt_branch" 2>/dev/null)
       wt_behind=${wt_counts%%	*} wt_a=${wt_counts##*	}
       wt_ahead_str="↑${wt_a:-0} ↓${wt_behind:-0}"
       wt_ahead+=("$wt_ahead_str")
@@ -207,7 +234,7 @@ function wt:info() {
       fi
 
       if [[ -f "$wt_path_str/docker-compose.yml" && -f "$wt_path_str/.env" ]]; then
-        if docker compose -f "$wt_path_str/docker-compose.yml" --env-file "$wt_path_str/.env" ps --status running 2>/dev/null | grep -q .; then
+        if [[ -n $(docker compose -f "$wt_path_str/docker-compose.yml" --env-file "$wt_path_str/.env" ps --status running --quiet 2>/dev/null) ]]; then
           wt_docker+=("●")
         else
           wt_docker+=("○")
@@ -251,7 +278,7 @@ function wt:info() {
 
   printf '┌%s┬%s┬%s┬%s┬%s┬%s┬%s┐\n' "$br_line" "$st_line" "$st_line" "$po_line" "$ha_line" "$da_line" "$ah_line"
   printf '│ %-*s │ %s │ %s │ %-*s │ %-*s │ %-*s │ %-*s │\n' \
-    "$max_br" "Branch" "Git" "Doc" "$max_port" "App:Db:Redis" "$hash_len" "Hash" "$max_date" "Last Committed" "$max_ahead" "vs master"
+    "$max_br" "Branch" "Git" "Doc" "$max_port" "App:Db:Redis" "$hash_len" "Hash" "$max_date" "Last Committed" "$max_ahead" "vs $base"
   printf '├%s┼%s┼%s┼%s┼%s┼%s┼%s┤\n' "$br_line" "$st_line" "$st_line" "$po_line" "$ha_line" "$da_line" "$ah_line"
   for (( i=1; i<=${#wt_branches}; i++ )); do
     printf '│ %-*s │  %s  │  %s  │ %-*s │ %-*s │ %-*s │ %-*s │\n' \
@@ -285,9 +312,7 @@ function wt:create() {
     return 1
   fi
 
-  local configured_base
-  configured_base=$(git -C .bare config wt.defaultBase 2>/dev/null)
-  local base="${2:-${configured_base:-master}}"
+  local base="${2:-$(_wt:default_base .bare)}"
 
   git -C .bare worktree prune
   git -C .bare worktree add "../$1" -b "$1" "$base" || return 1
@@ -406,7 +431,7 @@ function wt:remove() {
     echo
   fi
 
-  _wt:destroy "$wt_path" "$branch" false
+  _wt:destroy "$wt_path" "$branch" "$force"
 }
 
 function wt:cleanup() {
@@ -536,8 +561,8 @@ function wt:cleanup() {
   local deleted=0 skipped=0
   for (( i=1; i<=${#wt_branches}; i++ )); do
     case "${actions[$i]}" in
-      delete) _wt:destroy "${wt_paths[$i]}" "${wt_branches[$i]}" false; (( deleted++ )) ;;
-      force)  _wt:destroy "${wt_paths[$i]}" "${wt_branches[$i]}" true;  (( deleted++ )) ;;
+      delete) if _wt:destroy "${wt_paths[$i]}" "${wt_branches[$i]}" false; then (( ++deleted )); else (( ++skipped )); fi ;;
+      force)  if _wt:destroy "${wt_paths[$i]}" "${wt_branches[$i]}" true; then (( ++deleted )); else (( ++skipped )); fi ;;
       skip)   (( skipped++ )) ;;
     esac
   done
@@ -562,7 +587,7 @@ Worktree commands (most require project root containing .bare/):
   wt:init <remote-url> [folder]   Clone a repo as a bare repo ready for worktrees
   wt:add <branch>                 Check out an existing remote branch as a worktree
   wt:create <branch> [base]       Create a new branch and worktree
-                                  base = arg > wt:config defaultBase > master
+                                  base = arg > wt:config defaultBase > bare HEAD > main/master
   wt:config [<key> [<value>|--unset]]
                                   Read or write wt.* config on the bare repo
   wt:list                       * List worktree branch names
@@ -580,7 +605,7 @@ After wt:add / wt:create the new worktree is also set up with:
   - ./.wt-postcreate executed if present and executable — see below.
 
 Default base branch for wt:create:
-  Override the "master" default per-project with wt:config:
+  Override the repository's default branch per-project with wt:config:
 
     wt:config defaultBase sprint_ee
 

@@ -15,20 +15,20 @@ _prompt_async_worker() {
   branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
   if [[ -n "$branch" ]]; then
     local staged=0 modified=0 untracked=0 ahead=0 behind=0
-    local line
+    local line xy counts
     while IFS= read -r line; do
-      case "${line:0:2}" in
-        "##"*)
-          [[ "$line" =~ "ahead ([0-9]+)" ]] && ahead=${match[1]}
-          [[ "$line" =~ "behind ([0-9]+)" ]] && behind=${match[1]}
+      case "$line" in
+        '# branch.ab '*)
+          counts=${line#\# branch.ab }
+          ahead=${${counts%% *}#+}
+          behind=${${counts##* }#-}
           ;;
-        [ADMRC]?" "|[ADMRC][ADMRC]*) ((staged++)) ;;
-      esac
-      case "${line:1:1}" in
-        M|D) ((modified++)) ;;
-      esac
-      case "${line:0:2}" in
-        "??") ((untracked++)) ;;
+        '1 '*|'2 '*|'u '*)
+          xy=${line[3,4]}
+          [[ ${xy[1]} != . ]] && ((staged++))
+          [[ ${xy[2]} != . ]] && ((modified++))
+          ;;
+        '? '*) ((untracked++)) ;;
       esac
     done < <(git status --porcelain=v2 --branch 2>/dev/null)
 
@@ -57,7 +57,7 @@ _prompt_format_git() {
   fi
   local branch="${result%% *}"
   local status_part="${result#$branch}"
-  _prompt_git_info="${_prompt_blue}${branch}${_prompt_reset}"
+  _prompt_git_info="${_prompt_blue}${branch//\%/%%}${_prompt_reset}"
   if [[ -n "$status_part" ]]; then
     _prompt_git_info+=" ${_prompt_grey}[${status_part# }]${_prompt_reset}"
   fi
@@ -118,7 +118,8 @@ _prompt_precmd() {
   local host=""
   [[ -n "$SSH_TTY" ]] && host="%m "
 
-  local dir="${_prompt_grey}%B$(_prompt_short_dir)%b${_prompt_reset}"
+  local short_dir=$(_prompt_short_dir)
+  local dir="${_prompt_grey}%B${short_dir//\%/%%}%b${_prompt_reset}"
 
   local char="%(?:%F{white}:%F{red})❯${_prompt_reset}"
 

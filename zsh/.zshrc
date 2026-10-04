@@ -1,8 +1,5 @@
 [[ -o interactive ]] || return
 
-DISABLE_AUTO_TITLE="true"
-COMPLETION_WAITING_DOTS="true"
-DISABLE_UNTRACKED_FILES_DIRTY="true"
 setopt INC_APPEND_HISTORY
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
 HISTSIZE=1000000
@@ -74,7 +71,14 @@ function _cached_eval() {
   local cache_file="$cache_dir/$name.zsh"
   if [[ ! -f "$cache_file" || ! -s "$cache_file" ]]; then
     mkdir -p "$cache_dir"
-    "$@" > "$cache_file"
+    local temporary
+    temporary=$(mktemp "$cache_dir/.${name}.XXXXXX") || return 1
+    if "$@" > "$temporary" && [[ -s "$temporary" ]]; then
+      mv -f "$temporary" "$cache_file"
+    else
+      rm -f "$temporary"
+      return 1
+    fi
   fi
   source "$cache_file"
 }

@@ -55,6 +55,9 @@ Prefix: `Ctrl+A`
 
 ## FZF (`prefix + t`, then second key)
 
+Each popup has its own temporary result file. `Ctrl-S` opens the selected
+file in the pane that launched the popup, preserving spaces in filenames.
+
 | Binding        | Description                                           |
 | -------------- | ----------------------------------------------------- |
 | `prefix + t f` | Find and edit file (Enter: in popup, Ctrl-S: in pane) |

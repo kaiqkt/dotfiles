@@ -7,8 +7,8 @@ function zsh_add_file() {
 }
 
 function zsh_add_plugin() {
-  PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
-  PLUGIN_REF="${2:-}"
+  local PLUGIN_NAME=${1##*/}
+  local PLUGIN_REF="${2:-}"
 
   if [ ! -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
     if [ -n "$PLUGIN_REF" ]; then

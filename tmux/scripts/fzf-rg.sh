@@ -3,7 +3,7 @@ set -euo pipefail
 
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case"
 
-RESULT_FILE=/tmp/tmux-fzf-result
+: "${TMUX_FZF_RESULT_FILE:?Run through fzf-popup.sh}"
 
 result=$(fzf --no-tmux --ansi --disabled \
     --bind "start:reload:$RG_PREFIX {q} || true" \
@@ -12,7 +12,7 @@ result=$(fzf --no-tmux --ansi --disabled \
     --header 'Enter: edit here, Ctrl-S: edit in pane' \
     --preview 'bat --color=always --highlight-line {2} {1} 2>/dev/null' \
     --preview-window '+{2}/2' \
-    --bind "ctrl-s:become(echo '+{2}' '{1}' > $RESULT_FILE)" \
+    --bind 'ctrl-s:become(printf "%s\0" +{2} {1} > "$TMUX_FZF_RESULT_FILE")' \
     --exit-0) || exit 0
 
 if [[ -n "$result" ]]; then

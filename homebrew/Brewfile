@@ -1,5 +1,6 @@
 brew "git"
 brew "git-lfs"
+brew "gh"
 brew "zsh"
 brew "dotbot"
 brew "node"

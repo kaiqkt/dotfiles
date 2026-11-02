@@ -111,10 +111,10 @@ echo ""
 
 echo "Step 4: Remove asdf plugins and tool versions"
 echo "----------------------------------------------"
-read -rp "Remove asdf java/kotlin/golang plugins and installed versions? (y/N) " answer
+read -rp "Remove asdf java/kotlin/golang/gradle plugins and installed versions? (y/N) " answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   if command -v asdf &>/dev/null; then
-    for plugin in java kotlin golang; do
+    for plugin in java kotlin golang gradle; do
       asdf plugin remove "$plugin" 2>/dev/null && info "Removed asdf plugin: $plugin" || \
         warn "asdf plugin $plugin not present"
     done

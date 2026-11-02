@@ -153,19 +153,20 @@ Fuzzy finder. Shell bindings configured in `~/.config/zsh/config/fzf.sh`. Tmux p
 
 ## asdf
 
-Version manager for Java, Kotlin, Go. Global versions defined in `~/.tool-versions` (symlinked from repo `tool-versions`). Per-project overrides via `.tool-versions` at repo root.
+Version manager for Java, Kotlin, Go, Gradle. Global versions defined in `~/.tool-versions` (symlinked from repo `tool-versions`). Per-project overrides via `.tool-versions` at repo root.
 
 ```bash
 # List available versions
-asdf list all java | grep temurin-21
+asdf list all java | grep temurin-25
 asdf list all kotlin
 asdf list all golang
+asdf list all gradle
 
 # Install a specific version
-asdf install java temurin-21.0.11+10.0.LTS
+asdf install java temurin-25.0.5+8.0.LTS
 
 # Set global default
-asdf set -u java temurin-21.0.11+10.0.LTS
+asdf set -u java temurin-25.0.5+8.0.LTS
 
 # Set local (per-project) override
 asdf set java temurin-17.0.13+11.0.LTS

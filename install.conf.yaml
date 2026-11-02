@@ -52,6 +52,7 @@
     - [asdf plugin add java || true, Adding asdf java plugin]
     - [asdf plugin add kotlin || true, Adding asdf kotlin plugin]
     - [asdf plugin add golang || true, Adding asdf golang plugin]
+    - [asdf plugin add gradle || true, Adding asdf gradle plugin]
     - [asdf install, Installing tool versions]
     - [go install golang.org/x/tools/gopls@latest, Installing Go language server]
     - [go install github.com/go-delve/delve/cmd/dlv@latest, Installing Go debugger]

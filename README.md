@@ -219,7 +219,7 @@ profiles.
 - **VS Code** — Go, Rust, Java, Kotlin, SQL, Markdown preview, Spring Boot, and Docker tooling
 - **LazyGit** — git TUI
 - **FZF** — fuzzy finder
-- **asdf** — version manager (Java, Kotlin, Go)
+- **asdf** — version manager (Java, Kotlin, Go, Gradle)
 - **rustup** — Rust toolchain manager (stable, rust-analyzer, clippy, rustfmt)
 - **Homebrew** — package manager
 

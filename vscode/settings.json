@@ -70,5 +70,8 @@
   "[sql]": {
     "editor.defaultFormatter": "sqlfluff.vscode-sqlfluff",
     "editor.formatOnSave": true
+  },
+  "workbench.editorAssociations": {
+    "*.md": "markdown-preview-enhanced"
   }
 }
